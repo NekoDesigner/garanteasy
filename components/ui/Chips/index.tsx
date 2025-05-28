@@ -1,9 +1,9 @@
 import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import WashingMachinIcon from "../Icons/WashingMachinIcon";
-import { COLORS, SIZES } from "../constants";
 import { IChipsProps, TChipsIcon } from "./@types";
 import styles from "./styles";
+import { COLORS, SIZES } from "../constants";
 
 const Chips: React.FC<IChipsProps> = ({
   category,
