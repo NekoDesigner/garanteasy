@@ -1,9 +1,9 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import CategoryButton from "../ui/CategoryButton";
+import Chips from "../ui/Chips";
 import { COLORS, SIZES } from "../ui/constants";
 
-describe("CategoryButton", () => {
+describe("Chips Components", () => {
   const BUTTONS_LIST = [
     {
       category: "hoursehold-electricals",
@@ -38,7 +38,7 @@ describe("CategoryButton", () => {
   for (const button of BUTTONS_LIST) {
     it(`renders button for category: ${button.category}`, () => {
       const { getByText } = render(
-        <CategoryButton category={button.category} text={button.text} />
+        <Chips category={button.category} text={button.text} />
       );
       expect(getByText(button.text)).toBeTruthy();
     });
@@ -47,7 +47,7 @@ describe("CategoryButton", () => {
   it("renders button with custom icon", () => {
     const customIcon = <div>Custom Icon</div>;
     const { getByText } = render(
-      <CategoryButton category={customIcon} text="Custom Category" />
+      <Chips category={customIcon} text="Custom Category" />
     );
     expect(getByText("Custom Category")).toBeTruthy();
   });
@@ -55,7 +55,7 @@ describe("CategoryButton", () => {
   it("calls onPress when button is pressed", () => {
     const mockOnPress = jest.fn();
     const { getByText } = render(
-      <CategoryButton
+      <Chips
         category="hoursehold-electricals"
         text="Électroménager"
         onPress={mockOnPress}
@@ -69,7 +69,7 @@ describe("CategoryButton", () => {
   it("does not call onPress when button is disabled", () => {
     const mockOnPress = jest.fn();
     const { getByText } = render(
-      <CategoryButton
+      <Chips
         category="hoursehold-electricals"
         text="Électroménager"
         onPress={undefined}
@@ -81,7 +81,7 @@ describe("CategoryButton", () => {
   });
   it("renders with small size", () => {
     const { getByTestId } = render(
-      <CategoryButton
+      <Chips
         category="hoursehold-electricals"
         text="Électroménager"
         size="xs"
@@ -95,7 +95,7 @@ describe("CategoryButton", () => {
   });
   it("renders with default size", () => {
     const { getByTestId } = render(
-      <CategoryButton category="hoursehold-electricals" text="Électroménager" />
+      <Chips category="hoursehold-electricals" text="Électroménager" />
     );
     const expected = getByTestId("category-icon").findByProps({
       color: COLORS.light,
@@ -105,7 +105,7 @@ describe("CategoryButton", () => {
   });
   it("does not show icon when showIcon is false", () => {
     const { queryByTestId } = render(
-      <CategoryButton
+      <Chips
         category="hoursehold-electricals"
         text="Électroménager"
         showIcon={false}

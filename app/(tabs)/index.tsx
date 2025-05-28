@@ -4,7 +4,7 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import CategoryButton from "../../components/ui/CategoryButton";
+import Chips from "../../components/ui/Chips";
 
 export default function HomeScreen() {
   return (
@@ -16,14 +16,14 @@ export default function HomeScreen() {
         gap: 16,
       }}
     >
-      <CategoryButton
+      <Chips
         category="hoursehold-electricals"
         text="Électroménager"
         onPress={() => {
           console.log("Électroménager");
         }}
       />
-      <CategoryButton
+      <Chips
         category="hoursehold-electricals"
         text="Électroménager"
         size="xs"
@@ -31,7 +31,7 @@ export default function HomeScreen() {
           console.log("Électroménager");
         }}
       />
-      <CategoryButton
+      <Chips
         showIcon={false}
         category="hoursehold-electricals"
         text="Petit électroménager"
