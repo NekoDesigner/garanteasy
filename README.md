@@ -51,6 +51,23 @@ Follow the instructions in the terminal to run the app on an emulator or physica
 
 This project is licensed under the [MIT License](LICENSE).
 
+## VSCode
+
+### Recommended VSCode Extensions 🧑‍💻
+
+- [GitHub Pull Requests and Issues](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) – Manage GitHub PRs and issues directly in VSCode.
+- [Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree) – Quickly search and visualize TODOs, FIXMEs, and comment tags in your code.
+- [GitLens — Git supercharged](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) – Powerful Git insights and code annotation.
+- [Jest](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest) – Run and debug Jest tests from within VSCode.
+- [Pretty TypeScript Errors](https://marketplace.visualstudio.com/items?itemName=yoavbls.pretty-ts-errors) – Enhanced TypeScript error messages for better readability.
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) – Format your code consistently using Prettier.
+- [Prettier ESLint](https://marketplace.visualstudio.com/items?itemName=rvest.vs-code-prettier-eslint) – Format code using Prettier and ESLint together.
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) – Integrate ESLint into VSCode for JavaScript/TypeScript linting.
+- [Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens) – Highlight errors and warnings directly in your code.
+- [Auto Import](https://marketplace.visualstudio.com/items?itemName=steoates.autoimport) – Automatically find, import, and manage imports for your files.
+- [React Native Storybook](https://marketplace.visualstudio.com/items?itemName=storybook.react-native-storybook) – Develop and test UI components in isolation with Storybook for React Native.
+- [ES7+ React/Redux/React-Native snippets](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets) – Productivity booster with JavaScript and React/Redux snippets.
+
 ## Contributors 😎
 
 - <img src="https://github.com/NekoDesigner.png" width="24" height="24" alt="NekoDesigner avatar" style="vertical-align:middle; border-radius:50%;"> [Tahar Chibane](https://github.com/NekoDesigner)

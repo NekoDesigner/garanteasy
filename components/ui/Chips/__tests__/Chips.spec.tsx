@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import Chips from "../ui/Chips";
-import { COLORS, SIZES } from "../ui/constants";
+import Chips from "..";
+import { COLORS, SIZES } from "../../constants";
 
 describe("Chips Components", () => {
   const BUTTONS_LIST = [
