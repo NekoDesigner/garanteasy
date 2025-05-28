@@ -41,6 +41,14 @@ npm run dev
 
 Follow the instructions in the terminal to run the app on an emulator or physical device.
 
+## Commit
+
+For create pretty commit, use
+
+```shell
+npm run cz
+```
+
 ## Project Info
 
 - **React Native**: v0.79.x (React 19)

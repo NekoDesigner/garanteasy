@@ -1,4 +1,4 @@
-const SIZES = {
+export const SIZES = {
   icon: {
     s: 20,
     xs: 16,
@@ -22,14 +22,3 @@ const SIZES = {
     m: 16,
   },
 };
-
-const COLORS = {
-  primary: "#1A1770",
-  emerald: "#046C63",
-  danger: "#C82828",
-  light: "#FFFFFF",
-  grey: "#EBEBEB",
-  blueDarker: "#050426",
-};
-
-export { SIZES, COLORS };

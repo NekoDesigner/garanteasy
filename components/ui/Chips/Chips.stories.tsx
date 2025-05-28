@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, View } from 'react-native';
-import Chips from './index';
 import { IChipsProps } from './@types';
+import Chips from './index';
 
 export default {
   title: 'Chips',

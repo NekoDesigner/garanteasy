@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-import { COLORS, SIZES } from "../constants";
+import { COLORS, SIZES } from "../../../constants";
 
 type Props = {
   className?: string;
