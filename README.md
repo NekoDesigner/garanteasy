@@ -1,50 +1,61 @@
-# Welcome to your Expo app 👋
+# Garanteasy Mobile App Project 📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## What is GarantEasy ? 🤔
 
-## Get started
+GarantEasy is a mobile application designed to help users store and manage the warranties of their products. The app notifies users when a product's warranty is nearing its expiration date, ensuring they never miss an important deadline.
 
-1. Install dependencies
+## Getting Started 🤩
 
+Follow these steps to set up and run the project:
+
+### Prerequisites
+
+- **Node.js**: v20.x or higher
+- **npm**: v9.x or higher (comes with Node.js)
+- **Expo CLI**: Install globally with
+  ```bash
+  npm install -g expo-cli
+  ```
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/your-username/garanteasy.git
+   cd garanteasy
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
+### Running the App
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Start the development server:
 
 ```bash
-npm run reset-project
+npm run dev
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Follow the instructions in the terminal to run the app on an emulator or physical device.
 
-## Learn more
+## Project Info
 
-To learn more about developing your project with Expo, look at the following resources:
+- **React Native**: v0.72.x (React 19)
+- **Expo**: v50.x or higher
+- **Node.js**: v20.x or higher
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## License
 
-## Join the community
+This project is licensed under the [MIT License](LICENSE).
 
-Join our community of developers creating universal apps.
+## Contributors 😎
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- <img src="https://github.com/NekoDesigner.png" width="24" height="24" alt="NekoDesigner avatar" style="vertical-align:middle; border-radius:50%;"> [Tahar Chibane](https://github.com/NekoDesigner)
+- <img src="https://media.licdn.com/dms/image/v2/D4E03AQE6RNVpdrXlFg/profile-displayphoto-shrink_800_800/B4EZacioCRGQAg-/0/1746383046511?e=1753920000&v=beta&t=MyIdRacSrNyDacx-gPAU9zHM02ENGjvbaaR_eyC1eNU" width="24" height="24" style="vertical-align:middle; border-radius:50%;"> [Mélissa Chibane](https://www.linkedin.com/in/m%C3%A9lissa-chibane-200bba240/)
+
+---
+
+Feel free to open issues or submit pull requests!
