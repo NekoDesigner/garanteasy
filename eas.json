@@ -6,7 +6,6 @@
       "distribution": "store"
     },
     "test": {
-      "platforms": ["android"],
       "releaseChannel": "test",
       "developmentClient": false,
       "distribution": "internal"
