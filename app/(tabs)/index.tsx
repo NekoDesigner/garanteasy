@@ -1,7 +1,7 @@
 import { SafeAreaView } from "react-native";
 import Chips from "../../components/ui/Chips";
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   return (
     <SafeAreaView
       style={{
@@ -13,27 +13,23 @@ export default function HomeScreen() {
     >
       <Chips
         category="hoursehold-electricals"
-        text="Électroménager"
+        label="Électroménager"
         onPress={() => {
           console.log("Électroménager");
         }}
       />
       <Chips
         category="hoursehold-electricals"
-        text="Électroménager"
+        label="Électroménager"
         size="xs"
-        onPress={() => {
-          console.log("Électroménager");
-        }}
       />
       <Chips
         showIcon={false}
         category="hoursehold-electricals"
-        text="Petit électroménager"
-        onPress={() => {
-          console.log("Électroménager");
-        }}
+        label="Petit électroménager"
       />
     </SafeAreaView>
   );
 }
+
+export default HomeScreen;

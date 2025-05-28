@@ -8,7 +8,7 @@ export type TChipsIcon =
 
 export interface IChipsProps {
   category: TChipsIcon | React.ReactNode;
-  text: string;
+  label: string;
   size?: "s" | "xs";
   showIcon?: boolean;
   onPress?: () => void;

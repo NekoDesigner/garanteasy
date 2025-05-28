@@ -7,7 +7,7 @@ import { COLORS, SIZES } from "../constants";
 
 const Chips: React.FC<IChipsProps> = ({
   category,
-  text,
+  label,
   size = "s",
   showIcon = true,
   onPress,
@@ -44,7 +44,7 @@ const Chips: React.FC<IChipsProps> = ({
       {showIcon && (
         <View testID="category-icon">{getCategoryIcon(category)}</View>
       )}
-      <Text style={styles.buttonText}>{text}</Text>
+      <Text style={styles.buttonText}>{label}</Text>
     </TouchableOpacity>
   );
 };

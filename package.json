@@ -3,8 +3,8 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
-    "dev": "npx expo start --clear",
+    "start": "sb-rn-get-stories && expo start",
+    "dev": "sb-rn-get-stories && npx expo start --clear",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -12,7 +12,8 @@
     "test": "jest --watchAll",
     "test:ci": "jest --ci",
     "test:coverage": "jest --coverage",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "storybook-generate": "sb-rn-get-stories"
   },
   "jest": {
     "preset": "jest-expo"
@@ -46,6 +47,14 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@babel/plugin-transform-class-static-block": "^7.27.1",
+    "@gorhom/bottom-sheet": "^5.1.5",
+    "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-community/datetimepicker": "^8.4.1",
+    "@react-native-community/slider": "^4.5.7",
+    "@storybook/addon-ondevice-actions": "^8.6.4",
+    "@storybook/addon-ondevice-controls": "^8.6.4",
+    "@storybook/react-native": "^8.6.4",
     "@testing-library/react-native": "^13.2.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/jest": "^29.5.14",
@@ -53,7 +62,9 @@
     "@types/react-test-renderer": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.33.0",
     "@typescript-eslint/parser": "^8.33.0",
+    "babel-loader": "^8.4.1",
     "eslint": "^9.27.0",
+    "eslint-config-expo": "~9.2.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -62,8 +73,7 @@
     "jest-expo": "~53.0.5",
     "prettier": "^3.5.3",
     "react-test-renderer": "^19.0.0",
-    "typescript": "^5.3.3",
-    "eslint-config-expo": "~9.2.0"
+    "typescript": "^5.3.3"
   },
   "private": true
 }

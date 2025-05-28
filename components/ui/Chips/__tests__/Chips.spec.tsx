@@ -7,27 +7,27 @@ describe("Chips Components", () => {
   const BUTTONS_LIST = [
     {
       category: "hoursehold-electricals",
-      text: "Électroménager",
+      label: "Électroménager",
     },
     {
       category: "small-electricals",
-      text: "Petits appareils",
+      label: "Petits appareils",
     },
     {
       category: "diy",
-      text: "Bricolage",
+      label: "Bricolage",
     },
     {
       category: "garden",
-      text: "Jardin",
+      label: "Jardin",
     },
     {
       category: "fashion",
-      text: "Mode",
+      label: "Mode",
     },
     {
       category: "other",
-      text: "Autres",
+      label: "Autres",
     },
   ];
 
@@ -38,16 +38,16 @@ describe("Chips Components", () => {
   for (const button of BUTTONS_LIST) {
     it(`renders button for category: ${button.category}`, () => {
       const { getByText } = render(
-        <Chips category={button.category} text={button.text} />
+        <Chips category={button.category} label={button.label} />
       );
-      expect(getByText(button.text)).toBeTruthy();
+      expect(getByText(button.label)).toBeTruthy();
     });
   }
 
   it("renders button with custom icon", () => {
     const customIcon = <div>Custom Icon</div>;
     const { getByText } = render(
-      <Chips category={customIcon} text="Custom Category" />
+      <Chips category={customIcon} label="Custom Category" />
     );
     expect(getByText("Custom Category")).toBeTruthy();
   });
@@ -57,7 +57,7 @@ describe("Chips Components", () => {
     const { getByText } = render(
       <Chips
         category="hoursehold-electricals"
-        text="Électroménager"
+        label="Électroménager"
         onPress={mockOnPress}
       />
     );
@@ -71,7 +71,7 @@ describe("Chips Components", () => {
     const { getByText } = render(
       <Chips
         category="hoursehold-electricals"
-        text="Électroménager"
+        label="Électroménager"
         onPress={undefined}
       />
     );
@@ -83,7 +83,7 @@ describe("Chips Components", () => {
     const { getByTestId } = render(
       <Chips
         category="hoursehold-electricals"
-        text="Électroménager"
+        label="Électroménager"
         size="xs"
       />
     );
@@ -95,7 +95,7 @@ describe("Chips Components", () => {
   });
   it("renders with default size", () => {
     const { getByTestId } = render(
-      <Chips category="hoursehold-electricals" text="Électroménager" />
+      <Chips category="hoursehold-electricals" label="Électroménager" />
     );
     const expected = getByTestId("category-icon").findByProps({
       color: COLORS.light,
@@ -107,7 +107,7 @@ describe("Chips Components", () => {
     const { queryByTestId } = render(
       <Chips
         category="hoursehold-electricals"
-        text="Électroménager"
+        label="Électroménager"
         showIcon={false}
       />
     );
