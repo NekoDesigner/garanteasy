@@ -1,0 +1,685 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Chips Components renders correctly 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#046C63",
+      "borderRadius": 100,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    testID="category-icon"
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={62}
+      vbWidth={60}
+      width={20}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M57 53.705a7.364 7.364 0 01-7.364 7.363H10.364A7.364 7.364 0 013 53.705V18.114h54v35.59zM30 23.023c-8.134 0-14.727 6.593-14.727 14.727S21.866 52.477 30 52.477s14.727-6.593 14.727-14.727S38.134 23.023 30 23.023zm0 1.84c7.117 0 12.886 5.77 12.886 12.887 0 7.117-5.77 12.886-12.886 12.886-7.117 0-12.886-5.77-12.886-12.886 0-7.117 5.77-12.886 12.886-12.886zM49.636.932A7.364 7.364 0 0157 8.295v7.364H3V8.295A7.364 7.364 0 0110.364.932h39.272zM36.75 9.522a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682H36.75zm9.818 0a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682h-3.682z"
+          fill={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+  >
+    Électroménager
+  </Text>
+</View>
+`;
+
+exports[`Chips Components renders correctly 2`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#046C63",
+      "borderRadius": 100,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    testID="category-icon"
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={62}
+      vbWidth={60}
+      width={20}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M57 53.705a7.364 7.364 0 01-7.364 7.363H10.364A7.364 7.364 0 013 53.705V18.114h54v35.59zM30 23.023c-8.134 0-14.727 6.593-14.727 14.727S21.866 52.477 30 52.477s14.727-6.593 14.727-14.727S38.134 23.023 30 23.023zm0 1.84c7.117 0 12.886 5.77 12.886 12.887 0 7.117-5.77 12.886-12.886 12.886-7.117 0-12.886-5.77-12.886-12.886 0-7.117 5.77-12.886 12.886-12.886zM49.636.932A7.364 7.364 0 0157 8.295v7.364H3V8.295A7.364 7.364 0 0110.364.932h39.272zM36.75 9.522a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682H36.75zm9.818 0a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682h-3.682z"
+          fill={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+  >
+    Petits appareils
+  </Text>
+</View>
+`;
+
+exports[`Chips Components renders correctly 3`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#046C63",
+      "borderRadius": 100,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    testID="category-icon"
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={62}
+      vbWidth={60}
+      width={20}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M57 53.705a7.364 7.364 0 01-7.364 7.363H10.364A7.364 7.364 0 013 53.705V18.114h54v35.59zM30 23.023c-8.134 0-14.727 6.593-14.727 14.727S21.866 52.477 30 52.477s14.727-6.593 14.727-14.727S38.134 23.023 30 23.023zm0 1.84c7.117 0 12.886 5.77 12.886 12.887 0 7.117-5.77 12.886-12.886 12.886-7.117 0-12.886-5.77-12.886-12.886 0-7.117 5.77-12.886 12.886-12.886zM49.636.932A7.364 7.364 0 0157 8.295v7.364H3V8.295A7.364 7.364 0 0110.364.932h39.272zM36.75 9.522a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682H36.75zm9.818 0a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682h-3.682z"
+          fill={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+  >
+    Bricolage
+  </Text>
+</View>
+`;
+
+exports[`Chips Components renders correctly 4`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#046C63",
+      "borderRadius": 100,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    testID="category-icon"
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={62}
+      vbWidth={60}
+      width={20}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M57 53.705a7.364 7.364 0 01-7.364 7.363H10.364A7.364 7.364 0 013 53.705V18.114h54v35.59zM30 23.023c-8.134 0-14.727 6.593-14.727 14.727S21.866 52.477 30 52.477s14.727-6.593 14.727-14.727S38.134 23.023 30 23.023zm0 1.84c7.117 0 12.886 5.77 12.886 12.887 0 7.117-5.77 12.886-12.886 12.886-7.117 0-12.886-5.77-12.886-12.886 0-7.117 5.77-12.886 12.886-12.886zM49.636.932A7.364 7.364 0 0157 8.295v7.364H3V8.295A7.364 7.364 0 0110.364.932h39.272zM36.75 9.522a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682H36.75zm9.818 0a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682h-3.682z"
+          fill={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+  >
+    Jardin
+  </Text>
+</View>
+`;
+
+exports[`Chips Components renders correctly 5`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#046C63",
+      "borderRadius": 100,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    testID="category-icon"
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={62}
+      vbWidth={60}
+      width={20}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M57 53.705a7.364 7.364 0 01-7.364 7.363H10.364A7.364 7.364 0 013 53.705V18.114h54v35.59zM30 23.023c-8.134 0-14.727 6.593-14.727 14.727S21.866 52.477 30 52.477s14.727-6.593 14.727-14.727S38.134 23.023 30 23.023zm0 1.84c7.117 0 12.886 5.77 12.886 12.887 0 7.117-5.77 12.886-12.886 12.886-7.117 0-12.886-5.77-12.886-12.886 0-7.117 5.77-12.886 12.886-12.886zM49.636.932A7.364 7.364 0 0157 8.295v7.364H3V8.295A7.364 7.364 0 0110.364.932h39.272zM36.75 9.522a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682H36.75zm9.818 0a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682h-3.682z"
+          fill={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+  >
+    Mode
+  </Text>
+</View>
+`;
+
+exports[`Chips Components renders correctly 6`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#046C63",
+      "borderRadius": 100,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    testID="category-icon"
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={62}
+      vbWidth={60}
+      width={20}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M57 53.705a7.364 7.364 0 01-7.364 7.363H10.364A7.364 7.364 0 013 53.705V18.114h54v35.59zM30 23.023c-8.134 0-14.727 6.593-14.727 14.727S21.866 52.477 30 52.477s14.727-6.593 14.727-14.727S38.134 23.023 30 23.023zm0 1.84c7.117 0 12.886 5.77 12.886 12.887 0 7.117-5.77 12.886-12.886 12.886-7.117 0-12.886-5.77-12.886-12.886 0-7.117 5.77-12.886 12.886-12.886zM49.636.932A7.364 7.364 0 0157 8.295v7.364H3V8.295A7.364 7.364 0 0110.364.932h39.272zM36.75 9.522a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682H36.75zm9.818 0a1.84 1.84 0 100 3.683h3.682a1.841 1.841 0 000-3.682h-3.682z"
+          fill={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+  >
+    Autres
+  </Text>
+</View>
+`;

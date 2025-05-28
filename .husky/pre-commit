@@ -1,0 +1,2 @@
+npm run lint:fix --max-warnings=100
+npm run test:coverage

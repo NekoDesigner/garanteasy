@@ -1,7 +1,7 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import React from "react";
 import Chips from "..";
-import { COLORS, SIZES } from "../../constants";
+import { COLORS, SIZES } from "../../../../constants";
 
 describe("Chips Components", () => {
   const BUTTONS_LIST = [
@@ -41,6 +41,11 @@ describe("Chips Components", () => {
         <Chips category={button.category} label={button.label} />
       );
       expect(getByText(button.label)).toBeTruthy();
+    });
+
+    test('renders correctly', () => {
+      const tree = render(<Chips category={button.category} label={button.label} />).toJSON();
+      expect(tree).toMatchSnapshot();
     });
   }
 
