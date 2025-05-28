@@ -9,7 +9,12 @@ import CategoryButton from "../../components/ui/CategoryButton";
 export default function HomeScreen() {
   return (
     <SafeAreaView
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 16,
+      }}
     >
       <CategoryButton
         category="hoursehold-electricals"
@@ -18,7 +23,22 @@ export default function HomeScreen() {
           console.log("Électroménager");
         }}
       />
-      ;
+      <CategoryButton
+        category="hoursehold-electricals"
+        text="Électroménager"
+        size="xs"
+        onPress={() => {
+          console.log("Électroménager");
+        }}
+      />
+      <CategoryButton
+        showIcon={false}
+        category="hoursehold-electricals"
+        text="Petit électroménager"
+        onPress={() => {
+          console.log("Électroménager");
+        }}
+      />
     </SafeAreaView>
   );
   return (
