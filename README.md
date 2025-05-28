@@ -22,7 +22,7 @@ Follow these steps to set up and run the project:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/garanteasy.git
+   git clone https://github.com/NekoDesigner/garanteasy.git
    cd garanteasy
    ```
 
@@ -43,8 +43,8 @@ Follow the instructions in the terminal to run the app on an emulator or physica
 
 ## Project Info
 
-- **React Native**: v0.72.x (React 19)
-- **Expo**: v50.x or higher
+- **React Native**: v0.79.x (React 19)
+- **Expo**: v53.x or higher
 - **Node.js**: v20.x or higher
 
 ## License
