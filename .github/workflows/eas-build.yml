@@ -41,9 +41,15 @@ jobs:
       - name: Run EAS Android Test Build
         id: eas-build
         run: |
-          npx eas build --platform android --profile test --non-interactive > build-log.txt
-          BUILD_URL=$(grep -o 'https://expo.dev/accounts[^ ]*' build-log.txt | tail -1)
-          echo "build_url=$BUILD_URL" >> $GITHUB_OUTPUT
+            echo "🔧 Starting EAS build..."
+            npx eas build --platform android --profile test --non-interactive > build-log.txt 2>&1 || {
+              echo "❌ EAS build failed. Showing build-log.txt:"
+              cat build-log.txt
+              exit 1
+            }
+            BUILD_URL=$(grep -o 'https://expo.dev/accounts[^ ]*' build-log.txt | tail -1)
+            echo "✅ EAS build triggered: $BUILD_URL"
+            echo "build_url=$BUILD_URL" >> $GITHUB_OUTPUT
 
       - name: Send notification to Discord
         if: ${{ env.DISCORD_WEBHOOK_URL != '' }}
