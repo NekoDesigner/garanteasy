@@ -64,6 +64,7 @@
     "@typescript-eslint/parser": "^8.33.0",
     "babel-loader": "^8.4.1",
     "cz-conventional-changelog": "^3.3.0",
+    "eas-cli": "^16.6.2",
     "eslint": "^9.27.0",
     "eslint-config-expo": "~9.2.0",
     "eslint-plugin-import": "^2.31.0",
