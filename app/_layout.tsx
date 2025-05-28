@@ -1,5 +1,5 @@
 import { Slot } from "expo-router";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import "react-native-reanimated";
 
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === "true";
@@ -9,7 +9,7 @@ export default function RootLayout() {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const StorybookUI = require("../.storybook").default;
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <StorybookUI />
       </View>
     );
@@ -17,3 +17,11 @@ export default function RootLayout() {
 
   return <Slot />;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center", // Centre verticalement
+    alignItems: "center", // Centre horizontalement
+  },
+});

@@ -1,6 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import Chips from './index';
+import { IChipsProps } from './@types';
 
 export default {
   title: 'Chips',
@@ -8,13 +9,24 @@ export default {
 };
 
 export const Default = () => (
-  <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 16 }}>
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
     <Chips label="Default Chips" category="diy" showIcon={false} />
   </View>
 );
 
-export const WithIcon = () => (
-  <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 16 }}>
-    <Chips label="Bricolage" category="diy" showIcon />
+const chipVariants: IChipsProps[] = [
+  { label: 'Électroménage', category: 'hoursehold-electricals', showIcon: true, onPress: () => Alert.alert('Électroménage pressed') },
+  { label: 'Petit éléctroménagé', category: 'small-electricals', showIcon: true, onPress: () => Alert.alert('Petit éléctroménagé pressed') },
+  { label: 'Bricolage', category: 'diy', showIcon: true, onPress: () => Alert.alert('Bricolage pressed') },
+  { label: 'Jardin', category: 'garden', showIcon: true,  onPress: () => Alert.alert('Jardin pressed') },
+  { label: 'Mode', category: 'fashion', showIcon: true, onPress: () => Alert.alert('Mode pressed') },
+  { label: 'Autre', category: 'other', showIcon: true, onPress: () => Alert.alert('Autre pressed') },
+];
+
+export const WithIcons = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, gap: 24 }}>
+    {chipVariants.map((props, idx) => (
+      <Chips key={idx} {...props} />
+    ))}
   </View>
 );
