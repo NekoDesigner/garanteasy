@@ -1,0 +1,18 @@
+{
+  "build": {
+    "production": {
+      "releaseChannel": "production",
+      "developmentClient": false,
+      "distribution": "store"
+    },
+    "test": {
+      "platforms": ["android"],
+      "releaseChannel": "test",
+      "developmentClient": false,
+      "distribution": "internal"
+    }
+  },
+  "cli": {
+    "version": ">= 3.0.0"
+  }
+}
