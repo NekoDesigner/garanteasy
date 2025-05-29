@@ -8,6 +8,7 @@ const DEFAULT_PROPS = {
   color: COLORS.light,
 };
 
+// TODO: create tests for this FashionIcon component
 function FashionIcon({
   size = DEFAULT_PROPS.size,
   color = DEFAULT_PROPS.color,

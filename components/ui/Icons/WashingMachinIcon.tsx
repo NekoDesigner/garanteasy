@@ -3,6 +3,7 @@ import Svg, { Path } from "react-native-svg";
 import { COLORS, SIZES } from "../../../constants";
 import { IconProps } from "./@types";
 
+// TODO: create tests for this WashingMachinIcon component
 function WashingMachinIcon({
   size = SIZES.icon.s,
   color = COLORS.light,

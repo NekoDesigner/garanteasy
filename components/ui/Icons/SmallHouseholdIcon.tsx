@@ -8,6 +8,7 @@ const DEFAULT_PROPS = {
   color: COLORS.light,
 };
 
+// TODO: create tests for this SmallHouseholdIcon component
 function SmallHouseholdIcon({ size = DEFAULT_PROPS.size, color = DEFAULT_PROPS.color, ...props }: IconProps) {
   return (
     <Svg

@@ -9,6 +9,7 @@ const DEFAULT_PROPS = {
   color: "#fff",
 };
 
+// TODO: create tests for this GardenIcon component
 function GardenIcon({ color = DEFAULT_PROPS.color, size, ...props }: IconProps) {
   const { width, height } = useDynamicSize(
     DEFAULT_PROPS.width,

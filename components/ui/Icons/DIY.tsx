@@ -10,6 +10,7 @@ const DEFAULT_PROPS = {
   color2: "#000",
 };
 
+// TODO: create tests for this DIYIcon component
 function DIYIcon({ size, color, color2, ...props }: IconProps) {
   const sizeState = useDynamicSize(DEFAULT_PROPS.width, DEFAULT_PROPS.height, size);
 

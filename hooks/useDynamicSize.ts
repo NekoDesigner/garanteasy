@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { calculateRelativeSize } from "../components/ui/Icons/utils";
 
+// TODO: create tests for this hook
 export const useDynamicSize = (
     originalWidth: number,
     originalHeight: number,
