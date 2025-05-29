@@ -1,19 +1,14 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { COLORS, SIZES } from "../../../constants";
+import { IconProps } from "./@types";
 
-type Props = {
-  className?: string;
-  size?: number;
-  color?: string;
-  testID?: string;
-};
-
+// TODO: create tests for this WashingMachinIcon component
 function WashingMachinIcon({
   size = SIZES.icon.s,
   color = COLORS.light,
   ...props
-}: Props) {
+}: IconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 60 62" fill="none" {...props}>
       <Path

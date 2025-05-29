@@ -4,6 +4,7 @@ export type TChipsIcon =
   | "diy"
   | "garden"
   | "fashion"
+  | "multimedia"
   | "other";
 
 export interface IChipsProps {

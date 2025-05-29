@@ -26,6 +26,10 @@ describe("Chips Components", () => {
       label: "Mode",
     },
     {
+      category: "multimedia",
+      label: "Multimédia",
+    },
+    {
       category: "other",
       label: "Autres",
     },
