@@ -1,6 +1,11 @@
 import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { COLORS, SIZES } from "../../../constants";
+import DIYIcon from "../Icons/DIY";
+import FashionIcon from "../Icons/FashionIcon";
+import GardenIcon from "../Icons/GardenIcon";
+import MultimediaIcon from "../Icons/MultimediaIcon";
+import SmallHouseholdIcon from "../Icons/SmallHouseholdIcon";
 import WashingMachinIcon from "../Icons/WashingMachinIcon";
 import { IChipsProps, TChipsIcon } from "./@types";
 import styles from "./styles";
@@ -25,10 +30,17 @@ const Chips: React.FC<IChipsProps> = ({
   const getCategoryIcon = (category: TChipsIcon | React.ReactNode) => {
     switch (category) {
       case "hoursehold-electricals":
+        return <WashingMachinIcon color={COLORS.light} size={getSize()} />;
       case "small-electricals":
+        return <SmallHouseholdIcon color={COLORS.light} size={getSize()} />;
       case "diy":
+        return <DIYIcon color={COLORS.light} size={getSize()} />;
       case "garden":
+        return <GardenIcon color={COLORS.light} size={getSize()} />;
       case "fashion":
+        return <FashionIcon color={COLORS.light} size={getSize()} />;
+      case "multimedia":
+        return <MultimediaIcon color={COLORS.light} size={getSize()} />;
       case "other":
         return <WashingMachinIcon color={COLORS.light} size={getSize()} />;
       default:

@@ -20,7 +20,8 @@ const chipVariants: IChipsProps[] = [
   { label: 'Bricolage', category: 'diy', showIcon: true, onPress: () => Alert.alert('Bricolage pressed') },
   { label: 'Jardin', category: 'garden', showIcon: true,  onPress: () => Alert.alert('Jardin pressed') },
   { label: 'Mode', category: 'fashion', showIcon: true, onPress: () => Alert.alert('Mode pressed') },
-  { label: 'Autre', category: 'other', showIcon: true, onPress: () => Alert.alert('Autre pressed') },
+  { label: 'Multimédia', category: 'multimedia', showIcon: true, onPress: () => Alert.alert('Multimédia pressed') },
+  { label: 'Autre', category: 'other', showIcon: false, onPress: () => Alert.alert('Autre pressed') },
 ];
 
 export const WithIcons = () => (
