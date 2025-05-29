@@ -6,13 +6,13 @@
       "distribution": "store"
     },
     "test": {
-      "platforms": ["android"],
       "releaseChannel": "test",
       "developmentClient": false,
       "distribution": "internal"
     }
   },
   "cli": {
-    "version": ">= 3.0.0"
+    "version": ">=16.2.2",
+    "appVersionSource": "local"
   }
 }
