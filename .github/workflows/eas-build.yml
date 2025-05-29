@@ -10,7 +10,7 @@ on:
       - staging
 
 jobs:
-  build-test:
+  android-test-build:
     runs-on: ubuntu-latest
 
     steps:
