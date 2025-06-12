@@ -1,0 +1,869 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button Components renders correctly 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#1A1770",
+      "borderColor": "transparent",
+      "borderRadius": 4,
+      "borderWidth": 0,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "space-between",
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+  testID="button"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={24}
+    bbWidth={24}
+    fill="none"
+    focusable={false}
+    height={24}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#FFFFFF",
+            "height": 24,
+            "width": 24,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    testID="button-icon"
+    vbHeight={24}
+    vbWidth={24}
+    width={24}
+  >
+    <RNSVGGroup
+      color="#FFFFFF"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+    testID="button-label"
+  >
+    Default Button
+  </Text>
+</View>
+`;
+
+exports[`Button Components renders correctly 2`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#046C63",
+      "borderColor": "transparent",
+      "borderRadius": 4,
+      "borderWidth": 0,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "space-between",
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+  testID="button"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={24}
+    bbWidth={24}
+    fill="none"
+    focusable={false}
+    height={24}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#FFFFFF",
+            "height": 24,
+            "width": 24,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    testID="button-icon"
+    vbHeight={24}
+    vbWidth={24}
+    width={24}
+  >
+    <RNSVGGroup
+      color="#FFFFFF"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+    testID="button-label"
+  >
+    Secondary Button
+  </Text>
+</View>
+`;
+
+exports[`Button Components renders correctly 3`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#C82828",
+      "borderColor": "transparent",
+      "borderRadius": 4,
+      "borderWidth": 0,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "space-between",
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+  testID="button"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={24}
+    bbWidth={24}
+    fill="none"
+    focusable={false}
+    height={24}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#FFFFFF",
+            "height": 24,
+            "width": 24,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    testID="button-icon"
+    vbHeight={24}
+    vbWidth={24}
+    width={24}
+  >
+    <RNSVGGroup
+      color="#FFFFFF"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+    testID="button-label"
+  >
+    Danger Button
+  </Text>
+</View>
+`;
+
+exports[`Button Components renders correctly 4`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "transparent",
+      "borderColor": "#1A1770",
+      "borderRadius": 4,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "space-between",
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+  testID="button"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={24}
+    bbWidth={24}
+    fill="none"
+    focusable={false}
+    height={24}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#1A1770",
+            "height": 24,
+            "width": 24,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    testID="button-icon"
+    vbHeight={24}
+    vbWidth={24}
+    width={24}
+  >
+    <RNSVGGroup
+      color="#1A1770"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4279900016,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <Text
+    style={
+      {
+        "color": "#1A1770",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+    testID="button-label"
+  >
+    Outline Primary Button
+  </Text>
+</View>
+`;
+
+exports[`Button Components renders correctly 5`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "transparent",
+      "borderColor": "#046C63",
+      "borderRadius": 4,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "space-between",
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+  testID="button"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={24}
+    bbWidth={24}
+    fill="none"
+    focusable={false}
+    height={24}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#046C63",
+            "height": 24,
+            "width": 24,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    testID="button-icon"
+    vbHeight={24}
+    vbWidth={24}
+    width={24}
+  >
+    <RNSVGGroup
+      color="#046C63"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4278479971,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <Text
+    style={
+      {
+        "color": "#046C63",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+    testID="button-label"
+  >
+    Outline Secondary Button
+  </Text>
+</View>
+`;
+
+exports[`Button Components renders correctly 6`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "transparent",
+      "borderColor": "#C82828",
+      "borderRadius": 4,
+      "borderWidth": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "space-between",
+      "opacity": 1,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+  testID="button"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={24}
+    bbWidth={24}
+    fill="none"
+    focusable={false}
+    height={24}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#C82828",
+            "height": 24,
+            "width": 24,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    testID="button-icon"
+    vbHeight={24}
+    vbWidth={24}
+    width={24}
+  >
+    <RNSVGGroup
+      color="#C82828"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4291307560,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <Text
+    style={
+      {
+        "color": "#C82828",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+    testID="button-label"
+  >
+    Outline Danger Button
+  </Text>
+</View>
+`;
+
+exports[`Button Components renders correctly 7`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#1A1770",
+      "borderColor": "transparent",
+      "borderRadius": 4,
+      "borderWidth": 0,
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "space-between",
+      "opacity": 0.5,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+  testID="button"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={24}
+    bbWidth={24}
+    fill="none"
+    focusable={false}
+    height={24}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#FFFFFF",
+            "height": 24,
+            "width": 24,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    testID="button-icon"
+    vbHeight={24}
+    vbWidth={24}
+    width={24}
+  >
+    <RNSVGGroup
+      color="#FFFFFF"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <Text
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Ubuntu",
+        "fontSize": 16,
+        "fontWeight": "700",
+      }
+    }
+    testID="button-label"
+  >
+    Disabled Button
+  </Text>
+</View>
+`;
