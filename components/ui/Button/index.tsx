@@ -36,7 +36,7 @@ const renderIcon = React.useMemo(() => {
       color: styles.icon.color, // Ensure the icon color matches the button style
     }
   );
-}, [showIcon, icon, styles.icon]);
+}, [showIcon, icon, styles.icon, testID]);
 
   return <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.button, style]} testID={testID}>
     {showIcon && iconPosition === "left" && renderIcon}
