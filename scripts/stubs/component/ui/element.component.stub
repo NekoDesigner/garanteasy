@@ -1,0 +1,14 @@
+import React from "react";
+import { View, Text } from "react-native";
+import { {{IElementProps}} } from "./@types";
+import {{ElementStyles}} from "./styles";
+
+const {{ElementComponent}}: React.FC<{{IElementProps}}> = ({style, testID = '{{elementComponent}}', ...props}) => {
+  return (
+    <View style={[{{ElementStyles}}, style]} testID={testID} {...props}>
+      <Text>{{ElementComponent}}</Text>
+    </View>
+  );
+};
+
+export default {{ElementComponent}};

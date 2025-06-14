@@ -1,0 +1,14 @@
+import { render } from "@testing-library/react-native";
+import React from "react";
+import {{ElementComponent}} from "../index";
+
+describe("{{ElementComponent}} Components", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+    test('renders correctly', () => {
+      const tree = render(<{{ElementComponent}} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+});

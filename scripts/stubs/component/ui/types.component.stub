@@ -1,0 +1,4 @@
+export interface {{IElementProps}} {
+  style?: object;
+  testID?: string;
+}
