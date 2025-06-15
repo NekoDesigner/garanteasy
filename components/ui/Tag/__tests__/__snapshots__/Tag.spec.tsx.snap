@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tag Components renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 4,
+        "display": "flex",
+        "flexDirection": "row",
+        "gap": 4,
+        "justifyContent": "space-between",
+        "paddingHorizontal": 8,
+        "paddingVertical": 4,
+      },
+      {},
+    ]
+  }
+  testID="tag"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#050426",
+          "fontFamily": "Ubuntu",
+          "fontSize": 14,
+          "fontWeight": "700",
+        },
+        {},
+      ]
+    }
+    testID="tag-text"
+  >
+    Content
+  </Text>
+</View>
+`;
