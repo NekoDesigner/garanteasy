@@ -8,7 +8,6 @@ const Card: React.FC<ICardProps> = ({ style, testID = 'card', children }) => {
   const styledChildren = React.useMemo(() =>
     React.Children.map(children, (child) => {
       if (React.isValidElement(child)) {
-        console.log("CHILDREN", child.type);
         // Check if the child is a Text component
         if (
           (typeof child.type === 'function' && (child.type as any).displayName === 'Text') ||
