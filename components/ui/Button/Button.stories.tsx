@@ -26,6 +26,9 @@ const buttonVariants: IButtonProps[] = [
   { label: 'Outline Secondary Button', variant: 'outline-secondary', showIcon: true, icon: <ScanIcon />, onPress: () => Alert.alert('Outline Secondary Button Pressed') },
   { label: 'Outline Danger Button', variant: 'outline-danger', showIcon: true, icon: <ScanIcon />, onPress: () => Alert.alert('Outline Danger Button Pressed') },
   { label: 'Disabled Button', variant: 'primary', disabled: true, showIcon:true, icon: <ScanIcon />, onPress: () => Alert.alert('Disabled Button Pressed') },
+  { label: 'Link Button', variant: 'link-primary', disabled: false, showIcon:true, icon: <ScanIcon />, onPress: () => Alert.alert('Link Button Pressed') },
+  { label: 'Disbled Link Button', variant: 'link-secondary', disabled: true, showIcon:true, icon: <ScanIcon />, onPress: () => Alert.alert('Disabled Link Button Pressed') },
+  { label: 'Icon Right Button', variant: 'link-danger', disabled: true, showIcon:true, iconPosition: 'right', icon: <ScanIcon />, onPress: () => Alert.alert('Icon Right Button Pressed') },
 ];
 
 export const Variant = () => (

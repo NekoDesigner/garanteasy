@@ -43,7 +43,7 @@ const ButtonStyles = function ({
       opacity: disabled ? 0.5 : 1,
     },
     buttonText: {
-      color: variant.startsWith('outline') ? getColor(variant.split('-')[1]) : COLORS.light,
+      color: variant.startsWith('outline') || variant.startsWith('link') ? getColor(variant.split('-')[1]) : COLORS.light,
       fontSize: SIZES.font.m,
       fontWeight: SIZES.font.weight.semiBold,
       fontFamily: SIZES.font.familly.default,
@@ -51,7 +51,7 @@ const ButtonStyles = function ({
     icon: {
       width: size === 's' ? SIZES.icon.m : SIZES.icon.xs,
       height: size === 's' ? SIZES.icon.m : SIZES.icon.xs,
-      color: variant.startsWith('outline') ? getColor(variant.split('-')[1]) : COLORS.light,
+      color: variant.startsWith('outline') || variant.startsWith('link') ? getColor(variant.split('-')[1]) : COLORS.light,
     }
   });
 };

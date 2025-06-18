@@ -57,6 +57,30 @@ describe("Button Components", () => {
       icon: <ScanIcon />,
       onPress: () => console.log("Disabled Button Pressed"),
     },
+    {
+      label: "Link Primary Button",
+      variant: "link-primary",
+      disabled: false,
+      showIcon: true,
+      icon: <ScanIcon />,
+      onPress: () => console.log("Link Button Pressed"),
+    },
+    {
+      label: "Link Secondary Button",
+      variant: "link-secondary",
+      disabled: false,
+      showIcon: true,
+      icon: <ScanIcon />,
+      onPress: () => console.log("Link Button Pressed"),
+    },
+    {
+      label: "Link Danger Button",
+      variant: "link-danger",
+      disabled: false,
+      showIcon: true,
+      icon: <ScanIcon />,
+      onPress: () => console.log("Link Button Pressed"),
+    },
   ];
 
   beforeEach(() => {
