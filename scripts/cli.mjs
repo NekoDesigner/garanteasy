@@ -6,7 +6,7 @@ import ora from 'ora';
 
 program
   .name('Garanteasier')
-  .description('CLI for generating components and utilities for Garanteasier')
+  .description('CLI for generating components and hooks for Garanteasier')
   .version('0.8.0');
 
 program
@@ -24,6 +24,11 @@ program
         createHook(name);
         spinner.color = 'green';
         spinner.text = `Hook use${firstLetterToUpperCase(name)} created successfully. ✅`;
+        break;
+      case 'icon':
+        createIconComponent(name);
+        spinner.color = 'green';
+        spinner.text = `Icon ${name} created successfully. ✅`;
         break;
       default:
         spinner.color = 'red';
@@ -47,6 +52,26 @@ program
     } catch {
       spinner.color = 'red';
       spinner.text = `Failed to create component ${name}. ❌`;
+      spinner.stop();
+    }
+});
+
+program
+.command('generate-icon <name>')
+  .alias('gic')
+  .description('Generate a new Icon Component') // Use .description() instead of passing it to .command()
+  .action((name) => {
+    const iconName = `${firstLetterToUpperCase(name)}Icon`;
+    const spinner = ora(`Generate ${name} hook`).start();
+    try {
+      createIconComponent(name);
+      spinner.color = 'green';
+      spinner.text = `Icon component ${iconName} created successfully. ✅`;
+      spinner.stop();
+      console.log(`Icon component ${iconName} created successfully. ✅`);
+    } catch {
+      spinner.color = 'red';
+      spinner.text = `Failed to create icon component ${iconName}. ❌`;
       spinner.stop();
     }
 });
@@ -147,6 +172,24 @@ function createHook(name) {
   // Create tests file
   fs.mkdirSync(testsDir, { recursive: true });
   fs.writeFileSync(path.join(testsDir, `${hookName}.spec.ts`), `// TODO: Add tests for use${firstLetterToUpperCase(name)} hook`);
+}
+
+/**
+ *  Creates a new icon component with the given name.
+ *  It generates the necessary files and directories for the icon component.
+ *  @param {string} name - The name of the icon component to create.
+ *  @throws Will throw an error if the icon component cannot be created.
+ */
+function createIconComponent(name) {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Resolve __dirname correctly
+  const stubDirectory = path.join(__dirname, 'stubs', 'component', 'ui');
+  const iconPath = path.join(process.cwd(), 'components', 'ui', 'Icons');
+
+  // Create base component
+  const indexStubPath = path.join(stubDirectory, 'icon.component.stub');
+  const indexContent = fs.readFileSync(indexStubPath, 'utf-8')
+    .replace(/{{IconComponent}}/g, name);
+  fs.writeFileSync(path.join(iconPath, `${firstLetterToUpperCase(name)}Icon.tsx`), indexContent);
 }
 
 /**
