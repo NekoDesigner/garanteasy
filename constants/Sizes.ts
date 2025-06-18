@@ -1,5 +1,6 @@
 export const SIZES = {
   radius: {
+    full: 9999,
     l: 18,
     m: 16,
     s: 14,

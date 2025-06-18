@@ -115,7 +115,7 @@ describe("Button Components", () => {
     });
 
     it(`calls onPress when button is pressed ${button.label}`, () => {
-        const mockOnPress = jest.fn();
+      const mockOnPress = jest.fn();
       const { getByText } = render(
         <Button
           label={button.label}
