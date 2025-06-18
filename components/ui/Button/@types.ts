@@ -17,4 +17,7 @@ export type TButtonVariant =
   | "danger"
   | "outline-primary"
   | "outline-secondary"
-  | "outline-danger";
+  | "outline-danger"
+  | "link-primary"
+  | "link-secondary"
+  | "link-danger";
