@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RoundedIconButton Components renders correctly 1`] = `
+<View
+  style={
+    [
+      {},
+      undefined,
+    ]
+  }
+  testID="roundediconbutton"
+>
+  <Text>
+    RoundedIconButton
+  </Text>
+</View>
+`;
