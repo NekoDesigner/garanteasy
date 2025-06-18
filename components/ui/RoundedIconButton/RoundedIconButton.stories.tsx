@@ -13,6 +13,6 @@ export default {
 
 export const Default = () => (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, gap: 24 }}>
-      <RoundedIconButton />
+      <RoundedIconButton icon="arrow-left" onPress={() => {}} />
     </View>
 );

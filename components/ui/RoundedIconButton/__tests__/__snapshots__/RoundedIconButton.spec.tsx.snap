@@ -2,16 +2,42 @@
 
 exports[`RoundedIconButton Components renders correctly 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
-    [
-      {},
-      undefined,
-    ]
+    {
+      "opacity": 1,
+    }
   }
   testID="roundediconbutton"
 >
   <Text>
-    RoundedIconButton
+    Arrow Left Icon
   </Text>
 </View>
 `;

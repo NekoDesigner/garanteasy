@@ -12,7 +12,7 @@ describe("RoundedIconButton Components", () => {
   });
 
     test('renders correctly', () => {
-      const tree = render(<RoundedIconButton />).toJSON();
+      const tree = render(<RoundedIconButton icon="arrow-left" onPress={() => {}} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
 });
