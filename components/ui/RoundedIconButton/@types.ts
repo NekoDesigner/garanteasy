@@ -4,9 +4,12 @@
 
 export interface IRoundedIconButtonProps {
   style?: object;
+  size?: IRoundedIconButtonSize;
   testID?: string;
   icon: IRoundedIconButtonType;
   onPress: () => void;
 }
 
 export type IRoundedIconButtonType = 'scan' | 'settings' | 'arrow-left' | 'arrow-right'
+
+export type IRoundedIconButtonSize = 'normal' | 'small';

@@ -3,7 +3,22 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { COLORS, SIZES } from '../../../constants';
+import { IRoundedIconButtonSize } from './@types';
 
-const styles = StyleSheet.create({});
+const styles = function getRoundedIconButtonStyle(size: IRoundedIconButtonSize) {
+  return StyleSheet.create({
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      backgroundColor: COLORS.primary,
+      borderRadius: SIZES.radius.full,
+      height: size === 'normal' ? 40 : 32,
+      width: size === 'normal' ? 40 : 32,
+    }
+  });
+};
 
 export default styles;

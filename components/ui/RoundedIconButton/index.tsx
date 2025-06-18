@@ -3,28 +3,31 @@
  */
 
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
+import ArrowIcon from "../Icons/ArrowIcon";
+import ScanIcon from "../Icons/ScanIcon";
+import SettingsIcon from "../Icons/SettingsIcon";
 import { IRoundedIconButtonProps } from "./@types";
 import RoundedIconButtonStyles from "./styles";
 
-const RoundedIconButton: React.FC<IRoundedIconButtonProps> = ({ style, testID = 'roundediconbutton', ...props }) => {
-  function getIconComponent(icon: IRoundedIconButtonProps['icon']) {
+const RoundedIconButton: React.FC<IRoundedIconButtonProps> = ({ style, testID = 'roundediconbutton', icon, size = 'normal', ...props }) => {
+  const iconComponent = React.useMemo(() => {
     switch (icon) {
       case 'scan':
-        return <Text>Scan Icon</Text>;
+        return <ScanIcon />;
       case 'settings':
-        return <Text>Settings Icon</Text>;
+        return <SettingsIcon />;
       case 'arrow-left':
-        return <Text>Arrow Left Icon</Text>;
+        return <ArrowIcon />;
       case 'arrow-right':
-        return <Text>Arrow Right Icon</Text>;
+        return <ArrowIcon style={{ transform: [{ scaleX: -1 }] }}/>;
       default:
-        return <Text>Default Icon</Text>;
+        return <ScanIcon />;
     }
-  }
+  }, [icon]);
   return (
-    <TouchableOpacity style={[RoundedIconButtonStyles, style]} testID={testID} {...props}>
-      {getIconComponent(props.icon)}
+    <TouchableOpacity style={[RoundedIconButtonStyles(size).container, style]} testID={testID} {...props}>
+      {iconComponent}
     </TouchableOpacity>
   );
 };

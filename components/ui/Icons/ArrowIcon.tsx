@@ -9,7 +9,7 @@ const DEFAULT_PROPS = {
   color: COLORS.light,
 };
 
-function LeftArrowIcon({
+function ArrowIcon({
   size = DEFAULT_PROPS.size,
   color = DEFAULT_PROPS.color,
   ...props
@@ -33,4 +33,4 @@ function LeftArrowIcon({
   );
 }
 
-export default LeftArrowIcon;
+export default ArrowIcon;

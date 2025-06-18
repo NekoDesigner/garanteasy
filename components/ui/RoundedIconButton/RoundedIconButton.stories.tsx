@@ -3,7 +3,8 @@
  */
 
 import React from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
+import { IRoundedIconButtonProps } from "./@types";
 import RoundedIconButton from "./index";
 
 export default {
@@ -11,8 +12,17 @@ export default {
   component: RoundedIconButton
 };
 
+const ICON_BUTTON_LIST: IRoundedIconButtonProps[] = [
+  { onPress: () => { Alert.alert('Icon button pressed !'); }, icon: "scan", testID: "roundediconbutton-scan" },
+  { onPress: () => { Alert.alert('Icon button pressed !'); }, icon: "settings", testID: "roundediconbutton-settings" },
+  { onPress: () => { Alert.alert('Icon button pressed !'); }, icon: "arrow-left", testID: "roundediconbutton-arrow-left" },
+  { onPress: () => { Alert.alert('Icon button pressed !'); }, icon: "arrow-right", testID: "roundediconbutton-arrow-right" }
+];
+
 export const Default = () => (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, gap: 24 }}>
-      <RoundedIconButton icon="arrow-left" onPress={() => {}} />
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, gap: 24 }}>
+    {ICON_BUTTON_LIST.map((props) => (
+      <RoundedIconButton key={props.testID} {...props} />
+    ))}
     </View>
 );
