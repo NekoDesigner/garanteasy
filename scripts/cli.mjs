@@ -59,7 +59,7 @@ program
 program
 .command('generate-icon <name>')
   .alias('gic')
-  .description('Generate a new Hook') // Use .description() instead of passing it to .command()
+  .description('Generate a new Icon Component') // Use .description() instead of passing it to .command()
   .action((name) => {
     const iconName = `${firstLetterToUpperCase(name)}Icon`;
     const spinner = ora(`Generate ${name} hook`).start();
