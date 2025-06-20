@@ -2,7 +2,7 @@ import { render } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
 import ScanIcon from "../../Icons/ScanIcon";
-import Card from "../index";
+import CategoryCard from "../index";
 import CardStyles from "../styles";
 
 describe("Card Components", () => {
@@ -11,19 +11,19 @@ describe("Card Components", () => {
   });
 
     test('renders correctly', () => {
-      const tree = render(<Card>
+      const tree = render(<CategoryCard>
         <Text>Test Card</Text>
         <ScanIcon />
-      </Card>).toJSON();
+      </CategoryCard>).toJSON();
       expect(tree).toMatchSnapshot();
     });
 
   it('renders with custom styles', () => {
     const customStyle = { backgroundColor: 'red' };
     const { getByTestId } = render(
-      <Card style={customStyle} testID="custom-card">
+      <CategoryCard style={customStyle} testID="custom-card">
         <Text>Custom Styled Card</Text>
-      </Card>
+      </CategoryCard>
     );
     const card = getByTestId('custom-card');
     expect(card.props.style).toContainEqual(customStyle);
@@ -31,9 +31,9 @@ describe("Card Components", () => {
 
   it('renders with default testID', () => {
     const { getByTestId } = render(
-      <Card>
+      <CategoryCard>
         <Text>Default TestID Card</Text>
-      </Card>
+      </CategoryCard>
     );
     const card = getByTestId('card');
     expect(card).toBeTruthy();
@@ -41,9 +41,9 @@ describe("Card Components", () => {
 
   it('applies text styles to Text children', () => {
     const { getByText } = render(
-      <Card>
+      <CategoryCard>
         <Text>Styled Text</Text>
-      </Card>
+      </CategoryCard>
     );
     const textElement = getByText('Styled Text');
     expect(textElement.props.style).toContainEqual(CardStyles.text);
