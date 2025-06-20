@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
-import Header from '../components/header';
+import { Text, View } from 'react-native';
+import ScreenView from '../components/ScreenView';
+import SearchBar from '../components/SearchBar';
 
 export class HomeScreen extends Component {
   render() {
     return (
-      <SafeAreaView>
-        <Header />
-      <View>
-        <Text>HomeScreen</Text>
-      </View>
-      </SafeAreaView>
+      <ScreenView>
+        <SearchBar />
+          <View>
+            <Text>HomeScreen</Text>
+          </View>
+      </ScreenView>
     );
   }
 }
