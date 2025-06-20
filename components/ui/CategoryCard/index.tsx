@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { ICardProps } from "./@types";
 import CardStyles from "./styles";
 
-const Card: React.FC<ICardProps> = ({ style, testID = 'card', children }) => {
+const CategoryCard: React.FC<ICardProps> = ({ style, testID = 'card', children }) => {
   // Map over children and clone with styles if needed
   const styledChildren = React.useMemo(() =>
     React.Children.map(children, (child) => {
@@ -44,4 +44,4 @@ const Card: React.FC<ICardProps> = ({ style, testID = 'card', children }) => {
   );
 };
 
-export default Card;
+export default CategoryCard;

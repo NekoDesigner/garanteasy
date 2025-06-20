@@ -4,30 +4,30 @@ import FashionIcon from "../Icons/FashionIcon";
 import GardenIcon from "../Icons/GardenIcon";
 import MultimediaIcon from "../Icons/MultimediaIcon";
 import ScanIcon from "../Icons/ScanIcon";
-import Card from "./index";
+import CategoryCard from "./index";
 
 export default {
   title: 'Card',
-  component: Card
+  component: CategoryCard
 };
 
 export const Default = () => (
     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', padding: 16, gap: 24, flexWrap: 'wrap' }}>
-      <Card>
+      <CategoryCard>
         <Text>Jardin</Text>
         <GardenIcon />
-    </Card>
-    <Card>
+    </CategoryCard>
+    <CategoryCard>
         <Text>Multimédia</Text>
         <MultimediaIcon />
-    </Card>
-    <Card>
+    </CategoryCard>
+    <CategoryCard>
         <Text>Mode</Text>
         <FashionIcon />
-    </Card>
-    <Card>
+    </CategoryCard>
+    <CategoryCard>
         <Text>Catégorie</Text>
         <ScanIcon />
-    </Card>
+    </CategoryCard>
     </View>
 );
