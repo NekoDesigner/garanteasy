@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProgressIndicator Components renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": "#7ABA8E",
+        "borderRadius": 9999,
+        "height": 8,
+        "width": "100%",
+      },
+      undefined,
+    ]
+  }
+  testID="progressindicator"
+/>
+`;

@@ -5,4 +5,7 @@ export const COLORS = {
   light: "#FFFFFF",
   grey: "#EBEBEB",
   blueDarker: "#050426",
+  success: "#7ABA8E",
+  warning: "#F4B286",
+  dangerLight: "#F86068",
 };
