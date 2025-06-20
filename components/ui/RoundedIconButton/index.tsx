@@ -7,6 +7,7 @@ import { TouchableOpacity } from "react-native";
 import ArrowIcon from "../Icons/ArrowIcon";
 import ScanIcon from "../Icons/ScanIcon";
 import SettingsIcon from "../Icons/SettingsIcon";
+import UploadIcon from "../Icons/UploadIcon";
 import { IRoundedIconButtonProps } from "./@types";
 import RoundedIconButtonStyles from "./styles";
 
@@ -21,6 +22,8 @@ const RoundedIconButton: React.FC<IRoundedIconButtonProps> = ({ style, testID = 
         return <ArrowIcon />;
       case 'arrow-right':
         return <ArrowIcon style={{ transform: [{ scaleX: -1 }] }}/>;
+      case 'upload':
+        return <UploadIcon />;
       default:
         return <ScanIcon />;
     }

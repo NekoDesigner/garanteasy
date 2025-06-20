@@ -16,6 +16,7 @@ const Chips: React.FC<IChipsProps> = ({
   size = "s",
   showIcon = true,
   onPress,
+  style = {}
 }) => {
   const getSize = () => {
     switch (size) {
@@ -49,7 +50,7 @@ const Chips: React.FC<IChipsProps> = ({
   };
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={[styles.button, style]}
       onPress={onPress}
       disabled={onPress === undefined}
     >
