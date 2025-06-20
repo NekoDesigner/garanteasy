@@ -6,6 +6,7 @@ import React from "react";
 import { View, Text, Image } from "react-native";
 import { DateService } from "../../../services/DateService";
 import ProgressIndicator from "../ProgressIndicator";
+import RoundedIconButton from "../RoundedIconButton";
 import Tag from "../Tag";
 import { IProductCardProps } from "./@types";
 import ProductCardStyles from "./styles";
@@ -97,9 +98,12 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
           resizeMode="cover"
         />
         <View>
-          <Text style={ProductCardStyles.brand} numberOfLines={1}>
-            {props.brand || 'Brand Name'}
-          </Text>
+          <View style={ProductCardStyles.brandContainer}>
+            <Text style={ProductCardStyles.brand} numberOfLines={1}>
+              {props.brand || 'Brand Name'}
+            </Text>
+            <RoundedIconButton icon="arrow-left" onPress={() => {}} size="small" />
+          </View>
           <Text style={ProductCardStyles.name} numberOfLines={1}>
             {props.name || 'Product Name'}
           </Text>

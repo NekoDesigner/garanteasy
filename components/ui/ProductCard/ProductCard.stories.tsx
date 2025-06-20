@@ -19,25 +19,25 @@ export const Default = () => (
       name="Tondeuse à gazon"
       purchaseDate={DateService.subtractDays(new Date(), 3)}
       warrantyDuration="15d"
-      image={require('../../../assets/images/default-product.png')}
+      image={require('../../../assets/images/tondeuse-test.png')}
     />
     <ProductCard
-      brand="Bosh"
-      name="Tondeuse à gazon"
+      brand="Qilive"
+      name="Four"
       purchaseDate={DateService.subtractDays(new Date(), 3)}
       warrantyDuration="2m7j"
-      image={require('../../../assets/images/default-product.png')}
+      image={require('../../../assets/images/four-test.png')}
     />
     <ProductCard
-      brand="Bosh"
-      name="Tondeuse à gazon"
+      brand="Whirpool"
+      name="Machine à laver"
       purchaseDate={DateService.subtractDays(new Date(), 8)}
       warrantyDuration="15d"
-      image={require('../../../assets/images/default-product.png')}
+      image={require('../../../assets/images/washingmachin-test.png')}
     />
     <ProductCard
-      brand="Bosh"
-      name="Tondeuse à gazon"
+      brand="Default Brand"
+      name="Default Product Name"
       purchaseDate={DateService.subtractDays(new Date(), 11)}
       warrantyDuration="15d"
       image={require('../../../assets/images/default-product.png')}

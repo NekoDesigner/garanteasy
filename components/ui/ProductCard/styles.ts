@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 8,
     backgroundColor: COLORS.greyLighter,
-    borderColor: COLORS.greyDarker,
+   borderColor: COLORS.greyDarker,
     borderWidth: 1,
     borderRadius: 8,
     gap: 8,
@@ -34,6 +34,13 @@ const styles = StyleSheet.create({
     fontFamily: SIZES.font.familly.default,
     fontSize: SIZES.font.xxs,
   },
+  brandContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+},
   brand: {
     color: COLORS.blueDarker,
     textOverflow: 'ellipsis',
