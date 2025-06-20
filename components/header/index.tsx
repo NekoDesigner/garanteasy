@@ -4,13 +4,13 @@ import { View, Text } from 'react-native';
 import RoundedIconButton from '../ui/RoundedIconButton';
 import { HeaderStyles, LogoStyles } from './styles';
 
-const Logo = () => {
+const Logo: React.FC = () => {
   return (
     <Text style={LogoStyles.text}>GareantEasy</Text>
   );
 };
 
-const Header = () => {
+const Header: React.FC = () => {
   const segments = useSegments(); // Get the current route segments
   const LeftIconComponent = React.useMemo(() => {
     if (!segments.length) {
