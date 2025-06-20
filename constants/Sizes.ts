@@ -29,9 +29,13 @@ export const SIZES = {
     },
     weight: {
       semiBold: "700" as const,
+      medium: "400" as const,
     },
     xxs: 12,
     xs: 14,
     m: 16,
+    l: 18,
+    xl: 20,
+    xxl: 24,
   },
 };
