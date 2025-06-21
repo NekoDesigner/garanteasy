@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { Keyboard, KeyboardAvoidingView, SafeAreaView, StatusBar, TouchableWithoutFeedback } from 'react-native';
-import Header from '../Header';
+import Header from '../header';
 
 interface ScreenViewProps extends PropsWithChildren {
   style?: object;
