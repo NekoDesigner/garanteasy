@@ -10,6 +10,6 @@ export interface IRoundedIconButtonProps {
   onPress: () => void;
 }
 
-export type IRoundedIconButtonType = 'scan' | 'settings' | 'arrow-left' | 'arrow-right'
+export type IRoundedIconButtonType = 'scan' | 'settings' | 'arrow-left' | 'arrow-right' | 'upload'
 
-export type IRoundedIconButtonSize = 'normal' | 'small';
+export type IRoundedIconButtonSize = 'normal' | 'small' | 'big';

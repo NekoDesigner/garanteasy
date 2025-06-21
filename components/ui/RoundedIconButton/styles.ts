@@ -6,6 +6,19 @@ import { StyleSheet } from 'react-native';
 import { COLORS, SIZES } from '../../../constants';
 import { IRoundedIconButtonSize } from './@types';
 
+function getSize(size: IRoundedIconButtonSize): number {
+  if (size === 'normal') {
+    return 40;
+  }
+if (size === 'small') {
+    return 32;
+  }
+  if (size === 'big') {
+    return 70;
+  }
+  return 40; // Default case
+}
+
 const styles = function getRoundedIconButtonStyle(size: IRoundedIconButtonSize) {
   return StyleSheet.create({
     container: {
@@ -15,8 +28,8 @@ const styles = function getRoundedIconButtonStyle(size: IRoundedIconButtonSize) 
       flexDirection: 'column',
       backgroundColor: COLORS.primary,
       borderRadius: SIZES.radius.full,
-      height: size === 'normal' ? 40 : 32,
-      width: size === 'normal' ? 40 : 32,
+      height: getSize(size),
+      width: getSize(size),
     }
   });
 };

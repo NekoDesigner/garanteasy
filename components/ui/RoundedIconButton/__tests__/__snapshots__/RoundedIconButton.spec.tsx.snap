@@ -129,9 +129,23 @@ exports[`RoundedIconButton Components renders correctly 1`] = `
           "borderWidth": 0,
         },
         {
+          "transform": [
+            {
+              "scaleX": -1,
+            },
+          ],
+        },
+        {
           "flex": 0,
           "height": 24,
           "width": 24,
+        },
+      ]
+    }
+    transform={
+      [
+        {
+          "scaleX": -1,
         },
       ]
     }

@@ -13,4 +13,5 @@ export interface IChipsProps {
   size?: "s" | "xs";
   showIcon?: boolean;
   onPress?: () => void;
+  style?: object;
 }
