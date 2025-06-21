@@ -18,9 +18,9 @@ const RoundedIconButton: React.FC<IRoundedIconButtonProps> = ({ style, testID = 
         return <ScanIcon />;
       case 'settings':
         return <SettingsIcon />;
-      case 'arrow-left':
-        return <ArrowIcon />;
       case 'arrow-right':
+        return <ArrowIcon />;
+      case 'arrow-left':
         return <ArrowIcon style={{ transform: [{ scaleX: -1 }] }}/>;
       case 'upload':
         return <UploadIcon />;
