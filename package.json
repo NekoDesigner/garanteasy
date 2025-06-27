@@ -15,6 +15,7 @@
     "lint": "expo lint",
     "lint:fix": "expo lint --fix",
     "storybook-generate": "sb-rn-get-stories",
+    "cli": "node scripts/cli.mjs",
     "prepare": "husky"
   },
   "dependencies": {
