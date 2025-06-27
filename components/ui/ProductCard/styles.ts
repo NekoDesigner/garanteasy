@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   tags: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     gap: 8,
     marginTop: 8,
@@ -41,21 +41,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 4,
 },
-  brand: {
-    color: COLORS.blueDarker,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    fontFamily: SIZES.font.familly.default,
-    fontWeight: SIZES.font.weight.semiBold,
-    fontSize: SIZES.font.xxl,
-  },
   name: {
     color: COLORS.blueDarker,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     fontFamily: SIZES.font.familly.default,
     fontWeight: SIZES.font.weight.semiBold,
-    fontSize: SIZES.font.xxs,
+    fontSize: SIZES.font.xl,
+  },
+  brand: {
+    color: COLORS.blueDarker,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    fontFamily: SIZES.font.familly.default,
+    fontWeight: SIZES.font.weight.semiBold,
+    fontSize: SIZES.font.xs,
   },
 });
 

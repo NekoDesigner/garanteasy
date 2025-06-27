@@ -97,15 +97,15 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
           style={ProductCardStyles.image}
           resizeMode="cover"
         />
-        <View>
+        <View style={{ display: 'flex', flex: 1 }}>
           <View style={ProductCardStyles.brandContainer}>
-            <Text style={ProductCardStyles.brand} numberOfLines={1}>
-              {props.brand || 'Brand Name'}
+            <Text style={ProductCardStyles.name} numberOfLines={1}>
+              {props.name || 'Product Name'}
             </Text>
-            <RoundedIconButton icon="arrow-left" onPress={() => {}} size="small" />
+            <RoundedIconButton icon="arrow-right" onPress={() => {}} size="small" />
           </View>
-          <Text style={ProductCardStyles.name} numberOfLines={1}>
-            {props.name || 'Product Name'}
+          <Text style={ProductCardStyles.brand} numberOfLines={1}>
+            {props.brand || 'Brand Name'}
           </Text>
           <View style={ProductCardStyles.tags}>
             <Tag testID="test-tag-1" label={`Acheté le: ${DateService.formatMMYY(purchaseDate)}`} textStyle={ProductCardStyles.tagsText} />
