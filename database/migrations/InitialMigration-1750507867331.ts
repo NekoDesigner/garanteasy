@@ -3,7 +3,7 @@ import uuid from 'react-native-uuid';
 import DatabaseMigrationException from '../../exceptions/DatabaseMigrationException';
 import { Migration } from "../migrate";
 
-export class InitialMigrationInitialMigration1750507867331 extends Migration {
+export class InitialMigration1750507867331 extends Migration {
   private database: SQLite.SQLiteDatabase | null = null;
   currentVersion = 1;
   private ownerId: string;
@@ -16,12 +16,34 @@ export class InitialMigrationInitialMigration1750507867331 extends Migration {
   protected async up(database: SQLite.SQLiteDatabase): Promise<void> {
     this.database = database;
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
+    await this.createMigrationTable();
     await this.createOwnersTable();
     await this.createCategoriesTable();
     await this.createDocumentsTable();
     await this.createDocumentAttachmentsTable();
     await this.createHistoriesTable();
     await this.createItemsTable();
+  }
+
+  private async createMigrationTable(): Promise<void> {
+    if (!this.database) {
+      throw new DatabaseMigrationException('Database is not available for migration.');
+    }
+    await this.database.execAsync(`
+        PRAGMA journal_mode = 'wal';
+        CREATE TABLE IF NOT EXISTS migrations (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          version INTEGER NOT NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+    const migrationName = this.constructor.name;
+    // Insert the current migration version
+    await this.database.execAsync(`
+        INSERT INTO migrations (name, version, created_at)
+        VALUES ('${migrationName}', ${this.currentVersion}, CURRENT_TIMESTAMP);
+      `);
   }
 
   private async createOwnersTable(): Promise<void> {

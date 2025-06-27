@@ -103,10 +103,15 @@ export abstract class Migration extends EventEmitter implements IMigration {
 export class Migrate {
   constructor(private migrations: Migration[]) { };
   async run(): Promise<void> {
+    // order migrations by currentVersion low to high
+    this.migrations = this.migrations.sort((a, b) => a.currentVersion - b.currentVersion);
     console.log('🚀 Starting database migrations...');
     console.log(this.migrations);
     for (const migration of this.migrations) {
       try {
+        if (await this.migrationIsAlreadyRunned(migration)) {
+          continue; // Skip migration if it has already been run
+        }
         await migration.run();
       } catch (error: unknown) {
         if (error instanceof DatabaseMigrationException) {
@@ -118,5 +123,29 @@ export class Migrate {
       }
     }
     console.log('✅ Database migrations completed successfully.');
+  }
+
+  private async migrationIsAlreadyRunned(migration: Migration): Promise<boolean> {
+    // Check if migrations table exists first
+    const database = await Database.getInstance();
+    const migrationName = migration.constructor.name;
+
+    // Check if migrations table exists
+    const tableExists = await database.getFirstAsync<{ count: number }>(
+      `SELECT COUNT(*) as count FROM sqlite_master WHERE type='table' AND name='migrations'`
+    );
+
+    if (!tableExists || tableExists.count === 0) {
+      // Migrations table doesn't exist yet, so no migrations have been run
+      return false;
+    }
+
+    const query = `SELECT COUNT(*) as count FROM migrations WHERE name = ?`;
+    const result = await database.getFirstAsync<{ count: number }>(query, [migrationName]);
+    if (result && result.count > 0) {
+      console.log(`Migration ${migrationName} has already been run.`);
+      return true;
+    }
+    return false;
   }
 }

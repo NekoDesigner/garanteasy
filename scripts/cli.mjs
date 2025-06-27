@@ -30,6 +30,11 @@ program
         spinner.color = 'green';
         spinner.text = `Icon ${name} created successfully. ✅`;
         break;
+      case 'migration':
+        const fileName = createMigration(name);
+        spinner.color = 'green';
+        spinner.text = `Migration ${fileName} created successfully. ✅`;
+        break;
       default:
         spinner.color = 'red';
         spinner.text = `Unknown type: ${type}. Use 'component' or 'utility'. ❌`;
@@ -95,6 +100,27 @@ program
       spinner.stop();
     }
 });
+
+program
+  .command('generate-migration <name>')
+  .alias('gm')
+  .description('Generate a new Migration')
+  .action((name) => {
+    let fileName = name;
+    const spinner = ora(`Generate migration ${name}`).start();
+    try {
+      fileName = createMigration(name);
+      spinner.color = 'green';
+      spinner.text = `Migration ${fileName} created successfully. ✅`;
+      spinner.stop();
+      console.log(`Migration ${fileName} created successfully. ✅`);
+    } catch (error) {
+      spinner.color = 'red';
+      spinner.text = `Failed to create migration ${fileName}. ❌`;
+      spinner.stop();
+      console.error(`Error creating migration ${fileName}:`, error.message);
+    }
+  });
 
 program.parse(process.argv);
 
@@ -190,6 +216,79 @@ function createIconComponent(name) {
   const indexContent = fs.readFileSync(indexStubPath, 'utf-8')
     .replace(/{{IconComponent}}/g, name);
   fs.writeFileSync(path.join(iconPath, `${firstLetterToUpperCase(name)}Icon.tsx`), indexContent);
+}
+
+/**
+ * Creates a new migration file with the given name.
+ * @param {string} name - The name of the migration to create.
+ * @returns {string} The name of the created migration file.
+ * @throws Will throw an error if the migration cannot be created.
+ * @example
+ * createMigration('add_users_table'); // Creates a migration file for adding users table
+ * @throws Will throw an error if the migration directory does not exist or is not a directory
+ * @throws Will throw an error if there is an issue reading the stub file or writing the migration file.
+ * @description
+ * This function generates a new migration file in the 'database/migrations' directory.
+ */
+function createMigration(name) {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Resolve __dirname correctly
+  const stubDirectory = path.join(__dirname, 'stubs', 'database');
+  const migrationPath = path.join(process.cwd(), 'database', 'migrations');
+  const migrationName = `${firstLetterToUpperCase(name)}Migration-${Date.now()}`;
+  const migrationFileName = `${migrationName}.ts`;
+  const migrationFilePath = path.join(migrationPath, migrationFileName);
+  const fileCount = countFilesInDirectory(migrationPath) + 1;
+  const migrationContent = fs.readFileSync(path.join(stubDirectory, 'migration.template.stub'), 'utf-8')
+    .replace(/{{MigrationTemplate}}/g, migrationName.replace(/-/g, ''))
+    .replace(/{{MIGRATION_NUMBER}}/g, fileCount.toString());
+  fs.writeFileSync(migrationFilePath, migrationContent);
+
+  // Ensure the migrations directory exists
+  updateDatabaseMigrationConstantsList();
+
+  return migrationFileName;
+}
+
+function updateDatabaseMigrationConstantsList() {
+  const basePath = path.join(process.cwd(), 'database');
+  const migrationPath = path.join(basePath, 'migrations');
+  const migrationsFilePath = path.join(basePath, 'index.ts');
+  fs.readdir(migrationPath, (err, files) => {
+    if (err) {
+      console.error('Error reading migration directory:', err);
+      return;
+    }
+    const migrationFiles = files.filter(file => file.endsWith('.ts') && file !== 'index.ts');
+    const migrationImports = migrationFiles.map(file => `import { ${file.replace('.ts', '').replace('-', '')} } from './migrations/${file.replace('.ts', '')}';`).join('\n');
+    const migrationExports = migrationFiles.map(file => `\n    new ${file.replace('.ts', '').replace('-', '')}()`).join(',');
+    const content = `${migrationImports}\n\nexport const DATABASE_MIGRATIONS = [${migrationExports}\n];\n`;
+    fs.writeFileSync(migrationsFilePath, content);
+  });
+}
+
+/**
+ * Counts the number of files in a directory and its subdirectories.
+ * @param {string} directory - The directory to count files in.
+ * @returns {number} The total number of files in the directory and its subdirectories.
+ * @example
+ * countFilesInDirectory('/path/to/directory'); // Returns the number of files in the directory
+ * @throws Will throw an error if the directory does not exist or is not a directory
+ * @throws Will throw an error if there is an issue reading the directory or its contents.
+ */
+function countFilesInDirectory(directory) {
+  let fileCount = 0;
+  const items = fs.readdirSync(directory);
+  for (const item of items) {
+    const itemPath = path.join(directory, item);
+    const stats = fs.statSync(itemPath);
+    if (stats.isDirectory()) {
+      fileCount += countFilesInDirectory(itemPath); // Recursively count files in subdirectories
+    }
+    else if (stats.isFile()) {
+      fileCount++;
+    }
+  }
+  return fileCount;
 }
 
 /**
