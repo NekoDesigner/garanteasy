@@ -15,7 +15,7 @@ export const Default = () => (
 );
 
 const chipVariants: IChipsProps[] = [
-  { label: 'Électroménage', category: 'hoursehold-electricals', showIcon: true, onPress: () => Alert.alert('Électroménage pressed') },
+  { label: 'Électroménagé', category: 'hoursehold-electricals', showIcon: true, onPress: () => Alert.alert('Électroménage pressed') },
   { label: 'Petit éléctroménagé', category: 'small-electricals', showIcon: true, onPress: () => Alert.alert('Petit éléctroménagé pressed') },
   { label: 'Bricolage', category: 'diy', showIcon: true, onPress: () => Alert.alert('Bricolage pressed') },
   { label: 'Jardin', category: 'garden', showIcon: true,  onPress: () => Alert.alert('Jardin pressed') },
