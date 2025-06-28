@@ -1,4 +1,4 @@
-import { useSegments } from 'expo-router';
+import { useRouter, useSegments } from 'expo-router';
 import React from 'react';
 import { View, Text } from 'react-native';
 import RoundedIconButton from '../ui/RoundedIconButton';
@@ -12,12 +12,13 @@ const Logo: React.FC = () => {
 
 const Header: React.FC = () => {
   const segments = useSegments(); // Get the current route segments
+  const router = useRouter();
   const LeftIconComponent = React.useMemo(() => {
     if (!segments.length) {
       return <RoundedIconButton icon="settings" onPress={() => {}} />;
     }
-    return <RoundedIconButton icon="arrow-right" onPress={() => {}} />;
-  }, [segments]);
+    return <RoundedIconButton icon="arrow-left" onPress={() => { router.back(); }} />;
+  }, [segments, router]);
 
   return (
     <View style={ HeaderStyles.container }>

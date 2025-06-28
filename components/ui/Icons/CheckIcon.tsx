@@ -5,29 +5,35 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { COLORS } from "../../../constants";
+import { useDynamicSize } from "../../../hooks/useDynamicSize";
 import { IconProps } from "./@types";
 
 const DEFAULT_PROPS = {
-  size: 24,
+  width: 22,
+  height: 16,
   color: COLORS.light,
 };
 
 // TODO: create tests for this CheckIcon component
 function CheckIcon ({
-  size = DEFAULT_PROPS.size,
-  color = DEFAULT_PROPS.color,
-  ...props
+  color = DEFAULT_PROPS.color, size, ...props
 }: IconProps) {
+  const { width, height } = useDynamicSize(
+      DEFAULT_PROPS.width,
+      DEFAULT_PROPS.height,
+      size
+        ? size
+        : DEFAULT_PROPS.width);
   return (
     <Svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${DEFAULT_PROPS.size} ${DEFAULT_PROPS.size}`}
+      width={width}
+      height={height}
+      viewBox={`0 0 ${DEFAULT_PROPS.width} ${DEFAULT_PROPS.height}`}
       fill="none"
       {...props}
     >
       <Path
-        d="M21 6L8.625 18 3 12.546"
+        d="M20 2L7.625 14 2 8.545"
         stroke={color}
         strokeWidth={3}
         strokeLinecap="round"
