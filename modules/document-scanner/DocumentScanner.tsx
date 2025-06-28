@@ -7,6 +7,7 @@ import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native';
 import Button from '../../components/ui/Button';
 import CheckIcon from '../../components/ui/Icons/CheckIcon';
 import { COLORS, SIZES } from '../../constants';
+import DocumentReview from './DocumentReview';
 import DocumentScannedIndicator from './DocumentScannedIndicator';
 import DocumentScannerBottom from './DocumentScannerBottom';
 
@@ -28,6 +29,8 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
   const [photos, setPhotos] = useState<string[]>([]);
+  const [showReview, setShowReview] = useState(false);
+  const [scanMode, setScanMode] = useState<'invoice' | 'ticket'>('ticket');
   const cameraRef = useRef<CameraView>(null);
 
   const requestCameraPermission = React.useCallback(async () => {
@@ -55,6 +58,7 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
       });
 
       if (photo?.uri) {
+        console.log('Taking picture in mode:', scanMode);
         setPhotos((prev) => [...prev, photo.uri]);
         onDocumentScanned?.(photo.uri);
       }
@@ -93,10 +97,22 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
     onClose?.();
   };
 
+  const reviewPhotos = () => {
+    setShowReview(true);
+    router.setParams({ reviewMode: 'true' });
+  };
+
   const validatePhotos = () => {
-    if (photos) {
+    if (photos.length > 0) {
+      // Remove the review parameter when validation is complete
+      router.setParams({ reviewMode: undefined });
       onValidation?.(photos);
     }
+  };
+
+  const handleModeChange = (mode: 'invoice' | 'ticket') => {
+    setScanMode(mode);
+    console.log('Scan mode changed to:', mode);
   };
 
   React.useEffect(() => {
@@ -132,7 +148,16 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
     );
   }
 
-  return (
+  return showReview ? <DocumentReview
+    onValidate={validatePhotos}
+    onAdd={() => {
+      setShowReview(false);
+      // Remove the review parameter when going back to camera view
+      router.setParams({ reviewMode: undefined });
+    }}
+    onDelete={(index) => setPhotos((prev) => prev.filter((_, i) => i !== index))}
+    data={photos}
+  /> : (
     <View style={[styles.container, style]}>
         <View style={[styles.container, style]}>
           <CameraView
@@ -141,11 +166,11 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
             facing="back"
             >
               {photos.length > 0 && <DocumentScannedIndicator count={photos.length} />}
-              {photos.length > 0 && <TouchableOpacity onPress={validatePhotos} style={styles.validatePhotosButton}>
+              {photos.length > 0 && <TouchableOpacity onPress={reviewPhotos} style={styles.validatePhotosButton}>
                 <CheckIcon />
               </TouchableOpacity>}
           </CameraView>
-          <DocumentScannerBottom onTakePicture={takePicture} onClose={closeCamera} onImportPicture={pickImageFromGallery} />
+          <DocumentScannerBottom onTakePicture={takePicture} onClose={closeCamera} onImportPicture={pickImageFromGallery} onModeChange={handleModeChange} />
         </View>
     </View>
   );

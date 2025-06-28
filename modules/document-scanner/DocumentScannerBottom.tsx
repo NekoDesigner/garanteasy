@@ -1,5 +1,5 @@
-import React from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, Animated, Easing } from 'react-native';
 import CloseIcon from '../../components/ui/Icons/CloseIcon';
 import PictureIcon from '../../components/ui/Icons/PictureIcon';
 import { COLORS } from '../../constants';
@@ -16,25 +16,46 @@ interface DocumentScannerBottomProps {
   onTakePicture: () => void;
   onClose?: () => void;
   onImportPicture?: () => void;
+  onModeChange?: (mode: 'invoice' | 'ticket') => void;
 }
 
-const DocumentScannerBottom: React.FC<DocumentScannerBottomProps> = ({ onTakePicture, onClose, onImportPicture }) => {
+const DocumentScannerBottom: React.FC<DocumentScannerBottomProps> = ({ onTakePicture, onClose, onImportPicture, onModeChange }) => {
+  const [activeMode, setActiveMode] = useState<'invoice' | 'ticket'>('ticket');
+  const screenWidth = Dimensions.get('window').width;
+  const paddingLeftAnim = useRef(new Animated.Value(screenWidth * 0.13)).current; // Start with 15% padding for ticket mode
+
+  const handleModeChange = (mode: 'invoice' | 'ticket') => {
+    setActiveMode(mode);
+    onModeChange?.(mode);
+
+    // Animate padding based on mode
+    const targetPadding = mode === 'invoice' ? screenWidth * 0.38 : screenWidth * 0.13; // Center when invoice, left-aligned when ticket
+
+    Animated.timing(paddingLeftAnim, {
+      toValue: targetPadding,
+      duration: 500,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: false,
+    }).start();
+  };
   return (
     <View style={styles.container}>
-      <View style={[styles.modeArea, { paddingLeft: '15%' }]}>
-        <TouchableOpacity onPress={() => console.log('Grid pressed')}>
+      <Animated.View style={[styles.modeArea, {
+        paddingLeft: paddingLeftAnim
+      }]}>
+        <TouchableOpacity onPress={() => handleModeChange('invoice')}>
           <View style={{ alignItems: 'center' }}>
-            <Text style={styles.modeAreaText}>Facture</Text>
-            {/* <View style={{position: 'absolute', borderRadius: 999, height: 7, width: 7, backgroundColor: COLORS.primary, bottom: -10}} /> */}
+            <Text style={activeMode === 'invoice' ? styles.modeAreaTextActive : styles.modeAreaText}>Facture</Text>
+            {activeMode === 'invoice' && <View style={{position: 'absolute', borderRadius: 999, height: 7, width: 7, backgroundColor: COLORS.primary, bottom: -10}} />}
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Grid pressed')}>
+        <TouchableOpacity onPress={() => handleModeChange('ticket')}>
           <View style={{ alignItems: 'center' }}>
-            <Text style={styles.modeAreaTextActive}>Ticket</Text>
-            <View style={{position: 'absolute', borderRadius: 999, height: 7, width: 7, backgroundColor: COLORS.primary, bottom: -10}} />
+            <Text style={activeMode === 'ticket' ? styles.modeAreaTextActive : styles.modeAreaText}>Ticket</Text>
+            {activeMode === 'ticket' && <View style={{position: 'absolute', borderRadius: 999, height: 7, width: 7, backgroundColor: COLORS.primary, bottom: -10}} />}
           </View>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
       <View style={styles.actionArea}>
         <TouchableOpacity onPress={onClose}>
           <CloseIcon size={36} />
@@ -60,7 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingVertical: 15,
-    gap: '12%',
+    gap: 50, // Fixed gap instead of percentage for better control
   },
   modeAreaText: {
     fontSize: 16,
