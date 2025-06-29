@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState, useRef } from 'react';
@@ -15,7 +15,8 @@ export interface DocumentScannerProps {
   onDocumentScanned?: (data: string) => void;
   onError?: (error: Error) => void;
   onClose?: () => void;
-  onValidation?: (data: string[]) => void;
+  onValidation?: (data: (CameraCapturedPicture | ImagePicker.ImagePickerAsset)[], scanMode: 'invoice' | 'ticket') => void;
+  onSave?: (data: Record<string, any>) => void; // Assuming onSave is used to save the scanned document
   style?: object;
 }
 
@@ -24,11 +25,12 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
   onError,
   onClose,
   onValidation,
+  onSave,
   style
 }) => {
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<(CameraCapturedPicture | ImagePicker.ImagePickerAsset)[]>([]);
   const [showReview, setShowReview] = useState(false);
   const [scanMode, setScanMode] = useState<'invoice' | 'ticket'>('ticket');
   const cameraRef = useRef<CameraView>(null);
@@ -57,9 +59,8 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
         skipProcessing: false,
       });
 
-      if (photo?.uri) {
-        console.log('Taking picture in mode:', scanMode);
-        setPhotos((prev) => [...prev, photo.uri]);
+      if (photo && photo.uri) {
+        setPhotos((prev) => [...prev, photo]);
         onDocumentScanned?.(photo.uri);
       }
     } catch (error) {
@@ -82,8 +83,8 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
         quality: 1,
       });
 
-      if (!result.canceled && result.assets[0]) {
-        setPhotos((prev) => [...prev, result.assets[0].uri]);
+      if (!result.canceled && result.assets && result.assets[0] && result.assets[0].uri) {
+        setPhotos((prev) => [...prev, result.assets[0]]);
         onDocumentScanned?.(result.assets[0].uri);
       }
     } catch (error) {
@@ -106,13 +107,12 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
     if (photos.length > 0) {
       // Remove the review parameter when validation is complete
       router.setParams({ reviewMode: undefined });
-      onValidation?.(photos);
+      onValidation?.(photos, scanMode);
     }
   };
 
   const handleModeChange = (mode: 'invoice' | 'ticket') => {
     setScanMode(mode);
-    console.log('Scan mode changed to:', mode);
   };
 
   React.useEffect(() => {
