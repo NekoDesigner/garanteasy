@@ -8,8 +8,8 @@ import { COLORS } from "../../../constants";
 import { IconProps } from "./@types";
 
 const DEFAULT_PROPS = {
-  size: 24,
-  color: COLORS.light,
+  size: 25,
+  color: COLORS.primary,
 };
 
 // TODO: create tests for this TrashIcon component
@@ -27,7 +27,7 @@ function TrashIcon ({
       {...props}
     >
       <Path
-        d="M7 21c-.55 0-1.02-.196-1.412-.587A1.926 1.926 0 015 19V6H4V4h5V3h6v1h5v2h-1v13c0 .55-.196 1.02-.587 1.413A1.926 1.926 0 0117 21H7zM17 6H7v13h10V6zM9 17h2V8H9v9zm4 0h2V8h-2v9z"
+        d="M7.75 21.5c-.55 0-1.02-.196-1.412-.587A1.926 1.926 0 015.75 19.5v-13h-1v-2h5v-1h6v1h5v2h-1v13c0 .55-.196 1.02-.587 1.413a1.926 1.926 0 01-1.413.587h-10zm10-15h-10v13h10v-13zm-8 11h2v-9h-2v9zm4 0h2v-9h-2v9z"
         fill={color}
       />
     </Svg>

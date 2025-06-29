@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Text, View, ScrollView, FlatList } from 'react-native';
 import Container from '../components/Container';
@@ -8,7 +9,7 @@ import ProductCard from '../components/ui/ProductCard';
 import RoundedIconButton from '../components/ui/RoundedIconButton';
 import { COLORS } from '../constants';
 import { Item } from '../models/Item/Item';
-import { useUserContext } from '../providers/UserContext';
+// import { useUserContext } from '../providers/UserContext';
 
 const CATEGORIES = [
   {
@@ -34,10 +35,11 @@ const CATEGORIES = [
 ];
 
 export function BottomBar() {
+  const router = useRouter();
   return (
     <View style={{ height: 80, borderTopWidth: 1, borderColor: COLORS.grey }}>
       <View style={{ position: 'absolute', top: -35, left: '50%', transform: [{ translateX: -40 }] }}>
-        <RoundedIconButton icon='upload' onPress={() => {}} size='big' />
+        <RoundedIconButton icon='upload' onPress={() => { router.navigate('/scanner'); }} size='big' />
       </View>
     </View>
   );
@@ -82,50 +84,11 @@ const ITEMS: Item[] = [
     updatedAt: new Date('2023-10-01'),
     ownerId: 'user-1',
     categoryId: 'garden',
-  }),
-  new Item({
-    id: '4',
-    label: 'Tondeuse à gazon',
-    memo: 'Bosh',
-    purchaseDate: new Date('2023-10-01'),
-    warrantyDuration: '15d',
-    picture: require('../assets/images/tondeuse-test.png'),
-    isArchived: false,
-    createdAt: new Date('2023-10-01'),
-    updatedAt: new Date('2023-10-01'),
-    ownerId: 'user-1',
-    categoryId: 'garden',
-  }),
-  new Item({
-    id: '5',
-    label: 'Tondeuse à gazon',
-    memo: 'Bosh',
-    purchaseDate: new Date('2023-10-01'),
-    warrantyDuration: '15d',
-    picture: require('../assets/images/tondeuse-test.png'),
-    isArchived: false,
-    createdAt: new Date('2023-10-01'),
-    updatedAt: new Date('2023-10-01'),
-    ownerId: 'user-1',
-    categoryId: 'garden',
-  }),
-  new Item({
-    id: '6',
-    label: 'Tondeuse à gazon',
-    memo: 'Bosh',
-    purchaseDate: new Date('2023-10-01'),
-    warrantyDuration: '15d',
-    picture: require('../assets/images/tondeuse-test.png'),
-    isArchived: false,
-    createdAt: new Date('2023-10-01'),
-    updatedAt: new Date('2023-10-01'),
-    ownerId: 'user-1',
-    categoryId: 'garden',
   })
 ];
 
 const HomeScreen = () => {
-    useUserContext();
+    // useUserContext();
 
     return (
       <ScreenView>
