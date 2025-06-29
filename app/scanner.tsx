@@ -34,6 +34,10 @@ const ScannerScreen = () => {
       console.log('PDF created at:', pdfPath);
       console.log('PDF saved locally in documents directory');
 
+      /**
+       * TODO: Enregitrer le PDF comme Entity Document.
+       */
+
       // Show success alert with options to share or just acknowledge
       Alert.alert(
         'Success',
