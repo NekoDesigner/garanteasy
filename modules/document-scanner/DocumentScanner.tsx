@@ -156,6 +156,18 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
       router.setParams({ reviewMode: undefined });
     }}
     onDelete={(index) => setPhotos((prev) => prev.filter((_, i) => i !== index))}
+    onCrop={(imageUri, index) => {
+      // Update the photos array with the cropped image
+      setPhotos((prev) => {
+        const updated = [...prev];
+        updated[index] = { ...updated[index], uri: imageUri };
+        return updated;
+      });
+    }}
+    onImageUpdate={(updatedImages) => {
+      // Update the entire photos array when images are modified
+      setPhotos(updatedImages);
+    }}
     data={photos}
   /> : (
     <View style={[styles.container, style]}>
