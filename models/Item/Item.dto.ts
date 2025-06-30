@@ -2,6 +2,7 @@ export interface ItemDto {
   id?: string;
   label: string;
   picture?: string;
+  brand?: string;
   purchaseDate: Date;
   warrantyDuration: string;
   memo: string;
@@ -16,6 +17,7 @@ export interface DatabaseItemDto {
   id?: string;
   owner_id: string;
   label: string;
+  brand?: string;
   category_id: string;
   picture?: string;
   purchase_date: Date;

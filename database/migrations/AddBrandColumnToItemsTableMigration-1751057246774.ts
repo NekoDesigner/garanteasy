@@ -21,7 +21,6 @@ export class AddBrandColumnToItemsTableMigration1751057246774 extends Migration 
     );
 
     if (columnExists && columnExists.count > 0) {
-      console.log('Column "brand" already exists in "items" table.');
       return;
     }
 

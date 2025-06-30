@@ -1,3 +1,4 @@
+import { DateService } from "../../services/DateService";
 import { IModel } from "../model";
 import { DatabaseItemDto, ItemDto } from "./Item.dto";
 
@@ -5,6 +6,7 @@ export class Item extends IModel {
   id?: string;
   ownerId: string;
   label?: string;
+  brand?: string;
   categoryId: string;
   picture?: string;
   purchaseDate: Date;
@@ -18,6 +20,7 @@ export class Item extends IModel {
     this.id = data.id;
     this.ownerId = data.ownerId;
     this.label = data.label;
+    this.brand = data.brand;
     this.categoryId = data.categoryId;
     this.picture = data.picture;
     this.purchaseDate = new Date(data.purchaseDate);
@@ -34,6 +37,7 @@ export class Item extends IModel {
       id: data.id,
       ownerId: data.ownerId ?? "",
       label: data.label ?? "",
+      brand: data.brand ?? "",
       categoryId: data.categoryId ?? "",
       picture: data.picture ?? "",
       purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : new Date(),
@@ -57,9 +61,12 @@ export class Item extends IModel {
       id: dto.id,
       owner_id: dto.ownerId ?? "",
       label: dto.label ?? "",
+      brand: dto.brand,
       category_id: dto.categoryId ?? "",
+      picture: dto.picture,
       purchase_date: dto.purchaseDate ?? "",
       warranty_duration: dto.warrantyDuration ?? "",
+      memo: dto.memo,
       is_archived: dto.isArchived ?? false,
       created_at: dto.createdAt ?? new Date(),
       updated_at: dto.updatedAt ?? new Date(),
@@ -70,17 +77,24 @@ export class Item extends IModel {
     const dbData = data as unknown as DatabaseItemDto;
     const item = new Item({
       id: dbData.id,
-      ownerId: (dbData as any).ownerId ?? "",
+      ownerId: dbData.owner_id,
       label: dbData.label ?? "",
+      brand: dbData.brand,
       categoryId: dbData.category_id ?? "",
-      picture: (dbData as any).picture ?? "",
+      picture: dbData.picture,
       purchaseDate: dbData.purchase_date ? new Date(dbData.purchase_date) : new Date(),
       warrantyDuration: dbData.warranty_duration ?? "",
-      memo: (dbData as any).memo ?? "",
+      memo: dbData.memo ?? "",
       isArchived: dbData.is_archived ?? false,
       createdAt: dbData.created_at ? new Date(dbData.created_at) : new Date(),
       updatedAt: dbData.updated_at ? new Date(dbData.updated_at) : new Date(),
     });
     return item as unknown as T;
+  }
+
+  static setItemIsArchived(item: Item): Item {
+    const warrantyDurationInDays = DateService.getWarrantyDurationInDays(item.warrantyDuration);
+    item.isArchived = DateService.isItemExpired(item.purchaseDate, warrantyDurationInDays);
+    return item;
   }
 }

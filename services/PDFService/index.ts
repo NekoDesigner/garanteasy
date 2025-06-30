@@ -1,3 +1,5 @@
+import 'react-native-get-random-values'; // Required for pdf-lib
+import { Buffer } from 'buffer';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { PDFDocument } from 'pdf-lib';
@@ -9,6 +11,7 @@ export interface PDFCreationOptions {
   compress?: boolean;
   pageMargin?: number;
   imageQuality?: number;
+  useTimestamp?: boolean; // Whether to use timestamp in filename
 }
 
 export interface ImageInfo {
@@ -33,10 +36,11 @@ export const createPdfFromImages = async (
 
   const {
     title = 'Scanned Document',
-    author = 'GaranteAsy Scanner',
+    author = 'GarantEasy Scanner',
     subject = 'Scanned Document',
     compress = true,
     pageMargin = 20,
+    useTimestamp = false,
   } = options;
 
   try {
@@ -132,8 +136,6 @@ export const createPdfFromImages = async (
           height: finalHeight,
         });
 
-        console.log(`Added image ${i + 1}/${imageUris.length} to PDF`);
-
       } catch (imageError) {
         console.error(`Error processing image ${i + 1}:`, imageError);
         // Continue with other images even if one fails
@@ -148,17 +150,18 @@ export const createPdfFromImages = async (
 
     // Generate unique filename with timestamp
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `scanned-document-${timestamp}.pdf`;
+    const filename = title ? `${title}${useTimestamp ? ('-' + timestamp) : ''}.pdf` : `scanned-document-${timestamp}.pdf`;
     const filePath = `${FileSystem.documentDirectory}${filename}`;
 
     // Write PDF to file system
+    // Convert Uint8Array to base64 string using Buffer polyfill
+    const base64String = Buffer.from(pdfBytes).toString('base64');
     await FileSystem.writeAsStringAsync(
       filePath,
-      Buffer.from(pdfBytes).toString('base64'),
+      base64String,
       { encoding: FileSystem.EncodingType.Base64 }
     );
 
-    console.log(`PDF created successfully: ${filePath}`);
     return filePath;
 
   } catch (error) {
@@ -217,7 +220,6 @@ export const getPdfInfo = async (filePath: string): Promise<FileSystem.FileInfo>
 export const deletePdf = async (filePath: string): Promise<void> => {
   try {
     await FileSystem.deleteAsync(filePath);
-    console.log(`PDF deleted: ${filePath}`);
   } catch (error) {
     console.error('Error deleting PDF:', error);
     throw new Error(`Failed to delete PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -238,4 +240,10 @@ export const listPdfFiles = async (): Promise<string[]> => {
     console.error('Error listing PDF files:', error);
     throw new Error(`Failed to list PDF files: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
+};
+
+export const removeFileExtension = (filename: string): string => {
+  const lastDotIndex = filename.lastIndexOf('.');
+  if (lastDotIndex === -1) return filename; // No extension found
+  return filename.substring(0, lastDotIndex);
 };

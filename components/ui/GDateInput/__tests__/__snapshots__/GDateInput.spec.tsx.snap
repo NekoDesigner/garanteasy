@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GDateInput Components renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "errorText": {
+          "color": "#ff4444",
+          "fontSize": 12,
+          "marginTop": 5,
+        },
+        "label": {
+          "color": "#454545",
+          "fontSize": 14,
+          "marginBottom": 5,
+        },
+        "textInput": {
+          "color": "#333",
+          "flex": 1,
+          "fontSize": 16,
+          "paddingVertical": 10,
+        },
+        "textInputContainer": {
+          "alignItems": "center",
+          "backgroundColor": "#fff",
+          "borderColor": "#ccc",
+          "borderRadius": 4,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "gap": 10,
+          "justifyContent": "space-between",
+          "paddingHorizontal": 10,
+        },
+        "textInputError": {
+          "borderColor": "#ff4444",
+        },
+      },
+      undefined,
+    ]
+  }
+  testID="gdateinput"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#454545",
+          "fontSize": 14,
+          "marginBottom": 5,
+        },
+        undefined,
+      ]
+    }
+  >
+    Start Date
+  </Text>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#fff",
+        "borderColor": "#ccc",
+        "borderRadius": 4,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "gap": 10,
+        "justifyContent": "space-between",
+        "paddingHorizontal": 10,
+      }
+    }
+    testID="gdateinput-container"
+  >
+    <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
+      keyboardType="numeric"
+      maxLength={10}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      placeholder="DD/MM/YYYY"
+      style={
+        [
+          {
+            "color": "#333",
+            "flex": 1,
+            "fontSize": 16,
+            "paddingVertical": 10,
+          },
+          null,
+          undefined,
+        ]
+      }
+      testID="gdateinput-input"
+      value=""
+    />
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={24}
+      bbWidth={24}
+      fill="none"
+      focusable={false}
+      height={24}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 24,
+            "width": 24,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={24}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M16 1.25c.41 0 .75.34.75.75v1.25H19c1.52 0 2.75 1.23 2.75 2.75v14c0 1.52-1.23 2.75-2.75 2.75H5c-1.52 0-2.75-1.23-2.75-2.75V6c0-1.52 1.23-2.75 2.75-2.75h2.25V2c0-.41.34-.75.75-.75s.75.34.75.75v1.25h6.5V2c0-.41.34-.75.75-.75zm-12.25 9.5V20c0 .69.56 1.25 1.25 1.25h14c.69 0 1.25-.56 1.25-1.25v-9.25H3.75zm1.25-6c-.69 0-1.25.56-1.25 1.25v3.25h16.5V6c0-.69-.56-1.25-1.25-1.25h-2.25V6a.749.749 0 11-1.5 0V4.75h-6.5V6a.749.749 0 11-1.5 0V4.75H5z"
+          fill={
+            {
+              "payload": 4279900016,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+</View>
+`;

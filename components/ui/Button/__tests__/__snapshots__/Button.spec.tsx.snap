@@ -110,12 +110,15 @@ exports[`Button Components renders correctly 1`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -234,12 +237,15 @@ exports[`Button Components renders correctly 2`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -358,12 +364,15 @@ exports[`Button Components renders correctly 3`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -482,12 +491,15 @@ exports[`Button Components renders correctly 4`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#1A1770",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#1A1770",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -606,12 +618,15 @@ exports[`Button Components renders correctly 5`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#046C63",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#046C63",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -730,12 +745,15 @@ exports[`Button Components renders correctly 6`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#C82828",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#C82828",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -854,12 +872,15 @@ exports[`Button Components renders correctly 7`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -978,12 +999,15 @@ exports[`Button Components renders correctly 8`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#1A1770",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#1A1770",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -1102,12 +1126,15 @@ exports[`Button Components renders correctly 9`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#046C63",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#046C63",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >
@@ -1226,12 +1253,15 @@ exports[`Button Components renders correctly 10`] = `
   </RNSVGSvgView>
   <Text
     style={
-      {
-        "color": "#C82828",
-        "fontFamily": "Ubuntu",
-        "fontSize": 16,
-        "fontWeight": "700",
-      }
+      [
+        {
+          "color": "#C82828",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+        },
+        {},
+      ]
     }
     testID="button-label"
   >

@@ -40,5 +40,34 @@ export class DateService {
     const year = date.getFullYear().toString().slice(-2); // Get last two digits of the year
     return `${month}/${year}`;
   }
+
+  static getWarrantyDurationInDays(warrantyDuration: string): number {
+    let result = 0;
+    warrantyDuration = warrantyDuration.toLowerCase();
+    const warrantyDurationInYear = warrantyDuration.split('y')[0].trim();
+    const hasYear = warrantyDuration.includes('y');
+    if (warrantyDurationInYear && hasYear) {
+      const warrantyDurationInDays = parseInt(warrantyDurationInYear) * 365;
+      result += warrantyDurationInDays;
+    }
+    const warrantyDurationInMonth = warrantyDuration.split('m')[0].trim();
+    const hasMonth = warrantyDuration.includes('m');
+    if (warrantyDurationInMonth && hasMonth) {
+      const warrantyDurationInDays = parseInt(warrantyDurationInMonth) * 30;
+      result += warrantyDurationInDays;
+    }
+    const warrantyDurationInDays = warrantyDuration.split('d')[0].trim();
+    const hasDays = warrantyDuration.includes('d');
+    if (warrantyDurationInDays && hasDays) {
+      result += parseInt(warrantyDurationInDays);
+    }
+    return result;
+  }
+
+  static isItemExpired(purchaseDate: Date, warrantyDurationInDays: number): boolean {
+    const expirationDate = DateService.addDays(purchaseDate, warrantyDurationInDays);
+    const currentDate = new Date();
+    return DateService.IsDateAfter(currentDate, expirationDate);
+  }
 }
 

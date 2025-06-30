@@ -1,8 +1,7 @@
 import { EventEmitter } from 'events'; // Replace react-native EventEmitter
-import * as FileSystem from 'expo-file-system';
 import * as SQLite from 'expo-sqlite';
 import DatabaseMigrationException from '../exceptions/DatabaseMigrationException';
-import Database, { DATABASE_NAME } from './db';
+import Database from './db';
 
 /**
  * Interface for Migration
@@ -27,22 +26,9 @@ export abstract class Migration extends EventEmitter implements IMigration {
 
   async run() {
     const database = await Database.getInstance();
-    const databasePath = `${FileSystem.documentDirectory}${DATABASE_NAME}`;
 
-  // Check if the database file exists
-  const fileExists = await FileSystem.getInfoAsync(databasePath);
-  if (fileExists.exists) {
-    // Delete the database file
-    await FileSystem.deleteAsync(databasePath);
-    console.log('Database file deleted successfully.');
-  } else {
-    console.log('Database file does not exist.');
-  }
-    console.log(`Starting migration to version ${this.currentVersion}...`);
     this.addListener('migration:after', async (version: number) => {
-      console.log(`Migration to version ${version} completed successfully.`);
-      const newVersion = await this.updateDatabaseVersion();
-      console.log(`Database version updated to ${newVersion}.`);
+      await this.updateDatabaseVersion();
     });
     const before = await this.beforeMigrate();
     if (before.byPassMigration) {
@@ -91,6 +77,10 @@ export abstract class Migration extends EventEmitter implements IMigration {
   }
 }
 
+export interface IMigrationOptions {
+  migrations: Migration[];
+}
+
 /**
  * Class Migrate
  * @description This class manages the execution of migrations.
@@ -101,13 +91,19 @@ export abstract class Migration extends EventEmitter implements IMigration {
  * If not provided, it defaults to an array containing the initial migration.
  */
 export class Migrate {
-  constructor(private migrations: Migration[]) { };
+  private migrationOptions: IMigrationOptions = {
+    migrations: [],
+  };
+  constructor(options: IMigrationOptions) {
+    this.migrationOptions = { ...this.migrationOptions, ...options };
+  };
   async run(): Promise<void> {
     // order migrations by currentVersion low to high
-    this.migrations = this.migrations.sort((a, b) => a.currentVersion - b.currentVersion);
-    console.log('🚀 Starting database migrations...');
-    console.log(this.migrations);
-    for (const migration of this.migrations) {
+    let { migrations } = this.migrationOptions;
+    // Note: resetDBOnInit is now handled in _layout.tsx before SQLiteProvider opens the database
+
+    migrations = migrations.sort((a, b) => a.currentVersion - b.currentVersion);
+    for (const migration of migrations) {
       try {
         if (await this.migrationIsAlreadyRunned(migration)) {
           continue; // Skip migration if it has already been run
@@ -122,7 +118,6 @@ export class Migrate {
         throw error; // Re-throw the error to handle it outside if needed
       }
     }
-    console.log('✅ Database migrations completed successfully.');
   }
 
   private async migrationIsAlreadyRunned(migration: Migration): Promise<boolean> {
@@ -143,7 +138,6 @@ export class Migrate {
     const query = `SELECT COUNT(*) as count FROM migrations WHERE name = ?`;
     const result = await database.getFirstAsync<{ count: number }>(query, [migrationName]);
     if (result && result.count > 0) {
-      console.log(`Migration ${migrationName} has already been run.`);
       return true;
     }
     return false;

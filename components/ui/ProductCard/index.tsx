@@ -16,28 +16,32 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
   const [warrantyDurationTag, setWarrantyDurationTag] = React.useState<string>('');
   const [progress, setProgress] = React.useState<number>(1);
 
-  function getWarrantyDurationInDay(warrantyDurationStr: string): number {
-    let result = 0;
-    warrantyDurationStr = warrantyDurationStr.toLowerCase();
-    const warrantyDurationInYear = warrantyDurationStr.split('y')[0].trim();
-    const hasYear = warrantyDurationStr.includes('y');
-    if (warrantyDurationInYear && hasYear) {
-      const warrantyDurationInDays = parseInt(warrantyDurationInYear) * 365;
-      result += warrantyDurationInDays;
+  // Debug image prop
+  React.useEffect(() => {
+    if (props.image) {
+      console.log('ProductCard image prop:', props.image);
+      console.log('Image type:', typeof props.image);
     }
-    const warrantyDurationInMonth = warrantyDurationStr.split('m')[0].trim();
-    const hasMonth = warrantyDurationStr.includes('m');
-    if (warrantyDurationInMonth && hasMonth) {
-      const warrantyDurationInDays = parseInt(warrantyDurationInMonth) * 30;
-      result += warrantyDurationInDays;
+  }, [props.image]);
+
+  // Helper function to determine the correct image source
+  const getImageSource = () => {
+    if (!props.image) {
+      return require('../../../assets/images/default-product.png');
     }
-    const warrantyDurationInDays = warrantyDurationStr.split('d')[0].trim();
-    const hasDays = warrantyDurationStr.includes('d');
-    if (warrantyDurationInDays && hasDays) {
-      result += parseInt(warrantyDurationInDays);
+
+    if (typeof props.image === 'string') {
+      // Check if it's a file URI or HTTP URL
+      if (props.image.startsWith('file://') || props.image.startsWith('http://') || props.image.startsWith('https://')) {
+        return { uri: props.image };
+      }
+      // If it's just a string, assume it's a require() path
+      return props.image;
     }
-    return result;
-  }
+
+    // If it's already an object (like {uri: string}), use it directly
+    return props.image;
+  };
 
   function formatExpirationDate(purchaseDateProp: Date | string, warrantyDurationInDays: number): string {
     const _purchaseDate = new Date(purchaseDateProp);
@@ -64,7 +68,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
 
   React.useEffect(() => {
     if (props.warrantyDuration) {
-      const warrantyDurationInDays = getWarrantyDurationInDay(props.warrantyDuration);
+      const warrantyDurationInDays = DateService.getWarrantyDurationInDays(props.warrantyDuration);
       const expirationDate = formatExpirationDate(purchaseDate, warrantyDurationInDays);
       setWarrantyDurationTag(expirationDate);
 
@@ -72,6 +76,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
       const _purchaseDate = new Date(purchaseDate);
       const expirationDateObj = DateService.addDays(_purchaseDate, warrantyDurationInDays);
       const currentDate = new Date();
+
       if (DateService.IsDateAfter(currentDate, expirationDateObj)) {
         setProgress(0);
       }
@@ -93,9 +98,13 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
   return (
       <View style={[ProductCardStyles.container, style]} testID={testID} {...props}>
         <Image
-          source={props.image || require('../../../assets/images/default-product.png')}
+          source={getImageSource()}
           style={ProductCardStyles.image}
           resizeMode="cover"
+          onError={(error) => {
+            console.error('ProductCard Image load error:', error.nativeEvent.error);
+            console.log('Failed image source:', getImageSource());
+          }}
         />
         <View style={{ display: 'flex', flex: 1 }}>
           <View style={ProductCardStyles.brandContainer}>
