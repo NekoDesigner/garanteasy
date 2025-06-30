@@ -3,14 +3,17 @@
  */
 
 import { useSQLiteContext } from "expo-sqlite";
+import { useCallback } from "react";
 
 export function useUserRepository() {
   const db = useSQLiteContext();
-  async function getUser() {
+
+  const getUser = useCallback(async () => {
     const query = `SELECT * FROM owners LIMIT 1`;
     const result = await db.getFirstAsync(query);
     return result ? result : null;
-  }
+  }, [db]);
+
   return {
     getUser
   };

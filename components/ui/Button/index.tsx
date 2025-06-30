@@ -8,6 +8,7 @@ const Button: React.FC<IButtonProps> = ({
   onPress,
   disabled = false,
   style = {},
+  textStyle = {},
   testID = "button",
   size = "s",
   variant = "primary",
@@ -40,7 +41,7 @@ const renderIcon = React.useMemo(() => {
 
   return <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.button, style]} testID={testID}>
     {showIcon && iconPosition === "left" && renderIcon}
-    <Text style={styles.buttonText} testID={`${testID}-label`}>
+    <Text style={[styles.buttonText, textStyle]} testID={`${testID}-label`}>
       {label}
     </Text>
     {showIcon && iconPosition === "right" && renderIcon}

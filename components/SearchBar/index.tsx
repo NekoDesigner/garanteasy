@@ -6,7 +6,6 @@ import styles from './styles';
 
 const SearchBar = () => {
   const handleDonePress = () => {
-    console.log('Done pressed');
   };
   return (
     <Container>

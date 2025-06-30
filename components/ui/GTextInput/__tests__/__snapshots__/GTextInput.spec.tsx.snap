@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GTextInput Components renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "marginVertical": 5,
+      },
+      undefined,
+    ]
+  }
+  testID="gtextinput"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#454545",
+          "fontSize": 14,
+          "marginBottom": 5,
+        },
+        undefined,
+      ]
+    }
+  >
+    Test
+  </Text>
+  <TextInput
+    style={
+      [
+        {
+          "backgroundColor": "#fff",
+          "borderColor": "#ccc",
+          "borderRadius": 4,
+          "borderWidth": 1,
+          "color": "#333",
+          "fontSize": 16,
+          "padding": 10,
+        },
+        undefined,
+      ]
+    }
+  />
+</View>
+`;
