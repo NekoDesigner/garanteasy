@@ -96,24 +96,28 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     }
   }, [db, ownerId]);
 
-  const attachDocumentToItem = useCallback(async (documentId: string, itemId: string): Promise<void> => {
-    const query = `INSERT INTO document_attachments (entity_id, document_id, model) VALUES (?, ?, ?)`;
+  const attachDocumentToItem = useCallback(async (documentId: string, itemId: string): Promise<SQLiteExecuteAsyncResult<any>> => {
+    const documentAttachmentId = Document.generateId();
+    const query = `INSERT INTO document_attachments (id, entity_id, document_id, model) VALUES (?, ?, ?, ?)`;
     const statement = await db.prepareAsync(query);
-    const result = await statement.executeAsync([itemId, documentId, 'Item']);
+    const result = await statement.executeAsync([documentAttachmentId, itemId, documentId, 'Item']);
     if (result.changes === 0) {
       throw new DatabaseSaveException(`Failed to attach document ${documentId} to item ${itemId}`);
     }
+    return result;
   }, [db]);
 
   const getAllDocumentsForItem = useCallback(async (itemId: string): Promise<Document[]> => {
-    const query = `
-      SELECT d.* FROM documents d
-      JOIN document_attachments da ON d.id = da.document_id
-      WHERE da.entity_id = ? AND da.model = 'Item' AND d.owner_id = ?
-    `;
-    const result = await db.getAllAsync<DatabaseDocumentDto>(query, [itemId, ownerId]);
+    const query = `SELECT
+            documents.*,
+            document_attachments.model as "entity_model",
+            document_attachments.entity_id as "entity_id"
+          FROM documents
+            INNER JOIN document_attachments ON documents.id = document_attachments.document_id
+            WHERE document_attachments.entity_id = ? AND document_attachments.model = 'Item'`;
+    const result = await db.getAllAsync<DatabaseDocumentDto>(query, [itemId]);
     return result.map((doc) => Document.toModel(doc));
-  }, [db, ownerId]);
+  }, [db]);
 
   return {
     saveDocument,

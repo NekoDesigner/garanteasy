@@ -5,6 +5,10 @@
 import { SQLiteExecuteAsyncResult, useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { DatabaseSaveException } from "../../exceptions/DatabaseSaveException";
+import { Category } from "../../models/Category/Category";
+import { DatabaseCategoryDto } from "../../models/Category/Category.dto";
+import { Document } from "../../models/Document/Document";
+import { DatabaseDocumentDto } from "../../models/Document/Document.dto";
 import { Item } from "../../models/Item/Item";
 import { DatabaseItemDto } from "../../models/Item/Item.dto";
 
@@ -15,14 +19,63 @@ export interface IItemRepositoryProps {
 export function useItemRepository(props: IItemRepositoryProps) {
   const db = useSQLiteContext();
 
-  const getAllItems = React.useCallback(async (options: { withArchived?: boolean } = {}): Promise<Item[]> => {
+  const getAllItems = React.useCallback(async (options: { withArchived?: boolean, withDocuments?: boolean } = {}): Promise<Item[]> => {
     let query = `SELECT * FROM items WHERE owner_id = ? `;
     if (!options.withArchived) {
       query += 'AND is_archived = 0 ';
     }
     query += 'ORDER BY created_at DESC';
     const result = await db.getAllAsync<DatabaseItemDto>(query, [props.ownerId]);
-    const items: Item[] = result.map((item) => Item.toModel(item));
+    let items: Item[] = result.map((item) => Item.toModel(item));
+
+    if (options.withDocuments) {
+      const itemIds = items.map(item => item.id).filter(id => id !== undefined) as string[];
+      console.log('Item IDs for document lookup:', itemIds);
+
+      if (itemIds.length > 0) {
+        // First, let's check if the tables exist and what data they contain
+        try {
+          const allDocuments = await db.getAllAsync(`SELECT * FROM documents LIMIT 5`);
+          console.log('Sample documents table data:', allDocuments);
+
+          const allAttachments = await db.getAllAsync(`SELECT * FROM document_attachments LIMIT 5`);
+          console.log('Sample document_attachments table data:', allAttachments);
+
+          // Check if there are any attachments for our specific items
+          const specificAttachments = await db.getAllAsync(
+            `SELECT * FROM document_attachments WHERE entity_id IN (${itemIds.map(() => '?').join(', ')})`,
+            itemIds
+          );
+          console.log('Attachments for current items:', specificAttachments);
+        } catch (error) {
+          console.log('Error checking tables:', error);
+        }
+
+        const documents = await db.getAllAsync<DatabaseDocumentDto>(
+          `SELECT
+            documents.*,
+            document_attachments.model as "entity_model",
+            document_attachments.entity_id as "entity_id"
+          FROM documents
+            INNER JOIN document_attachments ON documents.id = document_attachments.document_id
+            WHERE document_attachments.entity_id IN (${itemIds.map(() => '?').join(', ')}) AND document_attachments.model = 'Item'`,
+          itemIds
+        );
+
+        // Attach documents to their respective items
+        documents.forEach((doc) => {
+          const item = items.find(item => item.id === doc.entity_id);
+          if (item) {
+            // Initialize documents array if it doesn't exist
+            if (!item.documents) {
+              item.documents = [];
+            }
+            const document = Document.toModel<DatabaseDocumentDto, Document>(doc);
+            item.documents.push(document);
+          }
+        });
+      }
+    }
     return items;
   }, [db, props.ownerId]);
 
@@ -31,7 +84,24 @@ export function useItemRepository(props: IItemRepositoryProps) {
       const query = `SELECT * FROM items WHERE id = ? AND owner_id = ?`;
       const result = await db.getFirstAsync<DatabaseItemDto>(query, [id, props.ownerId]);
       if (result) {
-        return Item.toModel(result);
+        const documents = await db.getAllAsync<DatabaseDocumentDto>(`SELECT
+            documents.*,
+            document_attachments.model as "entity_model",
+            document_attachments.entity_id as "entity_id"
+          FROM documents
+            INNER JOIN document_attachments ON documents.id = document_attachments.document_id
+            WHERE document_attachments.entity_id = ? AND document_attachments.model = 'Item'`, [id]);
+
+        const categoryDatabaseDto = await db.getFirstAsync<DatabaseCategoryDto>(`SELECT * FROM categories WHERE id = ? AND owner_id = ?`, [result.category_id, result.owner_id]);
+        let category: Category | null = null;
+        if (categoryDatabaseDto) {
+          category = Category.toModel<DatabaseCategoryDto, Category>(categoryDatabaseDto);
+        }
+
+        const item = Item.toModel<DatabaseItemDto, Item>(result);
+        item.documents = documents.map(doc => Document.toModel<DatabaseDocumentDto, Document>(doc));
+        item.category = category;
+        return item;
       }
       return null;
     },

@@ -18,4 +18,6 @@ export interface DatabaseDocumentDto {
   file_path: string;
   file_source: 'local' | 'remote';
   owner_id: string;
+  entity_model: string;
+  entity_id: string;
 }

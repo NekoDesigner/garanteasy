@@ -174,7 +174,11 @@ const CreateItem = () => {
 
       // Attach documents to the item
       for (const document of additionalDocuments) {
-        await attachDocumentToItem(savedItem.getId(), document.getId());
+        await attachDocumentToItem(document.getId(), savedItem.getId());
+      }
+      // attach the main document
+      if (document) {
+        await attachDocumentToItem(document.getId(), savedItem.getId());
       }
 
       Alert.alert('Succès', 'Article enregistré avec succès!', [
@@ -586,6 +590,14 @@ const CreateItem = () => {
             <FormCard style={styles.space}>
               <GTextInput
                 label="Note"
+                onChangeText={(value: string) => {
+                  setItem(prev => new Item({
+                    ...prev,
+                    label: prev.label || '',
+                    memo: value,
+                  }));
+                }}
+                value={item.memo}
                 labelStyle={[styles.h1, {marginBottom: 10}]}
                 placeholder='Informations complémentaires...'
               />

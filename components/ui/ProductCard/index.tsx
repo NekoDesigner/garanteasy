@@ -11,7 +11,7 @@ import Tag from "../Tag";
 import { IProductCardProps } from "./@types";
 import ProductCardStyles from "./styles";
 
-const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard', purchaseDate, ...props }) => {
+const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard', purchaseDate, onPress, ...props }) => {
 
   const [warrantyDurationTag, setWarrantyDurationTag] = React.useState<string>('');
   const [progress, setProgress] = React.useState<number>(1);
@@ -111,7 +111,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
             <Text style={ProductCardStyles.name} numberOfLines={1}>
               {props.name || 'Product Name'}
             </Text>
-            <RoundedIconButton icon="arrow-right" onPress={() => {}} size="small" />
+            {onPress && <RoundedIconButton icon="arrow-right" onPress={() => onPress()} size="small" />}
           </View>
           <Text style={ProductCardStyles.brand} numberOfLines={1}>
             {props.brand || 'Brand Name'}

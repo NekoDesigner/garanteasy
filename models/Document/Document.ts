@@ -47,7 +47,7 @@ export class Document extends IModel {
     };
   }
 
-  static toDatabaseDto(data: Document): DatabaseDocumentDto {
+  static toDatabaseDto(data: Document): Omit<DatabaseDocumentDto, 'entity_model' | 'entity_id'> {
     return {
       id: data.id,
       name: data.name,
@@ -61,7 +61,7 @@ export class Document extends IModel {
   }
 
   static override fromModel<T, U>(data: T): U {
-    let dto: DatabaseDocumentDto;
+    let dto: Omit<DatabaseDocumentDto, 'entity_model' | 'entity_id'>;
     if (data instanceof Document) {
       dto = this.toDatabaseDto(data as Document);
     } else {

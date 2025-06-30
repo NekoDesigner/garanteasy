@@ -26,6 +26,7 @@ export function BottomBar() {
 }
 
 const HomeScreen = () => {
+  const router = useRouter();
   const { user } = useUserContext();
   const { getAllItems } = useItemRepository({ ownerId: user?.id ?? '' });
   const [items, setItems] = React.useState<Item[]>([]);
@@ -33,8 +34,9 @@ const HomeScreen = () => {
 
   const fetchItems = React.useCallback(async () => {
     try {
-      const fetchedItems = await getAllItems({ withArchived: true });
+      const fetchedItems = await getAllItems({ withArchived: false, withDocuments: true });
       setItems(fetchedItems);
+      console.log('Fetched items:', fetchedItems);
     } catch (error) {
       console.error('Error fetching items:', error);
     }
@@ -99,6 +101,11 @@ const HomeScreen = () => {
                 warrantyDuration={item.warrantyDuration}
                 image={item.picture ? item.picture : require('../assets/images/default-product.png')}
                 style={{ marginTop: 16 }}
+                onPress={() => {
+                  router.push({
+                    pathname: '/show-item',
+                    params: { itemId: item.id },
+                }); }} // Navigate to item details
               />
             )}
             contentContainerStyle={{ paddingBottom: 80 }}

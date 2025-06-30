@@ -31,18 +31,25 @@ const Chips: React.FC<IChipsProps> = ({
   const getCategoryIcon = (category: TChipsIcon | React.ReactNode) => {
     switch (category) {
       case "hoursehold-electricals":
+      case "default-category-1":
         return <WashingMachinIcon color={COLORS.light} size={getSize()} />;
       case "small-electricals":
+      case "default-category-2":
         return <SmallHouseholdIcon color={COLORS.light} size={getSize()} />;
       case "diy":
+      case "default-category-3":
         return <DIYIcon color={COLORS.light} size={getSize()} />;
       case "garden":
+      case "default-category-4":
         return <GardenIcon color={COLORS.light} size={getSize()} />;
       case "fashion":
+      case "default-category-5":
         return <FashionIcon color={COLORS.light} size={getSize()} />;
       case "multimedia":
+      case "default-category-6":
         return <MultimediaIcon color={COLORS.light} size={getSize()} />;
       case "other":
+      case "default-category-7":
         return <WashingMachinIcon color={COLORS.light} size={getSize()} />;
       default:
         return category;

@@ -9,11 +9,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 8,
     backgroundColor: COLORS.greyLighter,
-   borderColor: COLORS.greyDarker,
+    borderColor: COLORS.greyDarker,
     borderWidth: 1,
     borderRadius: 8,
     gap: 8,
-    maxWidth: 327,
+    // maxWidth: 327,
   },
   image: {
     borderRadius: 4,

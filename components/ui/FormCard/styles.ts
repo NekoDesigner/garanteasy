@@ -8,7 +8,7 @@ import { COLORS } from '../../../constants';
 const styles = StyleSheet.create({
   container: {
     gap: 10,
-    backgroundColor: COLORS.grey,
+    backgroundColor: COLORS.greyLighter,
     borderColor: COLORS.greyDarker,
     borderWidth: 1,
     padding: 16,

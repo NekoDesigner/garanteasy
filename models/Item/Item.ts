@@ -1,4 +1,6 @@
 import { DateService } from "../../services/DateService";
+import { Category } from "../Category/Category";
+import { Document } from "../Document/Document";
 import { IModel } from "../model";
 import { DatabaseItemDto, ItemDto } from "./Item.dto";
 
@@ -15,6 +17,8 @@ export class Item extends IModel {
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
+  documents?: Document[];
+  category: Category | null = null;
   constructor(data: ItemDto) {
     super();
     this.id = data.id;
@@ -96,5 +100,13 @@ export class Item extends IModel {
     const warrantyDurationInDays = DateService.getWarrantyDurationInDays(item.warrantyDuration);
     item.isArchived = DateService.isItemExpired(item.purchaseDate, warrantyDurationInDays);
     return item;
+  }
+
+  get otherDocuments(): Document[] {
+    return this.documents?.filter((doc) => doc.type !== "invoice" && doc.type !== "ticket") || [];
+  }
+
+  get warrantyDocument(): Document | undefined {
+    return this.documents?.find((doc) => doc.type === "invoice" || doc.type === "ticket");
   }
 }
