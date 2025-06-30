@@ -3,6 +3,8 @@
  */
 
 import { SQLiteExecuteAsyncResult, useSQLiteContext } from "expo-sqlite";
+import React from "react";
+import { DatabaseSaveException } from "../../exceptions/DatabaseSaveException";
 import { Item } from "../../models/Item/Item";
 import { DatabaseItemDto } from "../../models/Item/Item.dto";
 
@@ -12,93 +14,137 @@ export interface IItemRepositoryProps {
 
 export function useItemRepository(props: IItemRepositoryProps) {
   const db = useSQLiteContext();
-  async function getAllItems(): Promise<Item[]> {
+
+  const getAllItems = React.useCallback(async (): Promise<Item[]> => {
     const query = `SELECT * FROM items WHERE owner_id = ?`;
     const result = await db.getAllAsync<DatabaseItemDto>(query, [props.ownerId]);
     const items: Item[] = result.map((item) => Item.toModel(item));
-    console.log("Fetched items:", items);
     return items;
-  }
-  async function getItemById(id: string): Promise<Item | null> {
-    const query = `SELECT * FROM items WHERE id = ? AND owner_id = ?`;
-    const result = await db.getFirstAsync<DatabaseItemDto>(query, [id, props.ownerId]);
-    if (result) {
-      return Item.toModel(result);
-    }
-    return null;
-  }
-  async function saveItem(item: Item): Promise<Item> {
-    let result: SQLiteExecuteAsyncResult<DatabaseItemDto>;
-    const dbItemDto: DatabaseItemDto = Item.fromModel(item);
-    if (dbItemDto.id) {
-      // UPDATE
-      const statement = await db.prepareAsync(
-        `UPDATE items SET 
-            label = $label, 
-            category_id = $category_id, 
-            owner_id = $owner_id, 
-            purchase_date = $purchase_date, 
-            warranty_duration = $warranty_duration, 
-            memo = $memo,
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = $id AND owner_id = $owner_id`
-      );
-      result = await statement.executeAsync({
-        $id: dbItemDto.id,
-        $label: dbItemDto.label,
-        $category_id: dbItemDto.category_id,
-        $owner_id: props.ownerId,
-        $purchase_date: dbItemDto.purchase_date instanceof Date
-          ? dbItemDto.purchase_date.toISOString()
-          : dbItemDto.purchase_date,
-        $warranty_duration: dbItemDto.warranty_duration,
-        $memo: dbItemDto.memo || ""
-      });
-      if (result.changes === 0) {
-        throw new Error(`Item with id ${dbItemDto.id} not found or not owned by user ${props.ownerId}`);
-      }
-      // Return the updated item
-      const updatedItem = await getItemById(dbItemDto.id);
-      if (updatedItem) {
-        return updatedItem;
-      }
-      throw new Error(`Failed to update item with id ${dbItemDto.id}`);
-    } else {
-      // INSERT
-      const id = Item.generateId();
-      const statement = await db.prepareAsync(
-        `INSERT INTO items (
-            id, 
-            label, 
-            category_id, 
-            owner_id,
-            purchase_date,
-            warranty_duration,
-            memo,
-        ) VALUES ($id, $label, $category_id, $owner_id, $purchase_date, $warranty_duration, $memo)`
-      );
-      result = await statement.executeAsync({
-        $id: id,
-        $label: dbItemDto.label,
-        $category_id: dbItemDto.category_id,
-        $owner_id: props.ownerId,
-        $purchase_date: dbItemDto.purchase_date instanceof Date
-          ? dbItemDto.purchase_date.toISOString()
-          : dbItemDto.purchase_date,
-        $warranty_duration: dbItemDto.warranty_duration,
-        $memo: dbItemDto.memo || ""
-      });
-    }
-    const firstRow = await result.getFirstAsync();
-    if (firstRow) {
-      return Item.toModel(firstRow);
-    }
-    throw new Error("Failed to save item");
-  }
+  }, [db, props.ownerId]);
 
-  return {
+  const getItemById = React.useCallback(
+    async (id: string): Promise<Item | null> => {
+      const query = `SELECT * FROM items WHERE id = ? AND owner_id = ?`;
+      const result = await db.getFirstAsync<DatabaseItemDto>(query, [id, props.ownerId]);
+      if (result) {
+        return Item.toModel(result);
+      }
+      return null;
+    },
+    [db, props.ownerId]
+  );
+  const saveItem = React.useCallback(
+    async (item: Item): Promise<Item> => {
+      let result: SQLiteExecuteAsyncResult<DatabaseItemDto>;
+      const dbItemDto: DatabaseItemDto = Item.fromModel(item);
+      if (dbItemDto.id) {
+        // UPDATE
+        const statement = await db.prepareAsync(
+          `UPDATE items SET 
+              label = $label, 
+              brand = $brand,
+              category_id = $category_id, 
+              owner_id = $owner_id, 
+              picture = $picture,
+              purchase_date = $purchase_date, 
+              warranty_duration = $warranty_duration, 
+              memo = $memo,
+              is_archived = $is_archived,
+              updated_at = CURRENT_TIMESTAMP
+            WHERE id = $id AND owner_id = $owner_id`
+        );
+        result = await statement.executeAsync({
+          $id: dbItemDto.id,
+          $label: dbItemDto.label,
+          $brand: dbItemDto.brand || null,
+          $category_id: dbItemDto.category_id,
+          $owner_id: props.ownerId,
+          $picture: dbItemDto.picture || null,
+          $purchase_date: dbItemDto.purchase_date instanceof Date
+            ? dbItemDto.purchase_date.toISOString()
+            : dbItemDto.purchase_date,
+          $warranty_duration: dbItemDto.warranty_duration,
+          $memo: dbItemDto.memo || null,
+          $is_archived: dbItemDto.is_archived ? 1 : 0
+        });
+        if (result.changes === 0) {
+          throw new DatabaseSaveException(`Item with id ${dbItemDto.id} not found or not owned by user ${props.ownerId}`);
+        }
+        // Return the updated item
+        const updatedItem = await getItemById(dbItemDto.id);
+        if (updatedItem) {
+          return updatedItem;
+        }
+        throw new Error(`Failed to update item with id ${dbItemDto.id}`);
+      } else {
+        // INSERT
+        let id = Item.generateId();
+
+        // Retry with different ID if there's a collision
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        while (attempts < maxAttempts) {
+          try {
+            const statement = await db.prepareAsync(
+              `INSERT INTO items (
+                  id, 
+                  label, 
+                  brand,
+                  category_id, 
+                  owner_id,
+                  picture,
+                  purchase_date,
+                  warranty_duration,
+                  memo,
+                  is_archived
+              ) VALUES ($id, $label, $brand, $category_id, $owner_id, $picture, $purchase_date, $warranty_duration, $memo, $is_archived)`
+            );
+            result = await statement.executeAsync({
+              $id: id,
+              $label: dbItemDto.label,
+              $brand: dbItemDto.brand || null,
+              $category_id: dbItemDto.category_id,
+              $owner_id: props.ownerId,
+              $picture: dbItemDto.picture || null,
+              $purchase_date: dbItemDto.purchase_date instanceof Date
+                ? dbItemDto.purchase_date.toISOString()
+                : dbItemDto.purchase_date,
+              $warranty_duration: dbItemDto.warranty_duration,
+              $memo: dbItemDto.memo || null,
+              $is_archived: dbItemDto.is_archived ? 1 : 0
+            });
+
+            // If we get here, the insert was successful
+            break;
+          } catch (error) {
+            attempts++;
+
+            if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
+              if (attempts < maxAttempts) {
+                // Generate a new ID and try again
+                id = Item.generateId();
+                continue;
+              }
+            }
+            // If it's not a UNIQUE constraint error, or we've exceeded max attempts, rethrow
+            throw error;
+          }
+        }
+
+        // For INSERT operations, fetch the newly created item
+        const newItem = await getItemById(id);
+        if (newItem) {
+          return newItem;
+        }
+        throw new DatabaseSaveException("Failed to save item");
+      }
+    },
+    [db, props.ownerId, getItemById]
+  );
+  return React.useMemo(() => ({
     getAllItems,
     getItemById,
     saveItem
-  };
+  }), [getAllItems, getItemById, saveItem]);
 }

@@ -1,11 +1,12 @@
 import { IModel } from "../model";
-import { DocumentDto } from "./Document.dto";
+import { DocumentDto, DatabaseDocumentDto } from "./Document.dto";
 
 export class Document extends IModel {
   id?: string | undefined;
   name: string;
   filename: string;
-  type: 'invoice' | 'ticket';
+  mimeType: string;
+  type: 'invoice' | 'ticket' | 'other';
   filePath: string;
   fileSource: 'local' | 'remote';
   ownerId: string;
@@ -18,7 +19,19 @@ export class Document extends IModel {
     this.type = data.type;
     this.filePath = data.filePath;
     this.fileSource = data.fileSource;
+    this.mimeType = data.mimetype || 'application/pdf'; // Default to PDF if not provided
     this.ownerId = data.ownerId;
+  }
+
+  get typeLabel(): string {
+    switch (this.type) {
+      case 'invoice':
+        return 'Facture';
+      case 'ticket':
+        return 'Ticket';
+      default:
+        return 'Document';
+    }
   }
 
   static toDto(data: Document): DocumentDto {
@@ -26,6 +39,7 @@ export class Document extends IModel {
       id: data.id,
       name: data.name,
       filename: data.filename,
+      mimetype: data.mimeType,
       type: data.type,
       filePath: data.filePath,
       fileSource: data.fileSource,
@@ -33,12 +47,25 @@ export class Document extends IModel {
     };
   }
 
+  static toDatabaseDto(data: Document): DatabaseDocumentDto {
+    return {
+      id: data.id,
+      name: data.name,
+      filename: data.filename,
+      mimetype: data.mimeType,
+      type: data.type,
+      file_path: data.filePath,
+      file_source: data.fileSource,
+      owner_id: data.ownerId,
+    };
+  }
+
   static override fromModel<T, U>(data: T): U {
-    let dto: DocumentDto;
+    let dto: DatabaseDocumentDto;
     if (data instanceof Document) {
-      dto = this.toDto(data as Document);
+      dto = this.toDatabaseDto(data as Document);
     } else {
-      dto = data as DocumentDto;
+      dto = data as DatabaseDocumentDto;
     }
     return dto as U;
   }
@@ -47,7 +74,17 @@ export class Document extends IModel {
     if (data instanceof Document) {
       return data as T;
     } else {
-      return new Document(data as DocumentDto) as T;
+      const dbData = data as DatabaseDocumentDto;
+      return new Document({
+        id: dbData.id,
+        name: dbData.name,
+        filename: dbData.filename,
+        mimetype: dbData.mimetype,
+        type: dbData.type,
+        filePath: dbData.file_path,
+        fileSource: dbData.file_source,
+        ownerId: dbData.owner_id,
+      }) as T;
     }
   }
 }

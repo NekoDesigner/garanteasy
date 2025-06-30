@@ -1,8 +1,11 @@
+import { StyleProp, TextStyle } from "react-native";
+
 export interface IButtonProps {
   label: string;
   onPress?: () => void;
   disabled?: boolean;
   style?: object;
+  textStyle?: StyleProp<TextStyle>;
   testID?: string;
   size?: "s" | "xs";
   variant?: TButtonVariant;

@@ -1,3 +1,5 @@
+import 'react-native-get-random-values'; // Required for pdf-lib and other crypto operations
+import { Buffer } from 'buffer';
 import { Slot } from "expo-router";
 import { SQLiteProvider } from 'expo-sqlite';
 import { Suspense } from 'react';
@@ -7,6 +9,9 @@ import { DATABASE_MIGRATIONS } from "../database";
 import { DATABASE_NAME } from "../database/db";
 import { Migrate } from "../database/migrate";
 import { UserProvider } from "../providers/UserContext";
+
+// Make Buffer available globally for React Native
+global.Buffer = Buffer;
 
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === "true";
 const migrateInstance = new Migrate(DATABASE_MIGRATIONS);

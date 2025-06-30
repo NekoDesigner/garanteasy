@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GDateInput Components renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "errorText": {
+          "color": "#ff4444",
+          "fontSize": 12,
+          "marginTop": 5,
+        },
+        "label": {
+          "color": "#454545",
+          "fontSize": 14,
+          "marginBottom": 5,
+        },
+        "textInput": {
+          "backgroundColor": "#fff",
+          "borderColor": "#ccc",
+          "borderRadius": 4,
+          "borderWidth": 1,
+          "color": "#333",
+          "fontSize": 16,
+          "padding": 10,
+        },
+        "textInputError": {
+          "borderColor": "#ff4444",
+        },
+      },
+      undefined,
+    ]
+  }
+  testID="gdateinput"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#454545",
+          "fontSize": 14,
+          "marginBottom": 5,
+        },
+        undefined,
+      ]
+    }
+  />
+  <TextInput
+    autoCapitalize="none"
+    autoCorrect={false}
+    keyboardType="numeric"
+    maxLength={10}
+    onBlur={[Function]}
+    onChangeText={[Function]}
+    placeholder="DD/MM/YYYY"
+    style={
+      [
+        {
+          "backgroundColor": "#fff",
+          "borderColor": "#ccc",
+          "borderRadius": 4,
+          "borderWidth": 1,
+          "color": "#333",
+          "fontSize": 16,
+          "padding": 10,
+        },
+        null,
+        undefined,
+      ]
+    }
+    testID="gdateinput-input"
+    value=""
+  />
+</View>
+`;

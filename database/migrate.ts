@@ -34,15 +34,10 @@ export abstract class Migration extends EventEmitter implements IMigration {
   if (fileExists.exists) {
     // Delete the database file
     await FileSystem.deleteAsync(databasePath);
-    console.log('Database file deleted successfully.');
   } else {
-    console.log('Database file does not exist.');
   }
-    console.log(`Starting migration to version ${this.currentVersion}...`);
     this.addListener('migration:after', async (version: number) => {
-      console.log(`Migration to version ${version} completed successfully.`);
-      const newVersion = await this.updateDatabaseVersion();
-      console.log(`Database version updated to ${newVersion}.`);
+      await this.updateDatabaseVersion();
     });
     const before = await this.beforeMigrate();
     if (before.byPassMigration) {
@@ -105,8 +100,6 @@ export class Migrate {
   async run(): Promise<void> {
     // order migrations by currentVersion low to high
     this.migrations = this.migrations.sort((a, b) => a.currentVersion - b.currentVersion);
-    console.log('🚀 Starting database migrations...');
-    console.log(this.migrations);
     for (const migration of this.migrations) {
       try {
         if (await this.migrationIsAlreadyRunned(migration)) {
@@ -122,7 +115,6 @@ export class Migrate {
         throw error; // Re-throw the error to handle it outside if needed
       }
     }
-    console.log('✅ Database migrations completed successfully.');
   }
 
   private async migrationIsAlreadyRunned(migration: Migration): Promise<boolean> {
@@ -143,7 +135,6 @@ export class Migrate {
     const query = `SELECT COUNT(*) as count FROM migrations WHERE name = ?`;
     const result = await database.getFirstAsync<{ count: number }>(query, [migrationName]);
     if (result && result.count > 0) {
-      console.log(`Migration ${migrationName} has already been run.`);
       return true;
     }
     return false;
