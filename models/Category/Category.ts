@@ -48,4 +48,8 @@ export class Category extends IModel {
       }) as T;
     }
   }
+
+  showIcon(): boolean {
+    return !(this.name.toLowerCase() === 'autre' || this.name.toLowerCase() === 'other' || this.id === 'default-category-7');
+  }
 }
