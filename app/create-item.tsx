@@ -482,9 +482,6 @@ const CreateItem = () => {
                   options={durationOptions}
                   selectedValue={warrantyDurationType}
                   onValueChange={(value: string) => {
-                    console.log('CreateItem: Duration type changed to:', value);
-                    console.log('CreateItem: Current warrantyDurationType:', warrantyDurationType);
-                    console.log('CreateItem: Current warrantyDuration:', warrantyDuration);
                     setWarrantyDurationType(value);
                     updateWarrantyDuration(warrantyDuration, value);
                   }}

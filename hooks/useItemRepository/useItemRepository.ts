@@ -30,27 +30,8 @@ export function useItemRepository(props: IItemRepositoryProps) {
 
     if (options.withDocuments) {
       const itemIds = items.map(item => item.id).filter(id => id !== undefined) as string[];
-      console.log('Item IDs for document lookup:', itemIds);
 
       if (itemIds.length > 0) {
-        // First, let's check if the tables exist and what data they contain
-        try {
-          const allDocuments = await db.getAllAsync(`SELECT * FROM documents LIMIT 5`);
-          console.log('Sample documents table data:', allDocuments);
-
-          const allAttachments = await db.getAllAsync(`SELECT * FROM document_attachments LIMIT 5`);
-          console.log('Sample document_attachments table data:', allAttachments);
-
-          // Check if there are any attachments for our specific items
-          const specificAttachments = await db.getAllAsync(
-            `SELECT * FROM document_attachments WHERE entity_id IN (${itemIds.map(() => '?').join(', ')})`,
-            itemIds
-          );
-          console.log('Attachments for current items:', specificAttachments);
-        } catch (error) {
-          console.log('Error checking tables:', error);
-        }
-
         const documents = await db.getAllAsync<DatabaseDocumentDto>(
           `SELECT
             documents.*,

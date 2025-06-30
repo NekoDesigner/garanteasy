@@ -16,14 +16,6 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
   const [warrantyDurationTag, setWarrantyDurationTag] = React.useState<string>('');
   const [progress, setProgress] = React.useState<number>(1);
 
-  // Debug image prop
-  React.useEffect(() => {
-    if (props.image) {
-      console.log('ProductCard image prop:', props.image);
-      console.log('Image type:', typeof props.image);
-    }
-  }, [props.image]);
-
   // Helper function to determine the correct image source
   const getImageSource = () => {
     if (!props.image) {

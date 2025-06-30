@@ -36,14 +36,12 @@ const HomeScreen = () => {
     try {
       const fetchedItems = await getAllItems({ withArchived: false, withDocuments: true });
       setItems(fetchedItems);
-      console.log('Fetched items:', fetchedItems);
     } catch (error) {
       console.error('Error fetching items:', error);
     }
   }, [getAllItems]);
 
   const onRefresh = async () => {
-    console.log('Refreshing items...');
     setRefreshing(true);
     await fetchItems();
     setRefreshing(false);

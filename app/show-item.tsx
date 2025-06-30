@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, ScrollView } from 'react-native';
+import { StyleSheet, Text, ScrollView, ActivityIndicator } from 'react-native';
 import Container from '../components/Container';
 import ScreenView from '../components/ScreenView';
 import Button from '../components/ui/Button';
@@ -8,7 +8,7 @@ import Chips from '../components/ui/Chips';
 import FormCard from '../components/ui/FormCard';
 import PDFPreview from '../components/ui/PDFPreview';
 import ProductCard from '../components/ui/ProductCard';
-import { SIZES } from '../constants';
+import { COLORS, SIZES } from '../constants';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
@@ -19,9 +19,6 @@ const ShowItem = () => {
   const { user } = useUserContext();
   const { getItemById } = useItemRepository({ ownerId: user?.id ?? '' });
   const [item, setItem] = React.useState<Item | null>(null);
-
-  console.log('------------------------------------');
-  console.log('other documents', item?.otherDocuments);
 
   React.useEffect(() => {
     const fetchItem = async () => {
@@ -35,6 +32,16 @@ const ShowItem = () => {
     };
     fetchItem();
   }, [itemId, getItemById, router]);
+
+  if (!item) {
+    return (
+      <ScreenView>
+        <Container>
+          <ActivityIndicator size="large" color={COLORS.blueDarker} />
+        </Container>
+      </ScreenView>
+    );
+  }
 
   return (
     <ScreenView>
