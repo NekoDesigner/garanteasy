@@ -1,8 +1,7 @@
 import { EventEmitter } from 'events'; // Replace react-native EventEmitter
-import * as FileSystem from 'expo-file-system';
 import * as SQLite from 'expo-sqlite';
 import DatabaseMigrationException from '../exceptions/DatabaseMigrationException';
-import Database, { DATABASE_NAME } from './db';
+import Database from './db';
 
 /**
  * Interface for Migration
@@ -27,15 +26,7 @@ export abstract class Migration extends EventEmitter implements IMigration {
 
   async run() {
     const database = await Database.getInstance();
-    const databasePath = `${FileSystem.documentDirectory}${DATABASE_NAME}`;
 
-  // Check if the database file exists
-  const fileExists = await FileSystem.getInfoAsync(databasePath);
-  if (fileExists.exists) {
-    // Delete the database file
-    await FileSystem.deleteAsync(databasePath);
-  } else {
-  }
     this.addListener('migration:after', async (version: number) => {
       await this.updateDatabaseVersion();
     });
@@ -86,6 +77,10 @@ export abstract class Migration extends EventEmitter implements IMigration {
   }
 }
 
+export interface IMigrationOptions {
+  migrations: Migration[];
+}
+
 /**
  * Class Migrate
  * @description This class manages the execution of migrations.
@@ -96,11 +91,19 @@ export abstract class Migration extends EventEmitter implements IMigration {
  * If not provided, it defaults to an array containing the initial migration.
  */
 export class Migrate {
-  constructor(private migrations: Migration[]) { };
+  private migrationOptions: IMigrationOptions = {
+    migrations: [],
+  };
+  constructor(options: IMigrationOptions) {
+    this.migrationOptions = { ...this.migrationOptions, ...options };
+  };
   async run(): Promise<void> {
     // order migrations by currentVersion low to high
-    this.migrations = this.migrations.sort((a, b) => a.currentVersion - b.currentVersion);
-    for (const migration of this.migrations) {
+    let { migrations } = this.migrationOptions;
+    // Note: resetDBOnInit is now handled in _layout.tsx before SQLiteProvider opens the database
+
+    migrations = migrations.sort((a, b) => a.currentVersion - b.currentVersion);
+    for (const migration of migrations) {
       try {
         if (await this.migrationIsAlreadyRunned(migration)) {
           continue; // Skip migration if it has already been run

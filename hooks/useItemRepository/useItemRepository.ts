@@ -15,8 +15,12 @@ export interface IItemRepositoryProps {
 export function useItemRepository(props: IItemRepositoryProps) {
   const db = useSQLiteContext();
 
-  const getAllItems = React.useCallback(async (): Promise<Item[]> => {
-    const query = `SELECT * FROM items WHERE owner_id = ?`;
+  const getAllItems = React.useCallback(async (options: { withArchived?: boolean } = {}): Promise<Item[]> => {
+    let query = `SELECT * FROM items WHERE owner_id = ? `;
+    if (!options.withArchived) {
+      query += 'AND is_archived = 0 ';
+    }
+    query += 'ORDER BY created_at DESC';
     const result = await db.getAllAsync<DatabaseItemDto>(query, [props.ownerId]);
     const items: Item[] = result.map((item) => Item.toModel(item));
     return items;
@@ -36,7 +40,9 @@ export function useItemRepository(props: IItemRepositoryProps) {
   const saveItem = React.useCallback(
     async (item: Item): Promise<Item> => {
       let result: SQLiteExecuteAsyncResult<DatabaseItemDto>;
+      item = Item.setItemIsArchived(item);
       const dbItemDto: DatabaseItemDto = Item.fromModel(item);
+
       if (dbItemDto.id) {
         // UPDATE
         const statement = await db.prepareAsync(

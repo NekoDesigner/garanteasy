@@ -4,6 +4,7 @@
 
 import React, { useState, useRef } from "react";
 import { View, Text, TextInput } from "react-native";
+import CalendarIcon from "../Icons/CalendarIcon";
 import { IGDateInputProps } from "./@types";
 import GDateInputStyles from "./styles";
 
@@ -144,24 +145,27 @@ const GDateInput: React.FC<IGDateInputProps> = ({
   return (
     <View style={[GDateInputStyles, style]} testID={testID}>
       <Text style={[GDateInputStyles.label, labelStyle]}>{label}</Text>
-      <TextInput
-        ref={inputRef}
-        placeholder="DD/MM/YYYY"
-        autoCapitalize="none"
-        autoCorrect={false}
-        testID={`${testID}-input`}
-        {...props}
-        value={value}
-        keyboardType="numeric"
-        maxLength={10} // Format DD/MM/YYYY
-        style={[
-          GDateInputStyles.textInput,
-          error ? GDateInputStyles.textInputError : null,
-          style
-        ]}
-        onChangeText={handleChangeText}
-        onBlur={handleBlur}
-      />
+      <View style={GDateInputStyles.textInputContainer} testID={`${testID}-container`}>
+        <TextInput
+          ref={inputRef}
+          placeholder="DD/MM/YYYY"
+          autoCapitalize="none"
+          autoCorrect={false}
+          testID={`${testID}-input`}
+          {...props}
+          value={value}
+          keyboardType="numeric"
+          maxLength={10} // Format DD/MM/YYYY
+          style={[
+            GDateInputStyles.textInput,
+            error ? GDateInputStyles.textInputError : null,
+            style
+          ]}
+          onChangeText={handleChangeText}
+          onBlur={handleBlur}
+        />
+        <CalendarIcon />
+      </View>
       {error ? (
         <Text style={[GDateInputStyles.errorText, errorStyle]} testID={`${testID}-error`}>
           {error}

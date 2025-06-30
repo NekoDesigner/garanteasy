@@ -8,6 +8,7 @@ import Button from '../components/ui/Button';
 import Chips from '../components/ui/Chips';
 import FormCard from '../components/ui/FormCard';
 import GDateInput from '../components/ui/GDateInput';
+import GDropdown from '../components/ui/GDropdown';
 import GTextInput from '../components/ui/GTextInput';
 import PictureIcon from '../components/ui/Icons/PictureIcon';
 import PDFPreview from '../components/ui/PDFPreview';
@@ -21,6 +22,7 @@ import { Category } from '../models/Category/Category';
 import { Document } from '../models/Document/Document';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
+import { ImageService } from '../services/ImageService';
 
 const CreateItem = () => {
   const router = useRouter();
@@ -53,6 +55,38 @@ const CreateItem = () => {
   const [itemImage, setItemImage] = React.useState<string | null>(null);
   const [category, setCategory] = React.useState<Category | null>(null);
   const [categoriesList, setCategoriesList] = React.useState<Category[]>([]);
+  const [warrantyDuration, setWarrantyDuration] = React.useState<string>('');
+  const [warrantyDurationType, setWarrantyDurationType] = React.useState<string>('y');
+
+  // Duration options for the dropdown
+  const durationOptions = [
+    { label: 'Mois', value: 'm' },
+    { label: 'Années', value: 'y' },
+  ];
+
+  // Function to update warranty duration string
+  const updateWarrantyDuration = (duration: string, type: string) => {
+    const warrantyDurationString = duration ? `${duration}${type}` : '';
+    setItem(prev => new Item({
+      ...prev,
+      label: prev.label || '',
+      memo: prev.memo || '',
+      warrantyDuration: warrantyDurationString,
+    }));
+  };
+
+  // Initialize warranty duration states from initial item value
+  React.useEffect(() => {
+    const initialDuration = item.warrantyDuration;
+    if (initialDuration) {
+      // Parse "8y" format
+      const match = initialDuration.match(/^(\d+)([my])$/);
+      if (match) {
+        setWarrantyDuration(match[1]);
+        setWarrantyDurationType(match[2]);
+      }
+    }
+  }, [item.warrantyDuration]);
 
   const handleCategoryPress = (selectedCategory: string) => {
     const selectedCategoryObj = categoriesList.find(cat => cat.name === selectedCategory);
@@ -118,9 +152,27 @@ const CreateItem = () => {
         return;
       }
 
+      // Save the item first
       const savedItem = await saveItem(item);
       setItem(savedItem);
 
+      // Now save the image with the item ID for better organization
+      if (itemImage && savedItem.getId()) {
+        const finalImageUri = await ImageService.saveItemImage(itemImage, savedItem.getId());
+
+        // Update the item with the final image URI
+        const itemWithFinalImage = new Item({
+          ...Item.toDto(savedItem),
+          picture: finalImageUri,
+        });
+
+        // Save the updated item with the final image URI
+        const updatedItem = await saveItem(itemWithFinalImage);
+        setItem(updatedItem);
+        setItemImage(finalImageUri);
+      }
+
+      // Attach documents to the item
       for (const document of additionalDocuments) {
         await attachDocumentToItem(savedItem.getId(), document.getId());
       }
@@ -180,13 +232,15 @@ const CreateItem = () => {
       });
 
       if (!result.canceled && result.assets[0]) {
-        setItemImage(result.assets[0].uri);
+        // Save image to filesystem and get the URI
+        const savedImageUri = await ImageService.saveItemImage(result.assets[0].uri);
+        setItemImage(savedImageUri);
         setItem(prevItem => new Item({
           ...prevItem,
           label: prevItem.label ?? '',
           brand: prevItem.brand ?? '',
           memo: prevItem.memo ?? '',
-          picture: result.assets[0].uri, // Update item picture with the new image URI
+          picture: savedImageUri, // Update item picture with the saved image URI
         }));
       }
     } catch (error) {
@@ -203,13 +257,15 @@ const CreateItem = () => {
       });
 
       if (!result.canceled && result.assets[0]) {
-        setItemImage(result.assets[0].uri);
+        // Save image to filesystem and get the URI
+        const savedImageUri = await ImageService.saveItemImage(result.assets[0].uri);
+        setItemImage(savedImageUri);
         setItem(prevItem => new Item({
           ...prevItem,
           label: prevItem.label ?? '',
           brand: prevItem.brand ?? '',
           memo: prevItem.memo ?? '',
-          picture: result.assets[0].uri, // Update item picture with the new image URI
+          picture: savedImageUri, // Update item picture with the saved image URI
         }));
       }
     } catch (error) {
@@ -393,17 +449,44 @@ const CreateItem = () => {
             </FormCard>
             <FormCard style={styles.space}>
               <Text style={styles.h1}>Date</Text>
-            <GDateInput
-              label="Date d'achat" allowFutureDates={false}
-              onDateChange={(date: Date) => {
-                setItem(prev => new Item({
-                  ...prev,
-                  label: prev.label || '',
-                  memo: prev.memo || '',
-                  purchaseDate: date,
-                }));
-              }}
-            />
+              <GDateInput
+                label="Date d'achat" allowFutureDates={false}
+                onDateChange={(date: Date) => {
+                  setItem(prev => new Item({
+                    ...prev,
+                    label: prev.label || '',
+                    memo: prev.memo || '',
+                    purchaseDate: date,
+                  }));
+                }}
+              />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 10 }}>
+              <View style={{ flex: 2 }}>
+                <GTextInput
+                  label="Durée de la garantie"
+                  keyboardType='numeric'
+                  value={warrantyDuration}
+                  onChangeText={(value: string) => {
+                    setWarrantyDuration(value);
+                    updateWarrantyDuration(value, warrantyDurationType);
+                  }}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <GDropdown
+                  label="Unité"
+                  options={durationOptions}
+                  selectedValue={warrantyDurationType}
+                  onValueChange={(value: string) => {
+                    console.log('CreateItem: Duration type changed to:', value);
+                    console.log('CreateItem: Current warrantyDurationType:', warrantyDurationType);
+                    console.log('CreateItem: Current warrantyDuration:', warrantyDuration);
+                    setWarrantyDurationType(value);
+                    updateWarrantyDuration(warrantyDuration, value);
+                  }}
+                />
+              </View>
+            </View>
             </FormCard>
             <FormCard style={styles.space}>
               <Text style={styles.h1}>Type de document</Text>

@@ -1,3 +1,4 @@
+import { DateService } from "../../services/DateService";
 import { IModel } from "../model";
 import { DatabaseItemDto, ItemDto } from "./Item.dto";
 
@@ -36,6 +37,7 @@ export class Item extends IModel {
       id: data.id,
       ownerId: data.ownerId ?? "",
       label: data.label ?? "",
+      brand: data.brand ?? "",
       categoryId: data.categoryId ?? "",
       picture: data.picture ?? "",
       purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : new Date(),
@@ -88,5 +90,11 @@ export class Item extends IModel {
       updatedAt: dbData.updated_at ? new Date(dbData.updated_at) : new Date(),
     });
     return item as unknown as T;
+  }
+
+  static setItemIsArchived(item: Item): Item {
+    const warrantyDurationInDays = DateService.getWarrantyDurationInDays(item.warrantyDuration);
+    item.isArchived = DateService.isItemExpired(item.purchaseDate, warrantyDurationInDays);
+    return item;
   }
 }

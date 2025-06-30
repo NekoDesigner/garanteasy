@@ -10,24 +10,32 @@ const styles = StyleSheet.create({
       marginBottom: 5,
       color: COLORS.placeholder,
       fontSize: 14,
-    },
-    textInput: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 4,
-      padding: 10,
-      fontSize: 16,
-      color: '#333',
-      backgroundColor: '#fff',
-    },
-    textInputError: {
-      borderColor: '#ff4444',
-    },
-    errorText: {
-      color: '#ff4444',
-      fontSize: 12,
-      marginTop: 5,
-    }
+  },
+  textInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    backgroundColor: '#fff',
+    gap: 10,
+    paddingHorizontal: 10,
+  },
+  textInput: {
+    fontSize: 16,
+    paddingVertical: 10,
+    color: '#333',
+    flex: 1,
+  },
+  textInputError: {
+    borderColor: '#ff4444',
+  },
+  errorText: {
+    color: '#ff4444',
+    fontSize: 12,
+    marginTop: 5,
+  }
 });
 
 export default styles;

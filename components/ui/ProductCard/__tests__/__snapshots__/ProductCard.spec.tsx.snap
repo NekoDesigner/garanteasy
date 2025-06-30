@@ -31,6 +31,7 @@ exports[`ProductCard Components renders correctly 1`] = `
   warrantyDuration="15d"
 >
   <Image
+    onError={[Function]}
     resizeMode="cover"
     source={
       {

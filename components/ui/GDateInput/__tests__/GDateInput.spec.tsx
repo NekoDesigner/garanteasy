@@ -12,7 +12,7 @@ describe("GDateInput Components", () => {
   });
 
     test('renders correctly', () => {
-      const tree = render(<GDateInput />).toJSON();
+      const tree = render(<GDateInput label="Start Date" />).toJSON();
       expect(tree).toMatchSnapshot();
     });
 });
