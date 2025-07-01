@@ -28,6 +28,15 @@ export function useItemRepository(props: IItemRepositoryProps) {
     const result = await db.getAllAsync<DatabaseItemDto>(query, [props.ownerId]);
     let items: Item[] = result.map((item) => Item.toModel(item));
 
+    for (const item of items) {
+      const categoryDatabaseDto = await db.getFirstAsync<DatabaseCategoryDto>(`SELECT * FROM categories WHERE id = ? AND owner_id = ?`, [item.categoryId, item.ownerId]);
+      let category: Category | null = null;
+      if (categoryDatabaseDto) {
+        category = Category.toModel<DatabaseCategoryDto, Category>(categoryDatabaseDto);
+      }
+      item.category = category;
+    }
+
     if (options.withDocuments) {
       const itemIds = items.map(item => item.id).filter(id => id !== undefined) as string[];
 

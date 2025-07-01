@@ -5,6 +5,7 @@ import Container from '../components/Container';
 import ScreenView from '../components/ScreenView';
 import SearchBar from '../components/SearchBar';
 import Chips from '../components/ui/Chips';
+import { IChipsProps } from '../components/ui/Chips/@types';
 import ProductCard from '../components/ui/ProductCard';
 import RoundedIconButton from '../components/ui/RoundedIconButton';
 import { COLORS } from '../constants';
@@ -30,12 +31,41 @@ const HomeScreen = () => {
   const { user } = useUserContext();
   const { getAllItems } = useItemRepository({ ownerId: user?.id ?? '' });
   const [items, setItems] = React.useState<Item[]>([]);
+  const [searchedItems, setSearchedItems] = React.useState<Item[]>([]);
+  const [categories, setCategories] = React.useState<IChipsProps[]>(CATEGORIES_BASE);
   const [refreshing, setRefreshing] = React.useState(false);
+
+  const handleShowCategories = (showableItems: Item[]) => {
+    // Get all categories from items as unique values and order by number ASC if id ends with a number
+    const uniqueCategoriesMap = new Map();
+    for (const item of showableItems) {
+      if (item.category && item.category.id) {
+        uniqueCategoriesMap.set(item.category.id, item.category);
+      }
+    }
+    let uniqueCategories = Array.from(uniqueCategoriesMap.values());
+
+    uniqueCategories = uniqueCategories.sort((a, b) => {
+      const getNumber = (id: string) => {
+        const match = id.match(/(\d+)$/);
+        return match ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
+      };
+      return getNumber(a.id) - getNumber(b.id);
+    });
+    const chipsCatgoriesMapped: IChipsProps[] = [];
+    for (const category of uniqueCategories) {
+      if (!category) continue; // Skip if category is undefined or null
+      chipsCatgoriesMapped.push(category.getCategoryChipsProps());
+    }
+    setCategories(chipsCatgoriesMapped.filter(cat => cat !== undefined) as IChipsProps[]);
+  };
 
   const fetchItems = React.useCallback(async () => {
     try {
       const fetchedItems = await getAllItems({ withArchived: false, withDocuments: true });
       setItems(fetchedItems);
+      setSearchedItems(fetchedItems);
+      handleShowCategories(fetchedItems);
     } catch (error) {
       console.error('Error fetching items:', error);
     }
@@ -47,16 +77,35 @@ const HomeScreen = () => {
     setRefreshing(false);
   };
 
+  const handleSearch = (query: string) => {
+    if (!query) {
+      setSearchedItems(items);
+      handleShowCategories(items);
+      return;
+    }
+    const filteredItems = items.filter(item =>
+      item.label?.toLowerCase().includes(query.toLowerCase()) ||
+      item.brand?.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchedItems(filteredItems);
+    handleShowCategories(filteredItems);
+  };
+
   React.useEffect(() => {
     fetchItems();
   }, [fetchItems]);
 
     return (
       <ScreenView>
-        <SearchBar />
+        <SearchBar onHandleSearch={handleSearch} />
         <View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 16, flexGrow: 1 }} >
-            {CATEGORIES_BASE.map((item, index) => (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 16, flexGrow: 1 }}
+            scrollEventThrottle={16}
+          >
+            {categories.map((item, index) => (
               <Chips
                 key={index}
                 label={item.label}
@@ -67,55 +116,60 @@ const HomeScreen = () => {
             ))}
           </ScrollView>
         </View>
-        <Container style={{
-          flex: 1,
-          justifyContent: items.length ? 'flex-start' : 'center',
-          alignItems: items.length ? 'flex-start' : 'center',
-        }}>
-          {items.length === 0 && (
-            <ScrollView
-              contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefresh}
-                />
-              }
-            >
-              <Text style={{ textAlign: 'center', paddingHorizontal: 20 }}>
-                Veuillez cliquer sur le bouton ci-dessous pour enregistrer votre première garantie en scannant vos documents. Vous pouvez également importer une photo ou un fichier
-              </Text>
-            </ScrollView>
-          )}
-          {items.length > 0 && <FlatList
-            style={{ flex: 1, width: '100%' }} // Ensure it takes up available space
-            data={items}
-            keyExtractor={(item) => item.id!}
-            renderItem={({ item }) => (
-              <ProductCard
-                brand={item.brand!}
-                name={item.label!}
-                purchaseDate={item.purchaseDate}
-                warrantyDuration={item.warrantyDuration}
-                image={item.picture ? item.picture : require('../assets/images/default-product.png')}
-                style={{ marginTop: 16 }}
-                onPress={() => {
-                  router.push({
-                    pathname: '/show-item',
-                    params: { itemId: item.id },
-                }); }} // Navigate to item details
-              />
-            )}
-            contentContainerStyle={{ paddingBottom: 80 }}
-            nestedScrollEnabled={true} // Allow nested scrolling
+
+        {searchedItems.length === 0 ? (
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
               />
             }
-          />}
-        </Container>
+            scrollEventThrottle={16}
+            bounces={true}
+          >
+            <Text style={{ textAlign: 'center' }}>
+              Veuillez cliquer sur le bouton ci-dessous pour enregistrer votre première garantie en scannant vos documents. Vous pouvez également importer une photo ou un fichier
+            </Text>
+          </ScrollView>
+        ) : (
+          <FlatList
+            style={{ flex: 1 }}
+            data={searchedItems}
+            keyExtractor={(item) => item.id!}
+            renderItem={({ item }) => (
+              <Container>
+                <ProductCard
+                  brand={item.brand!}
+                  name={item.label!}
+                  purchaseDate={item.purchaseDate}
+                  warrantyDuration={item.warrantyDuration}
+                  image={item.picture ? item.picture : require('../assets/images/default-product.png')}
+                  style={{ marginTop: 16 }}
+                  onPress={() => {
+                    router.push({
+                      pathname: '/show-item',
+                      params: { itemId: item.id },
+                  }); }}
+                />
+              </Container>
+            )}
+            contentContainerStyle={{ paddingBottom: 80 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }
+            scrollEventThrottle={16}
+            bounces={true}
+            showsVerticalScrollIndicator={true}
+            removeClippedSubviews={false}
+          />
+        )}
+
         <BottomBar />
       </ScreenView>
     );
