@@ -4,8 +4,16 @@ import Container from '../Container';
 import SearchIcon from '../ui/Icons/SearchIcon';
 import styles from './styles';
 
-const SearchBar = () => {
+interface SearchBarProps {
+  onHandleSearch?: (query: string) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ onHandleSearch }) => {
+  const [search, setSearch] = React.useState<string>('');
   const handleDonePress = () => {
+    if (onHandleSearch) {
+      onHandleSearch(search);
+    }
   };
   return (
     <Container>
@@ -14,6 +22,10 @@ const SearchBar = () => {
           placeholder="Rechercher..."
           style={styles.input}
           returnKeyType="done"
+          value={search}
+          onChangeText={(text) => {
+            setSearch(text);
+          }}
           onSubmitEditing={handleDonePress}
         />
         <TouchableOpacity
