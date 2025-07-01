@@ -1,28 +1,144 @@
+import BottomSheet from '@gorhom/bottom-sheet';
+import * as ImagePicker from 'expo-image-picker';
+import { MediaType } from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Text, View, ScrollView, FlatList, RefreshControl } from 'react-native';
+import { Text, View, ScrollView, FlatList, RefreshControl, Alert, ActivityIndicator, StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Container from '../components/Container';
 import ScreenView from '../components/ScreenView';
 import SearchBar from '../components/SearchBar';
+import ActionBottomSheet from '../components/ui/ActionBottomSheet';
 import Chips from '../components/ui/Chips';
 import { IChipsProps } from '../components/ui/Chips/@types';
 import ProductCard from '../components/ui/ProductCard';
 import RoundedIconButton from '../components/ui/RoundedIconButton';
 import { COLORS } from '../constants';
 import { CATEGORIES_BASE } from '../constants/Categories';
+import { useDocumentRepository } from '../hooks/useDocumentRepository/useDocumentRepository';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
+import { Document } from '../models/Document/Document';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
+import * as PDFService from '../services/PDFService';
 // import { useUserContext } from '../providers/UserContext';
 
 export function BottomBar() {
   const router = useRouter();
+  const { user } = useUserContext();
+  const { saveDocument } = useDocumentRepository({ ownerId: user?.id || '' });
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
+  const [isImporting, setIsImporting] = React.useState(false);
+
+  const handleUploadPress = () => {
+    bottomSheetRef.current?.snapToIndex(0);
+  };
+
+  const handleTakePhoto = () => {
+    bottomSheetRef.current?.close();
+    router.navigate('/scanner');
+  };
+
+  const handleUploadDocument = async () => {
+    bottomSheetRef.current?.close();
+
+    try {
+      setIsImporting(true);
+
+      // Request permission to access media library
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission requise',
+          'Nous avons besoin d\'accéder à votre galerie pour importer des documents.'
+        );
+        return;
+      }
+
+      // Launch image picker with support for images and PDFs
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'] as MediaType[],
+        allowsEditing: false,
+        quality: 0.8,
+        allowsMultipleSelection: false,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        const asset = result.assets[0];
+
+        // Create PDF from the selected image
+        const pdfOptions = {
+          title: asset.fileName ? PDFService.removeFileExtension(asset.fileName) : 'Document Importé',
+          author: 'GarantEasy Import',
+          subject: 'Document importé depuis la galerie',
+          compress: true,
+          useTimestamp: true,
+        };
+
+        // Create PDF and get file path
+        const pdfPath = await PDFService.createPdfFromImages([asset.uri], pdfOptions);
+        const fileName = pdfPath.split('/').pop() || 'document.pdf';
+
+        // Create and save the document
+        let document = new Document({
+          ownerId: user?.id || '',
+          name: fileName,
+          filename: fileName,
+          type: 'invoice', // Type for imported documents
+          mimetype: 'application/pdf',
+          fileSource: 'local',
+          filePath: pdfPath,
+        });
+
+        document = await saveDocument(document);
+
+        // Navigate to create-item with the document
+        router.push({
+          pathname: '/create-item',
+          params: { documentId: document.id! },
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'import du document:', error);
+      Alert.alert(
+        'Erreur',
+        'Une erreur est survenue lors de l\'import du document.'
+      );
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const handleCloseBottomSheet = () => {
+    bottomSheetRef.current?.close();
+  };
+
   return (
-    <View style={{ height: 80, borderTopWidth: 1, borderColor: COLORS.grey }}>
-      <View style={{ position: 'absolute', top: -35, left: '50%', transform: [{ translateX: -40 }] }}>
-        <RoundedIconButton icon='upload' onPress={() => { router.navigate('/scanner'); }} size='big' />
+    <>
+      <View style={{ height: 80, borderTopWidth: 1, borderColor: COLORS.grey }}>
+        <View style={{ position: 'absolute', top: -35, left: '50%', transform: [{ translateX: -40 }] }}>
+          <RoundedIconButton icon='upload' onPress={handleUploadPress} size='big' />
+        </View>
       </View>
-    </View>
+
+      <ActionBottomSheet
+        ref={bottomSheetRef}
+        onTakePhoto={handleTakePhoto}
+        onUploadDocument={handleUploadDocument}
+        onClose={handleCloseBottomSheet}
+      />
+
+      {/* Loading Overlay */}
+      {isImporting && (
+        <View style={styles.loadingOverlay}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={COLORS.primary || "#007AFF"} />
+            <Text style={styles.loadingText}>Import du document en cours...</Text>
+          </View>
+        </View>
+      )}
+    </>
   );
 }
 
@@ -95,7 +211,8 @@ const HomeScreen = () => {
     fetchItems();
   }, [fetchItems]);
 
-    return (
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <ScreenView>
         <SearchBar onHandleSearch={handleSearch} />
         <View>
@@ -172,7 +289,43 @@ const HomeScreen = () => {
 
         <BottomBar />
       </ScreenView>
-    );
+    </GestureHandlerRootView>
+  );
 };
+
+const styles = StyleSheet.create({
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  loadingContainer: {
+    backgroundColor: 'white',
+    padding: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
+    textAlign: 'center',
+  },
+});
 
 export default HomeScreen;
