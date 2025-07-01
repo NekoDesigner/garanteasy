@@ -35,35 +35,37 @@ const HomeScreen = () => {
   const [categories, setCategories] = React.useState<IChipsProps[]>(CATEGORIES_BASE);
   const [refreshing, setRefreshing] = React.useState(false);
 
+  const handleShowCategories = (showableItems: Item[]) => {
+    // Get all categories from items as unique values and order by number ASC if id ends with a number
+    const uniqueCategoriesMap = new Map();
+    for (const item of showableItems) {
+      if (item.category && item.category.id) {
+        uniqueCategoriesMap.set(item.category.id, item.category);
+      }
+    }
+    let uniqueCategories = Array.from(uniqueCategoriesMap.values());
+
+    uniqueCategories = uniqueCategories.sort((a, b) => {
+      const getNumber = (id: string) => {
+        const match = id.match(/(\d+)$/);
+        return match ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
+      };
+      return getNumber(a.id) - getNumber(b.id);
+    });
+    const chipsCatgoriesMapped: IChipsProps[] = [];
+    for (const category of uniqueCategories) {
+      if (!category) continue; // Skip if category is undefined or null
+      chipsCatgoriesMapped.push(category.getCategoryChipsProps());
+    }
+    setCategories(chipsCatgoriesMapped.filter(cat => cat !== undefined) as IChipsProps[]);
+  };
+
   const fetchItems = React.useCallback(async () => {
     try {
       const fetchedItems = await getAllItems({ withArchived: false, withDocuments: true });
       setItems(fetchedItems);
       setSearchedItems(fetchedItems);
-
-      // Get all categories from items as unique values and order by number ASC if id ends with a number
-      const uniqueCategoriesMap = new Map();
-      for (const item of fetchedItems) {
-        if (item.category && item.category.id) {
-          uniqueCategoriesMap.set(item.category.id, item.category);
-        }
-      }
-      let uniqueCategories = Array.from(uniqueCategoriesMap.values());
-
-      uniqueCategories = uniqueCategories.sort((a, b) => {
-        const getNumber = (id: string) => {
-          const match = id.match(/(\d+)$/);
-          return match ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
-        };
-        return getNumber(a.id) - getNumber(b.id);
-      });
-      console.log('Unique Categories:', uniqueCategories);
-      const chipsCatgoriesMapped: IChipsProps[] = [];
-      for (const category of uniqueCategories) {
-        if (!category) continue; // Skip if category is undefined or null
-        chipsCatgoriesMapped.push(category.getCategoryChipsProps());
-      }
-      setCategories(chipsCatgoriesMapped.filter(cat => cat !== undefined) as IChipsProps[]);
+      handleShowCategories(fetchedItems);
     } catch (error) {
       console.error('Error fetching items:', error);
     }
@@ -78,6 +80,7 @@ const HomeScreen = () => {
   const handleSearch = (query: string) => {
     if (!query) {
       setSearchedItems(items);
+      handleShowCategories(items);
       return;
     }
     const filteredItems = items.filter(item =>
@@ -85,6 +88,7 @@ const HomeScreen = () => {
       item.brand?.toLowerCase().includes(query.toLowerCase())
     );
     setSearchedItems(filteredItems);
+    handleShowCategories(filteredItems);
   };
 
   React.useEffect(() => {
