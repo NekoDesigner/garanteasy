@@ -14,15 +14,24 @@ const GDateInput: React.FC<IGDateInputProps> = ({
   label,
   labelStyle,
   errorStyle,
+  value: initialValue,
   allowFutureDates = true,
   onDateValidation,
   onDateChange,
   onBlur,
+  onChangeText, // Extract this to avoid conflicts
   ...props
 }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(initialValue || '');
   const [error, setError] = useState<string>('');
   const inputRef = useRef<TextInput>(null);
+
+  // Update internal value when prop changes
+  React.useEffect(() => {
+    if (initialValue !== undefined) {
+      setValue(initialValue);
+    }
+  }, [initialValue]);
 
   // Fonction pour formater la date en DD/MM/YYYY
   const formatDate = (text: string) => {
@@ -103,8 +112,8 @@ const GDateInput: React.FC<IGDateInputProps> = ({
     }
 
     // Appeler la fonction onChangeText si elle existe
-    if (props.onChangeText) {
-      props.onChangeText(formattedText);
+    if (onChangeText) {
+      onChangeText(formattedText);
     }
 
     if (onDateChange) {
