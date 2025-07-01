@@ -109,4 +109,8 @@ export class Item extends IModel {
   get warrantyDocument(): Document | undefined {
     return this.documents?.find((doc) => doc.type === "invoice" || doc.type === "ticket");
   }
+
+  get purchaseDateFormatted(): string {
+    return DateService.formatDDMMYYYY(this.purchaseDate);
+  }
 }

@@ -107,6 +107,16 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     return result;
   }, [db]);
 
+  const detachDocumnentFromItem = useCallback(async (documentId: string, itemId: string) => {
+    const query = `DELETE FROM document_attachments WHERE entity_id = ? AND document_id = ? AND model = 'Item'`;
+    const statement = await db.prepareAsync(query);
+    const result = await statement.executeAsync([itemId, documentId]);
+    if (result.changes === 0) {
+      throw new DatabaseSaveException(`Failed to attach document ${documentId} to item ${itemId}`);
+    }
+    return result;
+  }, [db]);
+
   const getAllDocumentsForItem = useCallback(async (itemId: string): Promise<Document[]> => {
     const query = `SELECT
             documents.*,
@@ -124,6 +134,7 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     getAllDocuments,
     getDocumentById,
     attachDocumentToItem,
+    detachDocumnentFromItem,
     getAllDocumentsForItem,
     deleteDocumentById
   };

@@ -11,6 +11,7 @@ export interface IGDateInputProps extends TextInputProps {
   labelStyle?: StyleProp<TextStyle>;
   errorStyle?: StyleProp<TextStyle>;
   label: string;
+  value?: string; // Default value in DD/MM/YYYY format
   allowFutureDates?: boolean;
   onDateValidation?: (isValid: boolean, errorMessage?: string) => void;
   onDateChange?: (date: Date) => void;

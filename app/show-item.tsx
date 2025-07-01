@@ -100,6 +100,12 @@ const ShowItem = () => {
             variant='secondary'
             style={{ paddingVertical: SIZES.padding.s }}
             textStyle={{ textAlign: 'center', flex: 1 }}
+            onPress={() => {
+              router.push({
+                pathname: '/update-item',
+                params: { itemId: item.id },
+              });
+            }}
           />
         </Container>
       </ScrollView>
