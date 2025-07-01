@@ -10,6 +10,7 @@ import { useCallback } from "react";
 import { DatabaseSaveException } from "../../exceptions/DatabaseSaveException";
 import { Document } from "../../models/Document/Document";
 import { DatabaseDocumentDto } from "../../models/Document/Document.dto";
+import { ImageService } from "../../services/ImageService";
 
 export interface IDocumentRepositoryProps {
   ownerId: string;
@@ -129,6 +130,38 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     return result.map((doc) => Document.toModel(doc));
   }, [db]);
 
+  /**
+   * Remove all documents that are not attachments
+   */
+  const ghostbuster = useCallback(async () => {
+    // Find all orphaned documents for this owner
+    const orphanedDocsQuery = `
+      SELECT * FROM documents 
+      WHERE id NOT IN (SELECT document_id FROM document_attachments) 
+      AND owner_id = ?
+    `;
+    const orphanedDocs = await db.getAllAsync<DatabaseDocumentDto>(orphanedDocsQuery, [ownerId]);
+    for (const doc of orphanedDocs) {
+      if (doc.file_source === 'local' && doc.file_path) {
+      try {
+        await ImageService.deleteImage(doc.file_path);
+      } catch (err) {
+        console.warn(`Failed to remove file at ${doc.file_path}:`, err);
+      }
+      }
+    }
+    const query = `DELETE FROM documents WHERE id NOT IN (SELECT document_id FROM document_attachments) AND owner_id = ?`;
+    const request = await db.prepareAsync(query);
+    const result = await request.executeAsync([ownerId]);
+    if (result.changes > 0) {
+      const message = `Who you gonna call? Ghostbusters 👻 ! Removed ${result.changes} orphaned documents.`;
+      const border = "─".repeat(message.length + 2);
+      console.log(`┌${border}┐`);
+      console.log(`│ ${message} │`);
+      console.log(`└${border}┘`);
+    }
+  }, [db, ownerId]);
+
   return {
     saveDocument,
     getAllDocuments,
@@ -136,6 +169,7 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     attachDocumentToItem,
     detachDocumnentFromItem,
     getAllDocumentsForItem,
-    deleteDocumentById
+    deleteDocumentById,
+    ghostbuster
   };
 }
