@@ -192,6 +192,11 @@ const UpdateItem = () => {
         !additionalDocuments.find((doc) => doc.getId() === dc.getId())
       );
 
+      console.log("ORIGIANL ADDITIONAL DOCUMENTS =>", originalAdditionalDocuments);
+      console.log("CURRENT ADDITIONAL DOCUMENTS =>", additionalDocuments);
+      console.log("DOCUMENT TO ATTACH =>", documentToAttach);
+      console.log("DOCUMENT TO DETACH =>", documentToDetach);
+
       // Save the item first
       const savedItem = await saveItem(item);
       setItem(savedItem);
@@ -214,20 +219,52 @@ const UpdateItem = () => {
 
       // Attach documents to the item
       for (const doc of documentToAttach) {
-        await attachDocumentToItem(doc.getId(), savedItem.getId());
+        try {
+          // Check if document has an ID before attaching
+          if (!doc.getId()) {
+            console.warn('Document does not have an ID, skipping attach:', doc);
+            continue;
+          }
+          // Only attach the document to the item, don't save it again since it's already saved
+          await attachDocumentToItem(doc.getId(), savedItem.getId());
+        } catch (attachError) {
+          console.error('Error attaching document:', attachError);
+          // Continue with other documents even if one fails
+        }
       }
 
-      // Detach documents to the item
+      // Detach documents from the item
       for (const doc of documentToDetach) {
-        await ImageService.deleteImage(doc.filePath);
-        await detachDocumnentFromItem(doc.getId(), savedItem.getId());
-        await deleteDocumentById(doc.getId());
+        try {
+          // Try to delete the image file if it exists
+          if (doc.filePath) {
+            await ImageService.deleteImage(doc.filePath);
+          }
+        } catch (imageError) {
+          console.warn('Error deleting image file:', imageError);
+          // Continue with document deletion even if image deletion fails
+        }
+
+        try {
+          // Check if document has an ID before detaching
+          if (!doc.getId()) {
+            console.warn('Document does not have an ID, skipping detach:', doc);
+            continue;
+          }
+          await detachDocumnentFromItem(doc.getId(), savedItem.getId());
+          await deleteDocumentById(doc.getId());
+        } catch (docError) {
+          console.error('Error deleting document:', docError);
+          // Continue with other documents even if one fails
+        }
       }
 
       Alert.alert('Succès', 'Article enregistré avec succès!', [
         {
           text: 'OK',
           onPress: () => {
+            // Update the original documents list to reflect the current state
+            setOriginalAdditionalDocuments([...additionalDocuments]);
             router.dismissAll();
           }
         }
@@ -398,7 +435,7 @@ const UpdateItem = () => {
     try {
       setLoading(true);
 
-      // Import the PDF service
+      // Import the PDF service functions
       const { createPdfFromImages, removeFileExtension } = await import('../services/PDFService');
 
       // Create PDF with appropriate title for 'other' type documents
@@ -450,8 +487,44 @@ const UpdateItem = () => {
           onPress: async () => {
             try {
               setLoading(true);
-              await deleteDocumentById(documentId);
+
+              // Find the document to get its file path
+              const docToDelete = additionalDocuments.find(doc => doc.id === documentId);
+
+              // Remove from UI state immediately for better UX
               setAdditionalDocuments((prev) => prev.filter(doc => doc.id !== documentId));
+
+              // If this is a newly created document (not in originalAdditionalDocuments),
+              // we need to actually delete it from the database
+              const isNewDocument = !originalAdditionalDocuments.find(doc => doc.getId() === documentId);
+
+              if (isNewDocument && docToDelete) {
+                try {
+                  // Try to delete the file if it exists
+                  if (docToDelete.filePath) {
+                    await ImageService.deleteImage(docToDelete.filePath);
+                  }
+                } catch (imageError) {
+                  console.warn('Error deleting image file:', imageError);
+                }
+
+                try {
+                  // Delete from database
+                  await deleteDocumentById(documentId);
+                } catch (dbError) {
+                  console.error('Error deleting document from database:', dbError);
+                  // Re-add to UI if database deletion failed
+                  if (docToDelete) {
+                    setAdditionalDocuments((prev) => [...prev, docToDelete]);
+                  }
+                  Alert.alert('Erreur', 'Échec de la suppression du document de la base de données');
+                  return;
+                }
+              } else {
+                // For existing documents, we'll handle deletion during save
+                // Just removing from UI is sufficient here
+              }
+
               Alert.alert('Succès', 'Document supprimé avec succès!');
             } catch (error) {
               console.error('Error deleting document:', error);
@@ -589,7 +662,7 @@ const UpdateItem = () => {
                 </View>
               )}
             </FormCard>
-          <FormCard style={[styles.space]}>
+            <FormCard style={[styles.space]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={styles.h1}>Ajouter un document</Text>
               {loading ? (
