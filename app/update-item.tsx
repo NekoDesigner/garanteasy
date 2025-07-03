@@ -192,11 +192,6 @@ const UpdateItem = () => {
         !additionalDocuments.find((doc) => doc.getId() === dc.getId())
       );
 
-      console.log("ORIGIANL ADDITIONAL DOCUMENTS =>", originalAdditionalDocuments);
-      console.log("CURRENT ADDITIONAL DOCUMENTS =>", additionalDocuments);
-      console.log("DOCUMENT TO ATTACH =>", documentToAttach);
-      console.log("DOCUMENT TO DETACH =>", documentToDetach);
-
       // Save the item first
       const savedItem = await saveItem(item);
       setItem(savedItem);

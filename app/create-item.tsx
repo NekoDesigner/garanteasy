@@ -90,9 +90,7 @@ const CreateItem = () => {
 
   const handleCategoryPress = (selectedCategory: string) => {
     const selectedCategoryObj = categoriesList.find(cat => cat.id === selectedCategory);
-    console.log('Selected category:', selectedCategory, 'Found:', selectedCategoryObj);
     if (selectedCategoryObj && selectedCategoryObj.id) {
-      console.log('Selected category:', selectedCategoryObj);
       setCategory(selectedCategoryObj);
       setItem(prev => new Item({
         ...prev,
@@ -101,8 +99,6 @@ const CreateItem = () => {
         categoryId: selectedCategoryObj.id!,
       }));
     } else {
-      console.warn('Selected category not found in categories list:', selectedCategory);
-      console.log('Current categories list:', categoriesList);
       setCategory(null);
       setItem(prev => new Item({
         ...prev,
@@ -136,7 +132,6 @@ const CreateItem = () => {
       try {
         setLoading(true);
         const categories = await getAllCategories();
-        console.log('Loaded categories:', categories);
         setCategoriesList(categories);
       } catch (error) {
         console.error('Error loading categories:', error);
