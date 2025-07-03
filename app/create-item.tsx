@@ -21,6 +21,7 @@ import { Category } from '../models/Category/Category';
 import { Document } from '../models/Document/Document';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
+import { DateService } from '../services/DateService';
 import { ImageService } from '../services/ImageService';
 
 const CreateItem = () => {
@@ -153,6 +154,15 @@ const CreateItem = () => {
       setLoading(true);
       if (!itemImage) {
         Alert.alert('Erreur', 'Veuillez ajouter une image pour l\'article.');
+        return;
+      }
+
+      // Check if warranty duration is alreay expired
+      if (DateService.isItemExpired(
+        item.purchaseDate,
+        DateService.getWarrantyDurationInDays(item.warrantyDuration)
+      )) {
+        Alert.alert('Erreur', 'La durée de garantie est déjà expirée. Veuillez vérifier la date d\'achat et la durée de garantie.');
         return;
       }
 

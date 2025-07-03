@@ -1,7 +1,7 @@
 import { CameraCapturedPicture } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert } from 'react-native';
 
 import ScreenView from '../components/ScreenView';
@@ -15,12 +15,14 @@ const ScannerScreen = () => {
   const { user } = useUserContext();
   const router = useRouter();
   const { saveDocument } = useDocumentRepository({ ownerId: user?.id || '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleError = (error: Error) => {
     Alert.alert('Error', 'Failed to scan document: ' + error.message);
   };
 
   const handleValidation = async (data: (CameraCapturedPicture | ImagePicker.ImagePickerAsset)[], scanMode: 'invoice' | 'ticket') => {
+    setIsLoading(true);
     try {
       // Import the PDF service
       const { createPdfFromImages } = await import('../services/PDFService');
@@ -41,9 +43,6 @@ const ScannerScreen = () => {
       const pdfPath = await createPdfFromImages(imageUris, pdfOptions);
       const fileName = pdfPath.split('/').pop() || 'document.pdf';
 
-      /**
-       * TODO: Enregitrer le PDF comme Entity Document.
-       */
       let document = new Document({
         ownerId: user?.id || '',
         name: fileName,
@@ -62,6 +61,8 @@ const ScannerScreen = () => {
     } catch (error) {
       console.error('Error creating PDF:', error);
       Alert.alert('Error', `Failed to create PDF: ${(error instanceof Error || error instanceof DatabaseSaveException) ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,6 +75,7 @@ const ScannerScreen = () => {
         onError={handleError}
         onValidation={handleValidation}
         onClose={handleClose}
+        isLoading={isLoading}
       />
     </ScreenView>
   );
