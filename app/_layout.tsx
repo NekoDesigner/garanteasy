@@ -8,6 +8,7 @@ import "react-native-reanimated";
 import { DATABASE_MIGRATIONS } from "../database";
 import { DATABASE_NAME } from "../database/db";
 import { Migrate } from "../database/migrate";
+import { OnboardingProvider } from "../providers/OnboardingContext";
 import { UserProvider } from "../providers/UserContext";
 import { ImageService } from "../services/ImageService";
 
@@ -84,7 +85,9 @@ export default function RootLayout() {
         useSuspense
       >
         <UserProvider>
-          <Slot />
+          <OnboardingProvider>
+            <Slot />
+          </OnboardingProvider>
         </UserProvider>
       </SQLiteProvider>
     </Suspense>

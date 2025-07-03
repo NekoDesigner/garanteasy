@@ -19,9 +19,9 @@ import { useDocumentRepository } from '../hooks/useDocumentRepository/useDocumen
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
 import { Document } from '../models/Document/Document';
 import { Item } from '../models/Item/Item';
+import { useOnboardingContext } from '../providers/OnboardingContext';
 import { useUserContext } from '../providers/UserContext';
 import * as PDFService from '../services/PDFService';
-// import { useUserContext } from '../providers/UserContext';
 
 export function BottomBar() {
   const router = useRouter();
@@ -150,6 +150,7 @@ const HomeScreen = () => {
   const [searchedItems, setSearchedItems] = React.useState<Item[]>([]);
   const [categories, setCategories] = React.useState<IChipsProps[]>(CATEGORIES_BASE);
   const [refreshing, setRefreshing] = React.useState(false);
+  const { currentOnboarding, isLoading } = useOnboardingContext();
 
   const handleShowCategories = (showableItems: Item[]) => {
     // Get all categories from items as unique values and order by number ASC if id ends with a number
@@ -210,6 +211,13 @@ const HomeScreen = () => {
   React.useEffect(() => {
     fetchItems();
   }, [fetchItems]);
+
+  React.useEffect(() => {
+    if (!isLoading && currentOnboarding && !currentOnboarding.isCompleted) {
+      // Use push instead of replace and cast to any to bypass TypeScript route checking
+      (router as any).push('/onboarding');
+    }
+  }, [currentOnboarding, isLoading, router]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
