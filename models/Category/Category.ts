@@ -52,7 +52,8 @@ export class Category extends IModel {
   }
 
   showIcon(): boolean {
-    return !(this.name.toLowerCase() === 'autre' || this.name.toLowerCase() === 'other' || this.id === 'default-category-7');
+    if (!this.id) return true;
+    return !(this.name.toLowerCase() === 'autre' || this.name.toLowerCase() === 'other' || this.id.includes('default-category-7'));
   }
 
   clone(): Category {
@@ -65,22 +66,27 @@ export class Category extends IModel {
 
   getCategoryChipsProps(): IChipsProps {
     const category = this.clone();
-    switch (category.id) {
-      case "default-category-1":
-        return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "hoursehold-electricals") as IChipsProps;
-      case "default-category-2":
-        return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "small-electricals") as IChipsProps;
-      case "default-category-3":
-        return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "diy") as IChipsProps;
-      case "default-category-4":
-        return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "garden") as IChipsProps;
-      case "default-category-5":
-        return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "fashion") as IChipsProps;
-      case "default-category-6":
-        return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "multimedia") as IChipsProps;
-      case "default-category-7":
-        return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "other") as IChipsProps;
+    if (!category.id) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "other") as IChipsProps;
     }
+
+    // Handle the new ID format that includes the owner ID
+    if (category.id.includes("default-category-1")) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "hoursehold-electricals") as IChipsProps;
+    } else if (category.id.includes("default-category-2")) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "small-electricals") as IChipsProps;
+    } else if (category.id.includes("default-category-3")) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "diy") as IChipsProps;
+    } else if (category.id.includes("default-category-4")) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "garden") as IChipsProps;
+    } else if (category.id.includes("default-category-5")) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "fashion") as IChipsProps;
+    } else if (category.id.includes("default-category-6")) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "multimedia") as IChipsProps;
+    } else if (category.id.includes("default-category-7")) {
+      return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "other") as IChipsProps;
+    }
+
     return CATEGORIES_BASE.find((item: IChipsProps) => item.category === "other") as IChipsProps;
   }
 }

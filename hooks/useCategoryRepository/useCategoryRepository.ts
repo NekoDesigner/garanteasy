@@ -14,16 +14,21 @@ export interface ICategoryRepositoryProps {
 
 export function useCategoryRepository({ ownerId }: ICategoryRepositoryProps) {
   const db = useSQLiteContext();
+
   const getAllCategories = React.useCallback(async () => {
-    const query = `SELECT * FROM categories`;
-    const result = await db.getAllAsync<DatabaseCategoryDto>(query);
+    // First, ensure default categories exist for this user
+    // await initializeDefaultCategories();
+
+    const query = `SELECT * FROM categories ${ownerId ? "WHERE owner_id = ?" : ""}`;
+    const params = ownerId ? [ownerId] : [];
+    const result = await db.getAllAsync<DatabaseCategoryDto>(query, params);
     if (result.length === 0) {
       console.warn("No categories found in the database.");
       return [];
     }
 
     return result.map<Category>((category) => (Category.toModel(category)));
-  }, [db]);
+  }, [db, ownerId]);
 
   const getCategoryByName = React.useCallback(async (name: string): Promise<Category | null> => {
     const query = `SELECT * FROM categories WHERE name = ? ${ownerId ? "AND owner_id = ?" : ""}`;
