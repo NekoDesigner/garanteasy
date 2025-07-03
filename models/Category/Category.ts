@@ -32,7 +32,7 @@ export class Category extends IModel {
   static fromModel<T, U>(data: T): U {
     let dto: { id?: string; owner_id: string; name: string };
     if (data instanceof Category) {
-      dto = this.toDatabaseDto(data as Category);
+      dto = Category.toDatabaseDto(data as Category);
     } else {
       dto = data as { id?: string; owner_id: string; name: string };
     }

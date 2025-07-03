@@ -11,6 +11,9 @@ import { Document } from "../../models/Document/Document";
 import { DatabaseDocumentDto } from "../../models/Document/Document.dto";
 import { Item } from "../../models/Item/Item";
 import { DatabaseItemDto } from "../../models/Item/Item.dto";
+import { Notification } from "../../models/Notification/Notification";
+import { DateService } from "../../services/DateService";
+import { useNotificationsRepository } from "../useNotificationsRepository/useNotificationsRepository";
 
 export interface IItemRepositoryProps {
   ownerId: string;
@@ -18,8 +21,9 @@ export interface IItemRepositoryProps {
 
 export function useItemRepository(props: IItemRepositoryProps) {
   const db = useSQLiteContext();
+  const { createNotification, removeNotification } = useNotificationsRepository();
 
-  const getAllItems = React.useCallback(async (options: { withArchived?: boolean, withDocuments?: boolean } = {}): Promise<Item[]> => {
+  const getAllItems = React.useCallback(async (options: { withArchived?: boolean, withDocuments?: boolean, withNotification?: boolean } = {}): Promise<Item[]> => {
     let query = `SELECT * FROM items WHERE owner_id = ? `;
     if (!options.withArchived) {
       query += 'AND is_archived = 0 ';
@@ -66,6 +70,15 @@ export function useItemRepository(props: IItemRepositoryProps) {
         });
       }
     }
+
+    if (options.withNotification) {
+      const dbNotifications = await db.getAllAsync<DatabaseItemDto>(`SELECT * FROM notifications`);
+      const notifications = dbNotifications.map(notification => Notification.toModel<DatabaseItemDto, Notification>(notification));
+      items.forEach(item => {
+        item.notifications = notifications.filter(notification => notification.data?.itemId === item.id && notification.data?.itemOwnerId === props.ownerId);
+      });
+    }
+
     return items;
   }, [db, props.ownerId]);
 
@@ -102,6 +115,7 @@ export function useItemRepository(props: IItemRepositoryProps) {
       let result: SQLiteExecuteAsyncResult<DatabaseItemDto>;
       item = Item.setItemIsArchived(item);
       const dbItemDto: DatabaseItemDto = Item.fromModel(item);
+      let savedItem: Item | null = null;
 
       if (dbItemDto.id) {
         // UPDATE
@@ -139,12 +153,27 @@ export function useItemRepository(props: IItemRepositoryProps) {
         // Return the updated item
         const updatedItem = await getItemById(dbItemDto.id);
         if (updatedItem) {
-          return updatedItem;
+          savedItem = updatedItem;
+          removeNotification(dbItemDto.id);
+          // Create a new notification for the updated item
+          await createNotification({
+            scheduleTime: DateService.scheduleTimeNotificationDateByItem(updatedItem),
+            title: `Une garanties arrive à expiration bientôt !`,
+            body: `La garrantie de votre ${dbItemDto.label} va bientôt expirer 🔔.`,
+            data: {
+              itemId: updatedItem.id,
+              itemLabel: dbItemDto.label,
+              itemOwnerId: props.ownerId
+            }
+          });
+        } else {
+          throw new Error(`Failed to update item with id ${dbItemDto.id}`);
         }
-        throw new Error(`Failed to update item with id ${dbItemDto.id}`);
       } else {
         // INSERT
         let id = Item.generateId();
+        item.id = id;
+        let identifier: string | null = null;
 
         // Retry with different ID if there's a collision
         let attempts = 0;
@@ -185,7 +214,9 @@ export function useItemRepository(props: IItemRepositoryProps) {
             break;
           } catch (error) {
             attempts++;
-
+            if (identifier) {
+              await removeNotification(identifier);
+            }
             if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
               if (attempts < maxAttempts) {
                 // Generate a new ID and try again
@@ -201,12 +232,27 @@ export function useItemRepository(props: IItemRepositoryProps) {
         // For INSERT operations, fetch the newly created item
         const newItem = await getItemById(id);
         if (newItem) {
-          return newItem;
+          savedItem = newItem;
+        } else {
+          throw new DatabaseSaveException("Failed to save item");
         }
-        throw new DatabaseSaveException("Failed to save item");
       }
+
+      // Create a notification for the new item
+      await createNotification({
+        scheduleTime: DateService.scheduleTimeNotificationDateByItem(item),
+        title: `Une garanties arrive à expiration bientôt !`,
+        body: `La garrantie de votre ${dbItemDto.label} va bientôt expirer 🔔.`,
+        data: {
+          itemId: item.id,
+          itemLabel: dbItemDto.label,
+          itemOwnerId: props.ownerId
+        }
+      });
+
+      return savedItem || item;
     },
-    [db, props.ownerId, getItemById]
+    [db, props.ownerId, getItemById, createNotification, removeNotification]
   );
   return React.useMemo(() => ({
     getAllItems,

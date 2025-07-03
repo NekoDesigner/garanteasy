@@ -1,5 +1,6 @@
 import 'react-native-get-random-values'; // Required for pdf-lib and other crypto operations
 import { Buffer } from 'buffer';
+import * as Notifications from 'expo-notifications';
 import { Slot } from "expo-router";
 import { SQLiteProvider } from 'expo-sqlite';
 import { Suspense, useEffect } from 'react';
@@ -32,6 +33,9 @@ const handleDatabaseInit = async (db: any) => {
       // Drop all tables
       for (const table of tables) {
         await db.execAsync(`DROP TABLE IF EXISTS ${table.name}`);
+        if (table.name === 'notifications') {
+          await Notifications.cancelAllScheduledNotificationsAsync();
+        }
       }
 
       // Reset the database version so migrations will run again
@@ -47,6 +51,15 @@ const handleDatabaseInit = async (db: any) => {
   const migrateInstance = new Migrate({ migrations: DATABASE_MIGRATIONS });
   await migrateInstance.run();
 };
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 function Fallback() {
   return (
@@ -64,6 +77,20 @@ export default function RootLayout() {
     ImageService.initializeDirectories().catch(error => {
       console.error('Failed to initialize image directories:', error);
     });
+  }, []);
+
+  useEffect(() => {
+    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+      console.log(notification);
+    });
+    const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      notificationListener.remove();
+      responseListener.remove();
+    };
   }, []);
 
   if (storybookEnabled) {
