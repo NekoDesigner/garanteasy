@@ -14,7 +14,6 @@ import PictureIcon from '../components/ui/Icons/PictureIcon';
 import PDFPreview from '../components/ui/PDFPreview';
 import RoundedIconButton from '../components/ui/RoundedIconButton';
 import { COLORS, SIZES } from '../constants';
-import { CATEGORIES_BASE } from '../constants/Categories';
 import { useCategoryRepository } from '../hooks/useCategoryRepository/useCategoryRepository';
 import { useDocumentRepository } from '../hooks/useDocumentRepository/useDocumentRepository';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
@@ -89,8 +88,10 @@ const CreateItem = () => {
   }, [item.warrantyDuration]);
 
   const handleCategoryPress = (selectedCategory: string) => {
-    const selectedCategoryObj = categoriesList.find(cat => cat.name === selectedCategory);
+    const selectedCategoryObj = categoriesList.find(cat => cat.id === selectedCategory);
+    console.log('Selected category:', selectedCategory, 'Found:', selectedCategoryObj);
     if (selectedCategoryObj && selectedCategoryObj.id) {
+      console.log('Selected category:', selectedCategoryObj);
       setCategory(selectedCategoryObj);
       setItem(prev => new Item({
         ...prev,
@@ -99,6 +100,8 @@ const CreateItem = () => {
         categoryId: selectedCategoryObj.id!,
       }));
     } else {
+      console.warn('Selected category not found in categories list:', selectedCategory);
+      console.log('Current categories list:', categoriesList);
       setCategory(null);
       setItem(prev => new Item({
         ...prev,
@@ -132,6 +135,7 @@ const CreateItem = () => {
       try {
         setLoading(true);
         const categories = await getAllCategories();
+        console.log('Loaded categories:', categories);
         setCategoriesList(categories);
       } catch (error) {
         console.error('Error loading categories:', error);
@@ -568,20 +572,23 @@ const CreateItem = () => {
             <FormCard style={styles.space}>
             <Text style={styles.h1}>Catégorie</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {CATEGORIES_BASE.map((chip, index) => (
+              {categoriesList.map((chip, index) => {
+                const chipsProps = chip.getCategoryChipsProps();
+                return (
                   <Chips
                     key={index}
-                    label={chip.label}
-                    category={chip.category}
-                    showIcon={chip.showIcon}
-                    onPress={() => handleCategoryPress(chip.label as string)}
+                    label={chip.name}
+                    category={chipsProps.category}
+                    showIcon={chip.showIcon()}
+                    onPress={() => handleCategoryPress(chip.getId())}
                     style={{
                       marginRight: 10,
                       marginBottom: 10,
-                      opacity: !category ? 1 : category && category.name !== chip.label ? 1 : 0.6
+                      opacity: !category ? 1 : category && category.getId() !== chip.getId() ? 1 : 0.6
                     }}
                   />
-                ))}
+                );
+              })}
             </View>
             </FormCard>
             <FormCard style={styles.space}>

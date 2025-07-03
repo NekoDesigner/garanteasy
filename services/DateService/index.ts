@@ -1,3 +1,5 @@
+import { Item } from "../../models/Item/Item";
+
 export class DateService {
   static IsDateAfter(date: Date, referenceDate: Date): boolean {
     const dateToCheck = new Date(date);
@@ -78,6 +80,19 @@ export class DateService {
     const expirationDate = DateService.addDays(purchaseDate, warrantyDurationInDays);
     const currentDate = new Date();
     return DateService.IsDateAfter(currentDate, expirationDate);
+  }
+
+  static scheduleTimeNotificationDateByItem(item: Item): Date {
+    const warrantyDurationInDays = DateService.getWarrantyDurationInDays(item.warrantyDuration);
+    const expirationDate = DateService.addDays(item.purchaseDate, warrantyDurationInDays);
+    // Check before if warranty expiration date is greater than 30 days and current date
+    if (DateService.getDaysBetweenDates(new Date(), expirationDate) < 30) {
+      // return middle time between current date and expiration date
+      const middleTime = new Date();
+      middleTime.setTime((new Date().getTime() + expirationDate.getTime()) / 2);
+      return middleTime; // Schedule in the middle of current date and expiration date
+    }
+    return DateService.subtractDays(expirationDate, 30); // Schedule 30 days before expiration
   }
 }
 

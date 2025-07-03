@@ -2,6 +2,7 @@ import { DateService } from "../../services/DateService";
 import { Category } from "../Category/Category";
 import { Document } from "../Document/Document";
 import { IModel } from "../model";
+import { Notification } from "../Notification/Notification";
 import { DatabaseItemDto, ItemDto } from "./Item.dto";
 
 export class Item extends IModel {
@@ -19,6 +20,7 @@ export class Item extends IModel {
   updatedAt: Date;
   documents?: Document[];
   category: Category | null = null;
+  notifications: Notification[] = [];
   constructor(data: ItemDto) {
     super();
     this.id = data.id;
@@ -56,7 +58,7 @@ export class Item extends IModel {
   static override fromModel<T, U>(data: T): U {
     let dto: ItemDto;
     if (data instanceof Item) {
-      dto = this.toDto(data as Item);
+      dto = Item.toDto(data as Item);
     } else {
       dto = data as ItemDto;
     }
@@ -112,5 +114,10 @@ export class Item extends IModel {
 
   get purchaseDateFormatted(): string {
     return DateService.formatDDMMYYYY(this.purchaseDate);
+  }
+
+  get warrantyEndDate(): Date {
+    const warrantyDurationInDays = DateService.getWarrantyDurationInDays(this.warrantyDuration);
+    return DateService.addDays(this.purchaseDate, warrantyDurationInDays);
   }
 }
