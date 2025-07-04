@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "sb-rn-get-stories && expo start",
-    "dev": "sb-rn-get-stories && npx expo start --clear",
+    "dev": "sb-rn-get-stories && npx expo start --clear --go",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
