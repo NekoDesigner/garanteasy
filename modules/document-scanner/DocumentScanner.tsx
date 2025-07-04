@@ -2,7 +2,7 @@ import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-ca
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import Button from '../../components/ui/Button';
 import CheckIcon from '../../components/ui/Icons/CheckIcon';
@@ -18,6 +18,7 @@ export interface DocumentScannerProps {
   onValidation?: (data: (CameraCapturedPicture | ImagePicker.ImagePickerAsset)[], scanMode: 'invoice' | 'ticket') => void;
   onSave?: (data: Record<string, any>) => void; // Assuming onSave is used to save the scanned document
   style?: object;
+  isLoading?: boolean;
 }
 
 const DocumentScanner: React.FC<DocumentScannerProps> = ({
@@ -26,7 +27,8 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
   onClose,
   onValidation,
   onSave,
-  style
+  style,
+  isLoading = false,
 }) => {
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
@@ -78,7 +80,7 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: false,
         quality: 1,
       });
@@ -146,9 +148,7 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
         />
       </View>
     );
-  }
-
-  return showReview ? <DocumentReview
+  }  return showReview ? <DocumentReview
     onValidate={validatePhotos}
     onAdd={() => {
       setShowReview(false);
@@ -169,6 +169,7 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
       setPhotos(updatedImages);
     }}
     data={photos}
+    isLoading={isLoading}
   /> : (
     <View style={[styles.container, style]}>
         <View style={[styles.container, style]}>
@@ -176,7 +177,7 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
             ref={cameraRef}
             style={styles.camera}
             facing="back"
-            >
+          >
               {photos.length > 0 && <DocumentScannedIndicator count={photos.length} />}
               {photos.length > 0 && <TouchableOpacity onPress={reviewPhotos} style={styles.validatePhotosButton}>
                 <CheckIcon />
@@ -184,6 +185,14 @@ const DocumentScanner: React.FC<DocumentScannerProps> = ({
           </CameraView>
           <DocumentScannerBottom onTakePicture={takePicture} onClose={closeCamera} onImportPicture={pickImageFromGallery} onModeChange={handleModeChange} />
         </View>
+
+        {/* Loading overlay */}
+        {isLoading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color={COLORS.light} />
+            <Text style={styles.loadingText}>Traitement en cours...</Text>
+          </View>
+        )}
     </View>
   );
 };
@@ -228,5 +237,22 @@ const styles = StyleSheet.create({
     width: 60,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  loadingText: {
+    color: COLORS.light,
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
+  },
 });

@@ -24,7 +24,6 @@ const GDropdown: React.FC<IGDropdownProps> = ({
   const selectedOption = options.find(option => option.value === selectedValue);
 
   const handleOptionPress = (value: string) => {
-    console.log('GDropdown: Option pressed with value:', value);
     onValueChange(value);
     setIsOpen(false);
   };

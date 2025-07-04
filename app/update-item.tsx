@@ -192,11 +192,6 @@ const UpdateItem = () => {
         !additionalDocuments.find((doc) => doc.getId() === dc.getId())
       );
 
-      console.log("ORIGIANL ADDITIONAL DOCUMENTS =>", originalAdditionalDocuments);
-      console.log("CURRENT ADDITIONAL DOCUMENTS =>", additionalDocuments);
-      console.log("DOCUMENT TO ATTACH =>", documentToAttach);
-      console.log("DOCUMENT TO DETACH =>", documentToDetach);
-
       // Save the item first
       const savedItem = await saveItem(item);
       setItem(savedItem);
@@ -311,7 +306,7 @@ const UpdateItem = () => {
       }
 
       const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         quality: 0.8,
       });
 
@@ -340,7 +335,7 @@ const UpdateItem = () => {
   const pickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         quality: 0.8,
       });
 
@@ -400,7 +395,7 @@ const UpdateItem = () => {
       }
 
       const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: false,
         quality: 0.8,
       });
@@ -417,7 +412,7 @@ const UpdateItem = () => {
   const pickDocumentFromLibrary = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: false,
         quality: 0.8,
       });

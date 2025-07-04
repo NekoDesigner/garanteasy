@@ -3,7 +3,7 @@ import { ImageResult, SaveFormat, useImageManipulator } from 'expo-image-manipul
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Image, View, ScrollView, Dimensions, TouchableOpacity, Text, Alert, PanResponder, StyleProp, ViewStyle } from 'react-native';
+import { StyleSheet, Image, View, ScrollView, Dimensions, TouchableOpacity, Text, Alert, PanResponder, StyleProp, ViewStyle, ActivityIndicator } from 'react-native';
 import Container from '../../components/Container';
 import AddIcon from '../../components/ui/Icons/AddIcon';
 import CropIcon from '../../components/ui/Icons/CropIcon';
@@ -43,11 +43,12 @@ interface DocumentReviewProps {
   onCrop?: (imageUri: string, index: number) => void;
   onImageUpdate?: (updatedImages: (CameraCapturedPicture | ImagePicker.ImagePickerAsset)[]) => void;
   style?: StyleProp<ViewStyle>;
+  isLoading?: boolean;
 
   data: (CameraCapturedPicture | ImagePicker.ImagePickerAsset)[];
 }
 
-const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate, onAdd, onDelete, onCrop, onImageUpdate }) => {
+const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate, onAdd, onDelete, onCrop, onImageUpdate, isLoading = false }) => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [showCropper, setShowCropper] = React.useState(false);
@@ -56,12 +57,12 @@ const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate
   // Cropper state
   const [imageSize, setImageSize] = React.useState({ width: 0, height: 0 });
   const [displayLayout, setDisplayLayout] = React.useState({ width: 0, height: 0 });
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [, setCropLoading] = React.useState(false);
   const [cropPercentage, setCropPercentage] = React.useState({
-    x: 0.15,
-    y: 0.15,
-    width: 0.7,
-    height: 0.7,
+    x: 0.25,
+      y: 0.25,
+      width: 0.5,
+      height: 0.5,
   });
 
   // Helper function to safely get URI from image object
@@ -89,10 +90,10 @@ const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate
   // Reset cropper when changing images
   React.useEffect(() => {
     setCropPercentage({
-      x: 0.15,
-      y: 0.15,
-      width: 0.7,
-      height: 0.7,
+      x: 0.25,
+      y: 0.25,
+      width: 0.5,
+      height: 0.5,
     });
   }, [currentIndex, showCropper]);
 
@@ -144,7 +145,7 @@ const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate
       return;
     }
 
-    setIsLoading(true);
+    setCropLoading(true);
     try {
       const displayed = getDisplayedImageDimensions(); // Donne: { width, height, offsetX, offsetY }
 
@@ -180,7 +181,7 @@ const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate
       console.error('Erreur lors du rognage:', error);
       Alert.alert('Erreur', 'Impossible de rogner l\'image');
     } finally {
-      setIsLoading(false);
+      setCropLoading(false);
     }
   };
 
@@ -412,6 +413,7 @@ const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate
               width: '100%',
               marginBottom: 16
             }}
+            resizeMode="contain"
           />
         ) : (
           <View style={{
@@ -476,6 +478,14 @@ const DocumentReview: React.FC<DocumentReviewProps> = ({ style, data, onValidate
           });
         }}
       />
+
+      {/* Loading overlay */}
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color={COLORS.light} />
+          <Text style={styles.loadingText}>Traitement en cours...</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -527,9 +537,9 @@ const styles = StyleSheet.create({
   },
   cropControls: {
     position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
+    bottom: 6,
+    left: 10,
+    right: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -538,11 +548,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: COLORS.primary,
+    borderColor: COLORS.light,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   cropCancelText: {
-    color: COLORS.primary,
+    color: COLORS.light,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -559,5 +569,22 @@ const styles = StyleSheet.create({
   },
   cropButtonDisabled: {
     opacity: 0.5,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  loadingText: {
+    color: COLORS.light,
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
   },
 });

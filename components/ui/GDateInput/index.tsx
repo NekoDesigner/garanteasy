@@ -34,9 +34,34 @@ const GDateInput: React.FC<IGDateInputProps> = ({
   }, [initialValue]);
 
   // Fonction pour formater la date en DD/MM/YYYY
-  const formatDate = (text: string) => {
+  const formatDate = (text: string, previousValue: string = '') => {
+    // Si l'utilisateur supprime tout, retourner une chaîne vide
+    if (text === '') {
+      return '';
+    }
+
     // Supprimer tous les caractères non-numériques
     const cleanedText = text.replace(/\D/g, '');
+    const previousCleanedText = previousValue.replace(/\D/g, '');
+
+    // Si l'utilisateur supprime des caractères numériques, permettre la suppression
+    if (cleanedText.length < previousCleanedText.length) {
+      // L'utilisateur supprime des caractères, donc formatons juste ce qui reste
+      const limitedText = cleanedText.slice(0, 8);
+
+      let formattedDate = '';
+      if (limitedText.length >= 1) {
+        formattedDate += limitedText.slice(0, 2);
+      }
+      if (limitedText.length >= 3) {
+        formattedDate += '/' + limitedText.slice(2, 4);
+      }
+      if (limitedText.length >= 5) {
+        formattedDate += '/' + limitedText.slice(4, 8);
+      }
+
+      return formattedDate;
+    }
 
     // Limiter à 8 chiffres maximum
     const limitedText = cleanedText.slice(0, 8);
@@ -103,7 +128,7 @@ const GDateInput: React.FC<IGDateInputProps> = ({
 
   // Gérer le changement de texte
   const handleChangeText = (text: string) => {
-    const formattedText = formatDate(text);
+    const formattedText = formatDate(text, value);
     setValue(formattedText);
 
     // Effacer l'erreur lors de la saisie
@@ -119,13 +144,15 @@ const GDateInput: React.FC<IGDateInputProps> = ({
     if (onDateChange) {
       // Extraire le jour, le mois et l'année du texte formaté
       const parts = formattedText.split('/');
-      if (parts.length === 3) {
+      if (parts.length === 3 && parts[0].length === 2 && parts[1].length === 2 && parts[2].length === 4) {
         const day = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10);
         const year = parseInt(parts[2], 10);
 
-        // Appeler le callback onDateChange avec la date complète
-        onDateChange(new Date(year, month - 1, day));
+        // Vérifier si la date est valide avant de l'envoyer
+        if (isValidDate(day, month, year)) {
+          onDateChange(new Date(year, month - 1, day));
+        }
       }
     }
   };
