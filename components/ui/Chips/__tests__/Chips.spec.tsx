@@ -2,6 +2,7 @@ import { render, fireEvent } from "@testing-library/react-native";
 import React from "react";
 import Chips from "..";
 import { COLORS, SIZES } from "../../../../constants";
+import ScanIcon from "../../Icons/ScanIcon";
 
 describe("Chips Components", () => {
   const BUTTONS_LIST = [
@@ -54,7 +55,7 @@ describe("Chips Components", () => {
   }
 
   it("renders button with custom icon", () => {
-    const customIcon = <div>Custom Icon</div>;
+    const customIcon = <ScanIcon />;
     const { getByText } = render(
       <Chips category={customIcon} label="Custom Category" />
     );

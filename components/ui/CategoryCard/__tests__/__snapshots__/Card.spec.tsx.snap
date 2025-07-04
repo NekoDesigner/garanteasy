@@ -1,0 +1,102 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card Components renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#050426",
+        "borderRadius": 18,
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": 8,
+        "height": 138,
+        "justifyContent": "center",
+        "paddingHorizontal": 14,
+        "paddingVertical": 24,
+        "width": 155,
+      },
+      undefined,
+    ]
+  }
+  testID="card"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Ubuntu",
+          "fontSize": 16,
+          "fontWeight": "700",
+          "textAlign": "center",
+        },
+        undefined,
+      ]
+    }
+  >
+    Test Card
+  </Text>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={32}
+    bbWidth={32}
+    fill="none"
+    focusable={false}
+    height={32}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        [
+          {
+            "color": "#FFFFFF",
+            "height": 32,
+            "width": 32,
+          },
+          undefined,
+        ],
+        {
+          "flex": 0,
+          "height": 32,
+          "width": 32,
+        },
+      ]
+    }
+    vbHeight={24}
+    vbWidth={24}
+    width={32}
+  >
+    <RNSVGGroup
+      color="#FFFFFF"
+      fill={null}
+      propList={
+        [
+          "fill",
+        ]
+      }
+    >
+      <RNSVGPath
+        d="M2.75 14a.75.75 0 01.75.75v2.5a3.25 3.25 0 003.25 3.25h2.5a.75.75 0 010 1.5h-2.5A4.75 4.75 0 012 17.25v-2.5a.75.75 0 01.75-.75zm18.5 0a.75.75 0 01.75.75v2.5A4.75 4.75 0 0117.25 22h-2.5a.75.75 0 010-1.5h2.5a3.25 3.25 0 003.25-3.25v-2.5a.75.75 0 01.75-.75zm-7-7A2.75 2.75 0 0117 9.75v4.5A2.75 2.75 0 0114.25 17h-4.5A2.75 2.75 0 017 14.25v-4.5A2.75 2.75 0 019.75 7h4.5zm-4.5 1.5c-.69 0-1.25.56-1.25 1.25v4.5c0 .69.56 1.25 1.25 1.25h4.5c.69 0 1.25-.56 1.25-1.25v-4.5c0-.69-.56-1.25-1.25-1.25h-4.5zM9.25 2a.75.75 0 010 1.5h-2.5A3.25 3.25 0 003.5 6.75v2.5a.75.75 0 01-1.5 0v-2.5A4.75 4.75 0 016.75 2h2.5zm8 0A4.75 4.75 0 0122 6.75v2.5a.75.75 0 01-1.5 0v-2.5a3.25 3.25 0 00-3.25-3.25h-2.5a.75.75 0 010-1.5h2.5z"
+        fill={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+</View>
+`;

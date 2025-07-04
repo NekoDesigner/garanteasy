@@ -5,7 +5,14 @@ export type TChipsIcon =
   | "garden"
   | "fashion"
   | "multimedia"
-  | "other";
+  | "other"
+  | "default-category-1"
+  | "default-category-2"
+  | "default-category-3"
+  | "default-category-4"
+  | "default-category-5"
+  | "default-category-6"
+  | "default-category-7";
 
 export interface IChipsProps {
   category: TChipsIcon | React.ReactNode;
@@ -13,4 +20,5 @@ export interface IChipsProps {
   size?: "s" | "xs";
   showIcon?: boolean;
   onPress?: () => void;
+  style?: object;
 }
