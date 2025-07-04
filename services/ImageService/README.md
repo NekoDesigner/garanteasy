@@ -112,7 +112,7 @@ Here's how to integrate the ImageService with the item creation flow:
 const takePhoto = async () => {
   try {
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       quality: 0.8,
     });
 
