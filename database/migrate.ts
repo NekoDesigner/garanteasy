@@ -1,7 +1,30 @@
-import { EventEmitter } from 'events'; // Replace react-native EventEmitter
 import * as SQLite from 'expo-sqlite';
 import DatabaseMigrationException from '../exceptions/DatabaseMigrationException';
 import Database from './db';
+
+// Simple EventEmitter implementation for React Native
+class EventEmitter {
+  private listeners: { [key: string]: Function[] } = {};
+
+  addListener(event: string, listener: Function): void {
+    if (!this.listeners[event]) {
+      this.listeners[event] = [];
+    }
+    this.listeners[event].push(listener);
+  }
+
+  emit(event: string, ...args: any[]): void {
+    if (this.listeners[event]) {
+      this.listeners[event].forEach(listener => listener(...args));
+    }
+  }
+
+  removeListener(event: string, listener: Function): void {
+    if (this.listeners[event]) {
+      this.listeners[event] = this.listeners[event].filter(l => l !== listener);
+    }
+  }
+}
 
 /**
  * Interface for Migration
