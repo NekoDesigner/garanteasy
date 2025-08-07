@@ -1,8 +1,6 @@
-import 'react-native-get-random-values'; // Required for pdf-lib and other crypto operations
-import { Buffer } from 'buffer';
 import * as Notifications from 'expo-notifications';
 import { Slot } from "expo-router";
-import { SQLiteProvider } from 'expo-sqlite';
+import { SQLiteProvider, SQLiteDatabase } from 'expo-sqlite';
 import { Suspense, useEffect } from 'react';
 import { View, StyleSheet, Text } from "react-native";
 import "react-native-reanimated";
@@ -13,43 +11,48 @@ import { OnboardingProvider } from "../providers/OnboardingContext";
 import { UserProvider } from "../providers/UserContext";
 import { ImageService } from "../services/ImageService";
 
-// Make Buffer available globally for React Native
-global.Buffer = Buffer;
-
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === "true";
 const resetDBOnInit = process.env.EXPO_PUBLIC_RESET_DB_ON_INIT === "true";
 
 // Create a function that handles reset and migrations
-const handleDatabaseInit = async (db: any) => {
-  // If reset is needed, clear all data from the database
-  if (resetDBOnInit) {
-    try {
-      // Get all table names
-      const tables = await db.getAllAsync(`
-        SELECT name FROM sqlite_master 
-        WHERE type='table' AND name NOT LIKE 'sqlite_%'
-      `);
+const handleDatabaseInit = async (db: SQLiteDatabase) => {
+  try {
+    console.log('🚀 Starting database initialization...');
+    // If reset is needed, clear all data from the database
+    if (resetDBOnInit) {
+      try {
+        // Get all table names
+        const tables = await db.getAllAsync<{ name: string }>(`
+          SELECT name FROM sqlite_master 
+          WHERE type='table' AND name NOT LIKE 'sqlite_%'
+        `);
 
-      // Drop all tables
-      for (const table of tables) {
-        await db.execAsync(`DROP TABLE IF EXISTS ${table.name}`);
-        if (table.name === 'notifications') {
-          await Notifications.cancelAllScheduledNotificationsAsync();
+        // Drop all tables
+        for (const table of tables) {
+          await db.execAsync(`DROP TABLE IF EXISTS ${table.name}`);
+          if (table.name === 'notifications') {
+            await Notifications.cancelAllScheduledNotificationsAsync();
+          }
         }
+
+        // Reset the database version so migrations will run again
+        await db.execAsync(`PRAGMA user_version = 0`);
+
+        console.log('✅ Database reset successfully - all tables dropped and version reset');
+      } catch (error) {
+        console.error('Error resetting database:', error);
       }
-
-      // Reset the database version so migrations will run again
-      await db.execAsync(`PRAGMA user_version = 0`);
-
-      console.log('✅ Database reset successfully - all tables dropped and version reset');
-    } catch (error) {
-      console.error('Error resetting database:', error);
     }
-  }
 
-  // Then run migrations (which will recreate the tables)
-  const migrateInstance = new Migrate({ migrations: DATABASE_MIGRATIONS });
-  await migrateInstance.run();
+    // Then run migrations (which will recreate the tables)
+    const migrateInstance = new Migrate({ migrations: DATABASE_MIGRATIONS, database: db });
+    await migrateInstance.run();
+
+    console.log('✅ Database initialization completed successfully');
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error);
+    throw error;
+  }
 };
 
 Notifications.setNotificationHandler({
@@ -107,8 +110,9 @@ export default function RootLayout() {
     <Suspense fallback={<Fallback />}>
       <SQLiteProvider
         databaseName={DATABASE_NAME}
-        onInit={handleDatabaseInit}
-        options={{ useNewConnection: false }}
+        onInit={async (db: SQLiteDatabase) => {
+          await handleDatabaseInit(db);
+        }}
         useSuspense
       >
         <UserProvider>
