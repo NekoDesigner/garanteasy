@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import { Migration } from "../migrate";
 
 export class AddTypeColumnFromDocumentTableMigration1751223578383 extends Migration {
-  private database: SQLite.SQLiteDatabase | null = null;
+  protected database: SQLite.SQLiteDatabase | null = null;
   currentVersion = 3;
 
   protected async up(database: SQLite.SQLiteDatabase): Promise<void> {

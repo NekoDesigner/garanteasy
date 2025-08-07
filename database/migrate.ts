@@ -1,6 +1,5 @@
 import * as SQLite from 'expo-sqlite';
 import DatabaseMigrationException from '../exceptions/DatabaseMigrationException';
-import Database from './db';
 
 // Simple EventEmitter implementation for React Native
 class EventEmitter {
@@ -46,10 +45,13 @@ interface IMigration {
  */
 export abstract class Migration extends EventEmitter implements IMigration {
   abstract currentVersion: number;
+  protected abstract database: SQLite.SQLiteDatabase | null;
 
-  async run() {
-    const database = await Database.getInstance();
-
+  async run(db: SQLite.SQLiteDatabase): Promise<void> {
+    this.database = db;
+    if (!this.database) {
+      throw new DatabaseMigrationException('Database is not available for migration.');
+    }
     this.addListener('migration:after', async (version: number) => {
       await this.updateDatabaseVersion();
     });
@@ -57,7 +59,7 @@ export abstract class Migration extends EventEmitter implements IMigration {
     if (before.byPassMigration) {
       return;
     }
-    await this.up(database);
+    await this.up(this.database);
     await this.afterMigrate();
   }
 
@@ -76,8 +78,10 @@ export abstract class Migration extends EventEmitter implements IMigration {
   }
 
   protected async getCurrentDatabaseVersion(): Promise<{ user_version: number }> {
-    const database = await Database.getInstance();
-    let db_version = await database.getFirstAsync<{ user_version: number }>(
+    if (!this.database) {
+      throw new Error('Database is not available for migration.');
+    }
+    let db_version = await this.database.getFirstAsync<{ user_version: number }>(
       'PRAGMA user_version'
     );
     if (!db_version) {
@@ -87,10 +91,12 @@ export abstract class Migration extends EventEmitter implements IMigration {
   }
 
   protected async updateDatabaseVersion(): Promise<number> {
-    const database = await Database.getInstance();
+    if (!this.database) {
+      throw new Error('Database is not available for migration.');
+    }
     let db_version = await this.getCurrentDatabaseVersion();
     const newVersion = db_version.user_version + 1;
-    await database.execAsync(`PRAGMA user_version = ${newVersion}`);
+    await this.database.execAsync(`PRAGMA user_version = ${newVersion}`);
     return newVersion;
   }
 
@@ -102,6 +108,7 @@ export abstract class Migration extends EventEmitter implements IMigration {
 
 export interface IMigrationOptions {
   migrations: Migration[];
+  database: SQLite.SQLiteDatabase;
 }
 
 /**
@@ -114,15 +121,24 @@ export interface IMigrationOptions {
  * If not provided, it defaults to an array containing the initial migration.
  */
 export class Migrate {
-  private migrationOptions: IMigrationOptions = {
-    migrations: [],
+  private migrationOptions: Partial<IMigrationOptions> = {
+    migrations: []
   };
   constructor(options: IMigrationOptions) {
     this.migrationOptions = { ...this.migrationOptions, ...options };
+    if (!this.migrationOptions.database) {
+      throw new Error('Database instance is required for migrations');
+    }
   };
   async run(): Promise<void> {
     // order migrations by currentVersion low to high
-    let { migrations } = this.migrationOptions;
+    let { migrations, database } = this.migrationOptions;
+    if (!migrations) {
+      throw new Error('No migrations provided to run');
+    }
+    if (!database) {
+      throw new Error('Database instance is required to run migrations');
+    }
     // Note: resetDBOnInit is now handled in _layout.tsx before SQLiteProvider opens the database
 
     migrations = migrations.sort((a, b) => a.currentVersion - b.currentVersion);
@@ -131,7 +147,7 @@ export class Migrate {
         if (await this.migrationIsAlreadyRunned(migration)) {
           continue; // Skip migration if it has already been run
         }
-        await migration.run();
+        await migration.run(database);
       } catch (error: unknown) {
         if (error instanceof DatabaseMigrationException) {
           console.error(`❌ Migration error: ${error.message}`);
@@ -144,12 +160,14 @@ export class Migrate {
   }
 
   private async migrationIsAlreadyRunned(migration: Migration): Promise<boolean> {
+    if (!this.migrationOptions.database) {
+      throw new Error('Database is not available for migration.');
+    }
     // Check if migrations table exists first
-    const database = await Database.getInstance();
     const migrationName = migration.constructor.name;
 
     // Check if migrations table exists
-    const tableExists = await database.getFirstAsync<{ count: number }>(
+    const tableExists = await this.migrationOptions.database.getFirstAsync<{ count: number }>(
       `SELECT COUNT(*) as count FROM sqlite_master WHERE type='table' AND name='migrations'`
     );
 
@@ -159,7 +177,7 @@ export class Migrate {
     }
 
     const query = `SELECT COUNT(*) as count FROM migrations WHERE name = ?`;
-    const result = await database.getFirstAsync<{ count: number }>(query, [migrationName]);
+    const result = await this.migrationOptions.database.getFirstAsync<{ count: number }>(query, [migrationName]);
     if (result && result.count > 0) {
       return true;
     }

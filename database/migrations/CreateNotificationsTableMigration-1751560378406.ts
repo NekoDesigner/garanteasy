@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import { Migration } from "../migrate";
 
 export class CreateNotificationsTableMigration1751560378406 extends Migration {
-  private database: SQLite.SQLiteDatabase | null = null;
+  protected database: SQLite.SQLiteDatabase | null = null;
   currentVersion = 5;
 
   protected async up(database: SQLite.SQLiteDatabase): Promise<void> {

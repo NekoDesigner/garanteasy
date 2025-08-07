@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import { Migration } from "../migrate";
 
 export class AddBrandColumnToItemsTableMigration1751057246774 extends Migration {
-  private database: SQLite.SQLiteDatabase | null = null;
+  protected database: SQLite.SQLiteDatabase | null = null;
   currentVersion = 2;
 
   protected async up(database: SQLite.SQLiteDatabase): Promise<void> {
