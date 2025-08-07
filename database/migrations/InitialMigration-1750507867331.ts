@@ -4,7 +4,7 @@ import DatabaseMigrationException from '../../exceptions/DatabaseMigrationExcept
 import { Migration } from "../migrate";
 
 export class InitialMigration1750507867331 extends Migration {
-  private database: SQLite.SQLiteDatabase | null = null;
+  protected database: SQLite.SQLiteDatabase | null = null;
   currentVersion = 1;
   private ownerId: string;
 
