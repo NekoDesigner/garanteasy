@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { COLORS, SIZES } from "../../../constants";
-import DIYIcon from "../Icons/DIY";
+import DIYIcon from "../Icons/DIYIcon";
 import FashionIcon from "../Icons/FashionIcon";
 import GardenIcon from "../Icons/GardenIcon";
 import MultimediaIcon from "../Icons/MultimediaIcon";

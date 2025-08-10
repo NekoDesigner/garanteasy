@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { ICardProps } from "./@types";
 import CardStyles from "./styles";
 
-const CategoryCard: React.FC<ICardProps> = ({ style, testID = 'card', children }) => {
+const CategoryCard: React.FC<ICardProps> = ({ style, testID = 'card', children, onPress = () => {} }) => {
   // Map over children and clone with styles if needed
   const styledChildren = React.useMemo(() =>
     React.Children.map(children, (child) => {
@@ -38,9 +38,9 @@ const CategoryCard: React.FC<ICardProps> = ({ style, testID = 'card', children }
   , [children]);
 
   return (
-    <View style={[CardStyles.container, style]} testID={testID}>
+    <TouchableOpacity style={[CardStyles.container, style]} testID={testID} onPress={onPress}>
       {styledChildren}
-    </View>
+    </TouchableOpacity>
   );
 };
 
