@@ -23,13 +23,27 @@ export function useItemRepository(props: IItemRepositoryProps) {
   const db = useSQLiteContext();
   const { createNotification, removeNotification } = useNotificationsRepository();
 
-  const getAllItems = React.useCallback(async (options: { withArchived?: boolean, withDocuments?: boolean, withNotification?: boolean } = {}): Promise<Item[]> => {
+  const getAllItems = React.useCallback(async (options: { withArchived?: boolean, withDocuments?: boolean, withNotification?: boolean, byCategoryIds?: string[], byLabelOrBrand?: string; } = {}): Promise<Item[]> => {
+    const dynamicProps = [];
     let query = `SELECT * FROM items WHERE owner_id = ? `;
+    dynamicProps.push(props.ownerId);
     if (!options.withArchived) {
       query += 'AND is_archived = 0 ';
     }
+    if (options.byCategoryIds && options.byCategoryIds.length > 0) {
+      query += `AND category_id IN (${options.byCategoryIds.map(() => '?').join(', ')}) `;
+      dynamicProps.push(...options.byCategoryIds);
+    }
+    if (options.byLabelOrBrand) {
+      query += `AND (label LIKE ? OR brand LIKE ?) `;
+      dynamicProps.push(`%${options.byLabelOrBrand}%`, `%${options.byLabelOrBrand}%`);
+    }
     query += 'ORDER BY created_at DESC';
-    const result = await db.getAllAsync<DatabaseItemDto>(query, [props.ownerId]);
+
+    if (options.byLabelOrBrand) {
+      console.log("QUERY => ", query);
+    }
+    const result = await db.getAllAsync<DatabaseItemDto>(query, dynamicProps);
     let items: Item[] = result.map((item) => Item.toModel(item));
 
     for (const item of items) {

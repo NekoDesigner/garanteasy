@@ -6,9 +6,11 @@ import styles from './styles';
 
 interface SearchBarProps {
   onHandleSearch?: (query: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onHandleSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onHandleSearch, onFocus, onBlur }) => {
   const [search, setSearch] = React.useState<string>('');
   const handleDonePress = () => {
     if (onHandleSearch) {
@@ -27,6 +29,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onHandleSearch }) => {
             setSearch(text);
           }}
           onSubmitEditing={handleDonePress}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         <TouchableOpacity
           style={styles.searchButton}
