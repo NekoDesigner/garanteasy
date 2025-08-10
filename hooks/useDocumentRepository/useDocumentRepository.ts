@@ -143,11 +143,11 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     const orphanedDocs = await db.getAllAsync<DatabaseDocumentDto>(orphanedDocsQuery, [ownerId]);
     for (const doc of orphanedDocs) {
       if (doc.file_source === 'local' && doc.file_path) {
-      try {
-        await ImageService.deleteImage(doc.file_path);
-      } catch (err) {
-        console.warn(`Failed to remove file at ${doc.file_path}:`, err);
-      }
+        try {
+          await ImageService.deleteImage(doc.file_path);
+        } catch (err) {
+          console.warn(`Failed to remove file at ${doc.file_path}:`, err);
+        }
       }
     }
     const query = `DELETE FROM documents WHERE id NOT IN (SELECT document_id FROM document_attachments) AND owner_id = ?`;
