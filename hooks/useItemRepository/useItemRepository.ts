@@ -13,6 +13,8 @@ import { Item } from "../../models/Item/Item";
 import { DatabaseItemDto } from "../../models/Item/Item.dto";
 import { Notification } from "../../models/Notification/Notification";
 import { DateService } from "../../services/DateService";
+import { ImageService } from "../../services/ImageService";
+import { useDocumentRepository } from "../useDocumentRepository/useDocumentRepository";
 import { useNotificationsRepository } from "../useNotificationsRepository/useNotificationsRepository";
 
 export interface IItemRepositoryProps {
@@ -21,7 +23,8 @@ export interface IItemRepositoryProps {
 
 export function useItemRepository(props: IItemRepositoryProps) {
   const db = useSQLiteContext();
-  const { createNotification, removeNotification } = useNotificationsRepository();
+  const { createNotification, removeNotificationByItem, removeNotification } = useNotificationsRepository();
+  const { deleteDocumentById, detachDocumnentFromItem } = useDocumentRepository({ ownerId: props.ownerId });
 
   const getAllItems = React.useCallback(async (options: { withArchived?: boolean, withDocuments?: boolean, withNotification?: boolean, byCategoryIds?: string[], byLabelOrBrand?: string; } = {}): Promise<Item[]> => {
     const dynamicProps = [];
@@ -96,6 +99,25 @@ export function useItemRepository(props: IItemRepositoryProps) {
     return items;
   }, [db, props.ownerId]);
 
+  const getItemsDocuments = React.useCallback(async (itemIds: string[]): Promise<DatabaseDocumentDto[]> => {
+    return await db.getAllAsync<DatabaseDocumentDto>(
+          `SELECT
+            documents.*,
+            document_attachments.model as "entity_model",
+            document_attachments.entity_id as "entity_id"
+          FROM documents
+            INNER JOIN document_attachments ON documents.id = document_attachments.document_id
+            WHERE document_attachments.entity_id IN (${itemIds.map(() => '?').join(', ')}) AND document_attachments.model = 'Item'`,
+          itemIds
+        );
+  }, [db]);
+
+  const isDocumentAttachedToOtherItem = React.useCallback(async (documentId: string, currentItemId: string) => {
+    const query = `SELECT * FROM document_attachments WHERE document_id = ? AND entity_id != ?`;
+    const result = await db.getAllAsync(query, [documentId, currentItemId]);
+    return result.length > 0;
+  }, [db]);
+
   const getItemById = React.useCallback(
     async (id: string): Promise<Item | null> => {
       const query = `SELECT * FROM items WHERE id = ? AND owner_id = ?`;
@@ -168,7 +190,7 @@ export function useItemRepository(props: IItemRepositoryProps) {
         const updatedItem = await getItemById(dbItemDto.id);
         if (updatedItem) {
           savedItem = updatedItem;
-          removeNotification(dbItemDto.id);
+          removeNotificationByItem(updatedItem);
           // Create a new notification for the updated item
           await createNotification({
             scheduleTime: DateService.scheduleTimeNotificationDateByItem(updatedItem),
@@ -266,11 +288,56 @@ export function useItemRepository(props: IItemRepositoryProps) {
 
       return savedItem || item;
     },
-    [db, props.ownerId, getItemById, createNotification, removeNotification]
+    [db, props.ownerId, getItemById, createNotification, removeNotificationByItem]
   );
+
+  const deleteItem = React.useCallback(async (item: Item) => {
+    return await db.withTransactionAsync(async () => {
+      const documents = await getItemsDocuments([item.getId()]);
+      for (const document of documents) {
+        if (!document.id) {
+          throw new Error(`Document with id ${document.id} not found`);
+        }
+        await detachDocumnentFromItem(document.id, item.getId());
+        await deleteDocumentById(document.id);
+      }
+      const statement = await db.prepareAsync(`DELETE FROM items WHERE id = $itemId AND owner_id = $ownerId`);
+      try {
+        statement.executeAsync({
+          $itemId: item.getId(),
+          $ownerId: props.ownerId
+        });
+      } catch (error) {
+        console.error('Error deleting item:', error);
+        throw new DatabaseSaveException(`Failed to delete item with id ${item.getId()} for user ${props.ownerId}`);
+      }
+
+      // Supprimer les notifications associées
+      await removeNotificationByItem(item);
+
+      // Supprimer les fichiers attachés (Vérifier si ces fichiers sont utilisé par d'autres objets)
+      for (const document of documents) {
+        if (document.file_source === 'local' && document.file_path) {
+          if (!document.id) {
+            throw new Error(`Document with id ${document.id} not found`);
+          }
+          const isDeletable = await isDocumentAttachedToOtherItem(document.id, item.getId());
+          try {
+            if (isDeletable) {
+              await ImageService.deleteImage(document.file_path);
+            }
+          } catch (err) {
+            console.warn(`Failed to remove file at ${document.file_path}:`, err);
+          }
+        }
+      }
+    });
+  }, [db, getItemsDocuments, removeNotificationByItem, detachDocumnentFromItem, deleteDocumentById, props.ownerId, isDocumentAttachedToOtherItem]);
+
   return React.useMemo(() => ({
     getAllItems,
     getItemById,
-    saveItem
-  }), [getAllItems, getItemById, saveItem]);
+    saveItem,
+    deleteItem
+  }), [getAllItems, getItemById, saveItem, deleteItem]);
 }

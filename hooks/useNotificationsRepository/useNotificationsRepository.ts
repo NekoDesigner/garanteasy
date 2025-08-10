@@ -5,6 +5,7 @@
 import * as Notifications from 'expo-notifications';
 import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
+import { Item } from '../../models/Item/Item';
 import { Notification } from '../../models/Notification/Notification';
 import { DatabaseNotificationDto } from '../../models/Notification/Notification.dto';
 
@@ -84,6 +85,18 @@ export function useNotificationsRepository() {
     return null;
   }, [db]);
 
+  const getNotificationByItem = React.useCallback(async (itemId: string): Promise<Notification | null> => {
+    // Since data is a JSON string, we need to search for the itemId inside it.
+    // This uses a LIKE query to match the itemId as a substring in the data column.
+    const query = `SELECT * FROM notifications WHERE data LIKE ?;`;
+    const likePattern = `%itemId: ${itemId}%`;
+    const result = await db.getFirstAsync<DatabaseNotificationDto>(query, [likePattern]);
+    if (result) {
+      return Notification.toModel<DatabaseNotificationDto, Notification>(result);
+    }
+    return null;
+  }, [db]);
+
   const removeNotification = React.useCallback(async (notification: Notification | string) => {
     if (!db) {
       throw new Error("Database connection is not established.");
@@ -97,6 +110,13 @@ export function useNotificationsRepository() {
       console.warn(`Failed to remove notification with identifier: ${typeof notification === 'string' ? notification : notification.deviceNotificationId}`);
     }
   }, [db]);
+
+  const removeNotificationByItem = React.useCallback(async (item: Item) => {
+    const notification = await getNotificationByItem(item.getId());
+    if (notification) {
+      await removeNotification(notification);
+    }
+  }, [getNotificationByItem, removeNotification]);
 
   const removeAllNotifications = React.useCallback(async () => {
     if (!db) {
@@ -112,6 +132,8 @@ export function useNotificationsRepository() {
     removeNotification,
     getNotification,
     removeAllNotifications,
-    recreateNotifications
+    recreateNotifications,
+    getNotificationByItem,
+    removeNotificationByItem
   };
 }
