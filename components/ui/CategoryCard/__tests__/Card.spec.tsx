@@ -26,7 +26,7 @@ describe("Card Components", () => {
       </CategoryCard>
     );
     const card = getByTestId('custom-card');
-    expect(card.props.style).toContainEqual(customStyle);
+    expect(card.props.style).toHaveProperty('backgroundColor', 'red');
   });
 
   it('renders with default testID', () => {

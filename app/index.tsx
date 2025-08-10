@@ -9,14 +9,17 @@ import Container from '../components/Container';
 import ScreenView from '../components/ScreenView';
 import SearchBar from '../components/SearchBar';
 import ActionBottomSheet from '../components/ui/ActionBottomSheet';
+import CategoryCard from '../components/ui/CategoryCard';
 import Chips from '../components/ui/Chips';
 import { IChipsProps } from '../components/ui/Chips/@types';
+import DynamicIcon from '../components/ui/Icons/DynamicIcon';
 import ProductCard from '../components/ui/ProductCard';
 import RoundedIconButton from '../components/ui/RoundedIconButton';
 import { COLORS } from '../constants';
-import { CATEGORIES_BASE } from '../constants/Categories';
+import { CATEGORIES_BASE, DYNAMIC_CATEGORIES_FILE_NAME } from '../constants/Categories';
 import { useDocumentRepository } from '../hooks/useDocumentRepository/useDocumentRepository';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
+import { useKeyboardHeight } from '../hooks/useKeyboardHeight/useKeyboardHeight';
 import { Document } from '../models/Document/Document';
 import { Item } from '../models/Item/Item';
 import { useOnboardingContext } from '../providers/OnboardingContext';
@@ -146,11 +149,13 @@ const HomeScreen = () => {
   const router = useRouter();
   const { user } = useUserContext();
   const { getAllItems } = useItemRepository({ ownerId: user?.id ?? '' });
-  const [items, setItems] = React.useState<Item[]>([]);
+  // ‡const [items, setItems] = React.useState<Item[]>([]);
   const [searchedItems, setSearchedItems] = React.useState<Item[]>([]);
   const [categories, setCategories] = React.useState<IChipsProps[]>(CATEGORIES_BASE);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
+  const [isCategoriesFilterVisible, setIsCategoriesFilterVisible] = React.useState<boolean>(false);
   const { currentOnboarding, isLoading } = useOnboardingContext();
+  const keyboardHeight = useKeyboardHeight();
 
   const handleShowCategories = (showableItems: Item[]) => {
     // Get all categories from items as unique values and order by number ASC if id ends with a number
@@ -180,7 +185,7 @@ const HomeScreen = () => {
   const fetchItems = React.useCallback(async () => {
     try {
       const fetchedItems = await getAllItems({ withArchived: false, withDocuments: true });
-      setItems(fetchedItems);
+      // setItems(fetchedItems);
       setSearchedItems(fetchedItems);
       handleShowCategories(fetchedItems);
     } catch (error) {
@@ -194,18 +199,16 @@ const HomeScreen = () => {
     setRefreshing(false);
   };
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     if (!query) {
-      setSearchedItems(items);
-      handleShowCategories(items);
+      handleSearchBarBlur();
+      await fetchItems();
       return;
     }
-    const filteredItems = items.filter(item =>
-      item.label?.toLowerCase().includes(query.toLowerCase()) ||
-      item.brand?.toLowerCase().includes(query.toLowerCase())
-    );
+    const filteredItems = await getAllItems({ withArchived: false, withDocuments: true, byLabelOrBrand: query });
     setSearchedItems(filteredItems);
     handleShowCategories(filteredItems);
+    handleSearchBarBlur();
   };
 
   React.useEffect(() => {
@@ -219,11 +222,58 @@ const HomeScreen = () => {
     }
   }, [currentOnboarding, isLoading, router]);
 
+  function handleSearchBarFocus(): void {
+    setIsCategoriesFilterVisible(true);
+  }
+
+  function handleSearchBarBlur(): void {
+    setIsCategoriesFilterVisible(false);
+  }
+
+  async function handleFilterByCategory(id: string) {
+    console.log('Filtering by category:', id);
+    try {
+      handleSearchBarBlur();
+      const fetchedItems = await getAllItems({ withArchived: false, withDocuments: true, byCategoryIds: [id] });
+      // setItems(fetchedItems);
+      setSearchedItems(fetchedItems);
+      handleShowCategories(fetchedItems);
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    }
+  }
+
+  // console.log(JSON.stringify(items, null, 2));
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScreenView>
-        <SearchBar onHandleSearch={handleSearch} />
-        <View>
+        <SearchBar onHandleSearch={handleSearch} onFocus={handleSearchBarFocus} />
+
+        {/** Afficher les CategoryCard pour filtrer */}
+        {isCategoriesFilterVisible && (
+          <ScrollView
+            contentContainerStyle={{
+              flex: 1,
+              paddingVertical: 16,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: 12,
+              justifyContent: 'space-around',
+              paddingBottom: keyboardHeight * 1.33 + 16, // Add padding for keyboard
+            }}
+            style={{}}
+          >
+            {DYNAMIC_CATEGORIES_FILE_NAME.map(category => (
+              <CategoryCard key={category.id} onPress={() => { handleFilterByCategory(category.id); }}>
+                <DynamicIcon name={category.fileId} />
+                <Text>{category.label}</Text>
+              </CategoryCard>
+            ))}
+          </ScrollView>
+        )}
+
+        {!isCategoriesFilterVisible && <View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -240,9 +290,9 @@ const HomeScreen = () => {
               />
             ))}
           </ScrollView>
-        </View>
+        </View>}
 
-        {searchedItems.length === 0 ? (
+        {searchedItems.length === 0 && !isCategoriesFilterVisible ? (
           <ScrollView
             style={{ flex: 1 }}
             contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}
@@ -260,42 +310,43 @@ const HomeScreen = () => {
             </Text>
           </ScrollView>
         ) : (
-          <FlatList
-            style={{ flex: 1 }}
-            data={searchedItems}
-            keyExtractor={(item) => item.id!}
-            renderItem={({ item }) => (
-              <Container>
-                <ProductCard
-                  brand={item.brand!}
-                  name={item.label!}
-                  purchaseDate={item.purchaseDate}
-                  warrantyDuration={item.warrantyDuration}
-                  image={item.picture ? item.picture : require('../assets/images/default-product.png')}
-                  style={{ marginTop: 16 }}
-                  onPress={() => {
-                    router.push({
-                      pathname: '/show-item',
-                      params: { itemId: item.id },
-                  }); }}
+          !isCategoriesFilterVisible && (
+            <FlatList
+              style={{ flex: 1 }}
+              data={searchedItems}
+              keyExtractor={(item) => item.id!}
+              renderItem={({ item }) => (
+                <Container>
+                  <ProductCard
+                    brand={item.brand!}
+                    name={item.label!}
+                    purchaseDate={item.purchaseDate}
+                    warrantyDuration={item.warrantyDuration}
+                    image={item.picture ? item.picture : require('../assets/images/default-product.png')}
+                    style={{ marginTop: 16 }}
+                    onPress={() => {
+                      router.push({
+                        pathname: '/show-item',
+                        params: { itemId: item.id },
+                    }); }}
+                  />
+                </Container>
+              )}
+              contentContainerStyle={{ paddingBottom: 80 }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
                 />
-              </Container>
-            )}
-            contentContainerStyle={{ paddingBottom: 80 }}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-              />
-            }
-            scrollEventThrottle={16}
-            bounces={true}
-            showsVerticalScrollIndicator={true}
-            removeClippedSubviews={false}
-          />
-        )}
+              }
+              scrollEventThrottle={16}
+              bounces={true}
+              showsVerticalScrollIndicator={true}
+              removeClippedSubviews={false}
+                />
+          ))}
 
-        <BottomBar />
+        {!isCategoriesFilterVisible && <BottomBar />}
       </ScreenView>
     </GestureHandlerRootView>
   );

@@ -2,23 +2,48 @@
 
 exports[`Card Components renders correctly 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
-    [
-      {
-        "alignItems": "center",
-        "backgroundColor": "#050426",
-        "borderRadius": 18,
-        "display": "flex",
-        "flexDirection": "column",
-        "gap": 8,
-        "height": 138,
-        "justifyContent": "center",
-        "paddingHorizontal": 14,
-        "paddingVertical": 24,
-        "width": 155,
-      },
-      undefined,
-    ]
+    {
+      "alignItems": "center",
+      "backgroundColor": "#050426",
+      "borderRadius": 18,
+      "display": "flex",
+      "flexDirection": "column",
+      "gap": 8,
+      "height": 138,
+      "justifyContent": "center",
+      "opacity": 1,
+      "paddingHorizontal": 14,
+      "paddingVertical": 24,
+      "width": 155,
+    }
   }
   testID="card"
 >

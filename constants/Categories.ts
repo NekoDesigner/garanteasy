@@ -9,3 +9,12 @@ export const CATEGORIES_BASE: IChipsProps[] = [
   { label: 'Multimédia', category: 'multimedia', showIcon: true, onPress: () => {} },
   { label: 'Autre', category: 'other', showIcon: false, onPress: () => {} },
 ];
+
+export const DYNAMIC_CATEGORIES_FILE_NAME = [
+  { id: 'default-category-1', label: 'Électroménagé', fileId: 'washingMachin' },
+  { id: 'default-category-2', label: 'Petit éléctroménagé', fileId: 'smallHousehold' },
+  { id: 'default-category-3', label: 'Bricolage', fileId: 'diy' },
+  { id: 'default-category-4', label: 'Jardin', fileId: 'garden' },
+  { id: 'default-category-5', label: 'Mode', fileId: 'fashion' },
+  { id: 'default-category-6', label: 'Multimédia', fileId: 'multimedia' }
+];
