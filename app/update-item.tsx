@@ -32,7 +32,7 @@ const UpdateItem = () => {
   // Use useMemo to stabilize the ownerId to prevent unnecessary re-renders
   const ownerId = React.useMemo(() => user?.id || '', [user?.id]);
 
-  const { saveItem, getItemById } = useItemRepository({ ownerId });
+  const { saveItem, getItemById, deleteItem } = useItemRepository({ ownerId });
   const { saveDocument, deleteDocumentById, attachDocumentToItem, detachDocumnentFromItem } = useDocumentRepository({ ownerId });
   const { getAllCategories } = useCategoryRepository({ ownerId });
 
@@ -533,6 +533,36 @@ const UpdateItem = () => {
     );
   };
 
+  function handleDeleteItem(): void {
+    if (!item) {
+      return;
+    }
+    Alert.alert(
+      'Supprimer l\'article',
+      `Êtes-vous sûr de vouloir supprimer définitivement l'article "${item?.label}" ?`,
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await deleteItem(item);
+              // Redirect to home screen
+              router.replace('/');
+            } catch (error) {
+              console.error('Error deleting item:', error);
+              Alert.alert('Erreur', `Échec de la suppression de l'article: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+            } finally {
+              setLoading(false);
+            }
+          }
+        }
+      ]
+    );
+  }
+
   return (
     <ScreenView>
         <ScrollView contentContainerStyle={{ paddingBottom: SIZES.padding.m }}>
@@ -745,9 +775,17 @@ const UpdateItem = () => {
           <Button
             style={[styles.space, { paddingVertical: SIZES.padding.s }]}
             textStyle={{ textAlign: 'center', width: '100%' }}
-            label='Mettre à jour'
+            label='Enregistrer'
             variant='secondary'
             onPress={handleSaveItem}
+            disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
+          />
+          <Button
+            style={[styles.space, { paddingVertical: SIZES.padding.s }]}
+            textStyle={{ textAlign: 'center', width: '100%' }}
+            label='Supprimer le produit'
+            variant='outline-secondary'
+            onPress={handleDeleteItem}
             disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
           />
           </Container>
