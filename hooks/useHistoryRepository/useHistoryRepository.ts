@@ -25,7 +25,7 @@ export function useHistoryRepository({ ownerId }: IHistoryRepositoryProps) {
    */
   const getHistoryInterventionsByItem = useCallback(async (item: Item) => {
     const query = `
-      SELECT * FROM histories WHERE item_id = ? ORDER BY intervent_date DESC
+      SELECT * FROM histories WHERE item_id = ? ORDER BY intervention_date DESC
     `;
     const result = await db.getAllAsync<DatabaseHistoryDto>(query, [item.getId()]);
     if (result) {
@@ -83,7 +83,7 @@ export function useHistoryRepository({ ownerId }: IHistoryRepositoryProps) {
         `UPDATE histories SET
             label = $label,
             item_id = $itemId,
-            intervent_date = $interventDate,
+            intervention_date = $interventDate,
             description = $description
         WHERE id = $id
         `);
@@ -103,8 +103,8 @@ export function useHistoryRepository({ ownerId }: IHistoryRepositoryProps) {
       // INSERT
       history.id = History.generateId();
       const statement = await db.prepareAsync(`
-        INSERT INTO histories (id, label, item_id, intervent_date, description)
-        VALUES ($id, $label, $itemId, $interventDate, $description)
+        INSERT INTO histories (id, label, item_id, intervention_date, description)
+        VALUES ($id, $label, $itemId, $interventionDate, $description)
       `);
       result = await statement.executeAsync({
         id: history.id,

@@ -9,6 +9,9 @@ export class AddDescriptionColumnToHistoriesTableMigration1756657804230 extends 
   protected async up(database: SQLite.SQLiteDatabase): Promise<void> {
     this.database = database;
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
+    console.log('Adding description column to histories table...');
+    await this.createHistoriesTable();
+    await this.saveMigration(database);
   }
 
   private async createHistoriesTable(): Promise<void> {

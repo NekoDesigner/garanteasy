@@ -53,6 +53,7 @@ export abstract class Migration extends EventEmitter implements IMigration {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
     this.addListener('migration:after', async (version: number) => {
+      console.log(`✅ Migration to version ${version} applied successfully.`);
       await this.updateDatabaseVersion();
     });
     const before = await this.beforeMigrate();
@@ -61,6 +62,16 @@ export abstract class Migration extends EventEmitter implements IMigration {
     }
     await this.up(this.database);
     await this.afterMigrate();
+  }
+
+  protected async saveMigration(db: SQLite.SQLiteDatabase) {
+    console.log(`Saving migration ${this.constructor.name} version ${this.currentVersion}`);
+    const migrationName = this.constructor.name;
+    // Insert the current migration version
+    await db.execAsync(`
+        INSERT INTO migrations (name, version, created_at)
+        VALUES ('${migrationName}', ${this.currentVersion}, CURRENT_TIMESTAMP);
+      `);
   }
 
   protected abstract up(database: SQLite.SQLiteDatabase): Promise<void>
@@ -101,8 +112,23 @@ export abstract class Migration extends EventEmitter implements IMigration {
   }
 
   protected async isAvailableToMigrate(): Promise<boolean> {
-    const db_version = await this.getCurrentDatabaseVersion();
-    return db_version.user_version < this.currentVersion;
+    const migration = await this.getDatabaseMigration(); // Ensure the migration table exists
+    if (migration) {
+      // Migration has already been run
+      return false;
+    }
+    return true;
+  }
+
+  protected getDatabaseMigration() {
+    if (!this.database) {
+      throw new Error('Database is not available for migration.');
+    }
+    const migrationName = this.constructor.name;
+    return this.database.getFirstAsync<{ id: number; name: string; version: number; created_at: string }>(
+      `SELECT * FROM migrations WHERE name = ?`,
+      [migrationName]
+    );
   }
 }
 
@@ -145,8 +171,11 @@ export class Migrate {
     for (const migration of migrations) {
       try {
         if (await this.migrationIsAlreadyRunned(migration)) {
+          // console.log(`⚠️ Migration ${migration.constructor.name} already run, skipping...`);
+          // console.log(`Migrations list : ${migrations.map(m => m.constructor.name).join(', \n')}`);
           continue; // Skip migration if it has already been run
         }
+        // console.log(`🚀 Running migration: ${migration.constructor.name} (version: ${migration.currentVersion})`);
         await migration.run(database);
       } catch (error: unknown) {
         if (error instanceof DatabaseMigrationException) {

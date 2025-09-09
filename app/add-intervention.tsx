@@ -76,7 +76,8 @@ const AddIntervention = () => {
         pathname: '/show-item',
         params: { itemId: item.id },
       });
-    } catch {
+    } catch (error) {
+      console.error('Error saving history intervention:', error);
       Alert.alert(
         'Erreur',
         "Une erreur est survenue lors de l'enregistrement de l'intervention. Veuillez contacter le support si le problème persiste."
@@ -143,14 +144,14 @@ const AddIntervention = () => {
           <FormCard style={[styles.space]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={styles.h1}>Ajouter un document</Text>
-              <RoundedIconButton
-                disabled={isCreatingDocument}
+              {isCreatingDocument && <ActivityIndicator animating={isCreatingDocument} />}
+              {!isCreatingDocument && <RoundedIconButton
                 icon='scan'
                 onPress={() => {
                 handleAddDocument((newDocument: Document) => {
                   setDocument(newDocument);
                 });
-                }} />
+                }} />}
             </View>
             {document && <Text style={{
               marginBottom: 5,
@@ -183,6 +184,7 @@ const AddIntervention = () => {
           <Button
             label="Enregistrer"
             variant='secondary'
+            disabled={isCreatingDocument}
             style={{ paddingVertical: SIZES.padding.s }}
             textStyle={{ textAlign: 'center', flex: 1 }}
             onPress={() => {
