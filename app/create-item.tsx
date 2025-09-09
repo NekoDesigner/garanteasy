@@ -1,4 +1,3 @@
-import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View, Image, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
@@ -17,6 +16,7 @@ import { COLORS, SIZES } from '../constants';
 import { useCategoryRepository } from '../hooks/useCategoryRepository/useCategoryRepository';
 import { useDocumentRepository } from '../hooks/useDocumentRepository/useDocumentRepository';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
+import { useUploaderService } from '../hooks/useUploaderService/useUploaderService';
 import { Category } from '../models/Category/Category';
 import { Document } from '../models/Document/Document';
 import { Item } from '../models/Item/Item';
@@ -33,8 +33,9 @@ const CreateItem = () => {
   const ownerId = React.useMemo(() => user?.id || '', [user?.id]);
 
   const { saveItem } = useItemRepository({ ownerId });
-  const { getDocumentById, saveDocument, deleteDocumentById, attachDocumentToItem } = useDocumentRepository({ ownerId });
+  const { getDocumentById, deleteDocumentById, attachDocumentToItem } = useDocumentRepository({ ownerId });
   const { getAllCategories } = useCategoryRepository({ ownerId });
+  const { handleAddDocument, handleSelectImage, isCreatingDocument } = useUploaderService({ user });
 
   const [item, setItem] = React.useState<Item>(new Item({
     ownerId,
@@ -143,6 +144,9 @@ const CreateItem = () => {
     loadCategories();
   }, [getAllCategories]);
 
+  React.useEffect(() => {
+    setLoading(isCreatingDocument);
+  }, [isCreatingDocument]);
 
   const handleSaveItem = async () => {
     try {
@@ -206,196 +210,6 @@ const CreateItem = () => {
     }
   };
 
-  const handleSelectImage = async () => {
-    try {
-      // Demander la permission d'accès à la galerie
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permissionResult.granted) {
-        Alert.alert('Permission refusée', 'L\'accès à la galerie est requis pour sélectionner une image.');
-        return;
-      }
-
-      // Afficher les options pour prendre une photo ou sélectionner depuis la galerie
-      Alert.alert(
-        'Sélectionner une image',
-        'Choisissez une option',
-        [
-          { text: 'Annuler', style: 'cancel' },
-          { text: 'Prendre une photo', onPress: takePhoto },
-          { text: 'Choisir depuis la galerie', onPress: pickImage }
-        ]
-      );
-    } catch (error) {
-      console.error('Erreur lors de la sélection d\'image:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la sélection de l\'image.');
-    }
-  };
-
-  const takePhoto = async () => {
-    try {
-      const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
-      if (!cameraPermission.granted) {
-        Alert.alert('Permission refusée', 'L\'accès à la caméra est requis pour prendre une photo.');
-        return;
-      }
-
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ['images'],
-        quality: 0.8,
-      });
-
-      if (!result.canceled && result.assets[0]) {
-        // Save image to filesystem and get the URI
-        const savedImageUri = await ImageService.saveItemImage(result.assets[0].uri);
-        setItemImage(savedImageUri);
-        setItem(prevItem => new Item({
-          ...prevItem,
-          label: prevItem.label ?? '',
-          brand: prevItem.brand ?? '',
-          memo: prevItem.memo ?? '',
-          picture: savedImageUri, // Update item picture with the saved image URI
-        }));
-      }
-    } catch (error) {
-      console.error('Erreur lors de la prise de photo:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la prise de photo.');
-    }
-  };
-
-  const pickImage = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        quality: 0.8,
-      });
-
-      if (!result.canceled && result.assets[0]) {
-        // Save image to filesystem and get the URI
-        const savedImageUri = await ImageService.saveItemImage(result.assets[0].uri);
-        setItemImage(savedImageUri);
-        setItem(prevItem => new Item({
-          ...prevItem,
-          label: prevItem.label ?? '',
-          brand: prevItem.brand ?? '',
-          memo: prevItem.memo ?? '',
-          picture: savedImageUri, // Update item picture with the saved image URI
-        }));
-      }
-    } catch (error) {
-      console.error('Erreur lors de la sélection d\'image:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la sélection de l\'image.');
-    }
-  };
-
-  const handleAddDocument = async () => {
-    try {
-      // Demander la permission d'accès à la galerie
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permissionResult.granted) {
-        Alert.alert('Permission refusée', 'L\'accès à la galerie est requis pour sélectionner un document.');
-        return;
-      }
-
-      // Afficher les options pour prendre une photo ou sélectionner depuis la galerie
-      Alert.alert(
-        'Ajouter un document',
-        'Choisissez une option',
-        [
-          { text: 'Annuler', style: 'cancel' },
-          { text: 'Prendre une photo', onPress: takeDocumentPhoto },
-          { text: 'Choisir depuis la galerie', onPress: pickDocumentFromLibrary }
-        ]
-      );
-    } catch (error) {
-      console.error('Erreur lors de l\'ajout de document:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de l\'ajout du document.');
-    }
-  };
-
-  const takeDocumentPhoto = async () => {
-    try {
-      const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
-      if (!cameraPermission.granted) {
-        Alert.alert('Permission refusée', 'L\'accès à la caméra est requis pour prendre une photo.');
-        return;
-      }
-
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ['images'],
-        allowsEditing: false,
-        quality: 0.8,
-      });
-
-      if (!result.canceled && result.assets[0]) {
-        await createDocumentFromImage(result.assets[0]);
-      }
-    } catch (error) {
-      console.error('Erreur lors de la prise de photo:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la prise de photo.');
-    }
-  };
-
-  const pickDocumentFromLibrary = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        allowsEditing: false,
-        quality: 0.8,
-      });
-
-      if (!result.canceled && result.assets[0]) {
-        await createDocumentFromImage(result.assets[0]);
-      }
-    } catch (error) {
-      console.error('Erreur lors de la sélection d\'image:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la sélection de l\'image.');
-    }
-  };
-
-  const createDocumentFromImage = async (asset: ImagePicker.ImagePickerAsset) => {
-    try {
-      setLoading(true);
-
-      // Import the PDF service
-      const { createPdfFromImages, removeFileExtension } = await import('../services/PDFService');
-
-      // Create PDF with appropriate title for 'other' type documents
-      const pdfOptions = {
-        title: asset.fileName ? removeFileExtension(asset.fileName) : 'Document Supplémentaire',
-        author: 'GarantEasy Scanner',
-        subject: 'Document ajouté',
-        compress: true,
-      };
-
-      // Create PDF and get file path
-      const pdfPath = await createPdfFromImages([asset.uri], pdfOptions);
-      const fileName = pdfPath.split('/').pop() || 'document.pdf';
-
-      // Create and save the document with type 'other'
-      let newDocument = new Document({
-        ownerId: user?.id || '',
-        name: fileName,
-        filename: fileName,
-        type: 'other', // Type 'other' as requested
-        mimetype: 'application/pdf',
-        fileSource: 'local',
-        filePath: pdfPath,
-      });
-
-      newDocument = await saveDocument(newDocument);
-
-      // Update the current document state to show the newly created document
-      setAdditionalDocuments((prev) => [...prev, newDocument]);
-
-      Alert.alert('Succès', 'Document ajouté avec succès!');
-    } catch (error) {
-      console.error('Error creating document:', error);
-      Alert.alert('Erreur', `Échec de la création du document: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDeleteDocument = async (documentId: string, documentName: string) => {
     Alert.alert(
       'Supprimer le document',
@@ -428,7 +242,19 @@ const CreateItem = () => {
         <ScrollView contentContainerStyle={{ paddingBottom: SIZES.padding.m }}>
           <Container>
             <FormCard style={styles.mainInfoContainer}>
-              <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
+            <TouchableOpacity onPress={() => handleSelectImage(
+              (savedImageUri: string | undefined) => {
+                if (!savedImageUri) return;
+                setItemImage(savedImageUri);
+                setItem(prevItem => new Item({
+                  ...prevItem,
+                  label: prevItem.label ?? '',
+                  brand: prevItem.brand ?? '',
+                  memo: prevItem.memo ?? '',
+                  picture: savedImageUri, // Update item picture with the saved image URI
+                }));
+                }
+              )} style={styles.imageSelector}>
                 {itemImage ? (
                   <Image source={{ uri: itemImage }} style={styles.itemImage} />
                 ) : (
@@ -533,7 +359,12 @@ const CreateItem = () => {
               {loading ? (
                 <ActivityIndicator size="small" color={COLORS.blueDarker} />
               ) : (
-                <RoundedIconButton icon='arrow-right' onPress={handleAddDocument} />
+                  <RoundedIconButton icon='arrow-right' onPress={() => handleAddDocument(
+                    async (newDoc: Document) => {
+                      // Update the current document state to show the newly created document
+                      setAdditionalDocuments((prev) => [...prev, newDoc]);
+                    }
+                )} />
               )}
             </View>
             {loading && (

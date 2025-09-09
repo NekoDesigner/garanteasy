@@ -19,6 +19,10 @@ export interface IDocumentRepositoryProps {
 export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
   const db = useSQLiteContext();
 
+  /**
+   * Get all documents for the current owner
+   * @returns Array of documents
+   */
   const getAllDocuments = useCallback(async (): Promise<Document[]> => {
     const query = `SELECT * FROM documents WHERE owner_id = ?`;
     const result = await db.getAllAsync<DatabaseDocumentDto>(query, [ownerId]);
@@ -26,6 +30,11 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     return documents;
   }, [db, ownerId]);
 
+  /**
+   * Get a document by its ID
+   * @param id ID of the document to retrieve
+   * @returns Document or null if not found
+   */
   const getDocumentById = useCallback(async (id: string): Promise<Document | null> => {
     const query = `SELECT * FROM documents WHERE id = ? AND owner_id = ?`;
     const result = await db.getFirstAsync<DatabaseDocumentDto>(query, [id, ownerId]);
@@ -35,6 +44,13 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     return null;
   }, [db, ownerId]);
 
+  /**
+   * Save or update a document
+   * @param document Document to save
+   * @returns Saved document with ID
+   * @throws DatabaseSaveException if the save or update fails
+   * @description If you want attach the document to an entity, use the attachDocumentToItem or attachDocumentToHistoryIntervention methods after saving the document
+   */
   const saveDocument = useCallback(async (document: Document): Promise<Document> => {
     let result: SQLiteExecuteAsyncResult<DatabaseDocumentDto>;
     const dbDocumentDto: DatabaseDocumentDto = Document.fromModel(document);
@@ -88,6 +104,11 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     return document;
   }, [db, ownerId]);
 
+  /**
+   * Delete a document by its ID
+   * @param id ID of the document to delete
+   * @throws DatabaseSaveException if the delete fails
+   */
   const deleteDocumentById = useCallback(async (id: string): Promise<void> => {
     const query = `DELETE FROM documents WHERE id = ? AND owner_id = ?`;
     const statement = await db.prepareAsync(query);
@@ -97,6 +118,13 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     }
   }, [db, ownerId]);
 
+  /**
+   * Attach a document to an item
+   * @param documentId ID of the document to attach
+   * @param itemId ID of the item to attach the document to
+   * @returns Result of the attachment operation
+   * @throws DatabaseSaveException if the attachment fails
+   */
   const attachDocumentToItem = useCallback(async (documentId: string, itemId: string): Promise<SQLiteExecuteAsyncResult<any>> => {
     const documentAttachmentId = Document.generateId();
     const query = `INSERT INTO document_attachments (id, entity_id, document_id, model) VALUES (?, ?, ?, ?)`;
@@ -108,6 +136,46 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     return result;
   }, [db]);
 
+  /**
+   * Attach a document to a history intervention
+   * @param documentId ID of the document to attach
+   * @param historyInterventionId ID of the history intervention to attach the document to
+   * @returns Result of the attachment operation
+   * @throws DatabaseSaveException if the attachment fails
+   * @description Use this method to attach documents to history interventions after saving the document with saveDocument
+   */
+  const attachDocumentToHistoryIntervention = useCallback(async (documentId: string, historyInterventionId: string): Promise<SQLiteExecuteAsyncResult<any>> => {
+    const documentAttachmentId = Document.generateId();
+    const query = `INSERT INTO document_attachments (id, entity_id, document_id, model) VALUES (?, ?, ?, ?)`;
+    const statement = await db.prepareAsync(query);
+    const result = await statement.executeAsync([documentAttachmentId, historyInterventionId, documentId, 'History']);
+    if (result.changes === 0) {
+      throw new DatabaseSaveException(`Failed to attach document ${documentId} to history intervention ${historyInterventionId}`);
+    }
+    return result;
+  }, [db]);
+
+  /**
+   * Save a document and attach it to a history intervention
+   * @param document Document to save and attach
+   * @param historyInterventionId ID of the history intervention to attach the document to
+   * @returns Saved document with ID
+   * @throws DatabaseSaveException if the save or attachment fails
+   * @description This is a convenience method to save a document and immediately attach it to a history intervention
+   */
+  const saveAndAttachDocumentToHistoryIntervention = useCallback(async (document: Document, historyInterventionId: string): Promise<Document> => {
+    const savedDocument = await saveDocument(document);
+    await attachDocumentToHistoryIntervention(savedDocument.getId(), historyInterventionId);
+    return savedDocument;
+  }, [saveDocument, attachDocumentToHistoryIntervention]);
+
+  /**
+   * Detach a document from an item
+   * @param documentId ID of the document to detach
+   * @param itemId ID of the item to detach the document from
+   * @returns Result of the detachment operation
+   * @throws DatabaseSaveException if the detachment fails
+   */
   const detachDocumnentFromItem = useCallback(async (documentId: string, itemId: string) => {
     const query = `DELETE FROM document_attachments WHERE entity_id = ? AND document_id = ? AND model = 'Item'`;
     const statement = await db.prepareAsync(query);
@@ -118,6 +186,11 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     return result;
   }, [db]);
 
+  /**
+   * Get all documents attached to a specific item
+   * @param itemId ID of the item to get documents for
+   * @returns Array of documents attached to the item
+   */
   const getAllDocumentsForItem = useCallback(async (itemId: string): Promise<Document[]> => {
     const query = `SELECT
             documents.*,
@@ -164,9 +237,11 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
 
   return {
     saveDocument,
+    saveAndAttachDocumentToHistoryIntervention,
     getAllDocuments,
     getDocumentById,
     attachDocumentToItem,
+    attachDocumentToHistoryIntervention,
     detachDocumnentFromItem,
     getAllDocumentsForItem,
     deleteDocumentById,

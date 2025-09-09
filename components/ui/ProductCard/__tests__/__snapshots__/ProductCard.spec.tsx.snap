@@ -145,7 +145,7 @@ exports[`ProductCard Components renders correctly 1`] = `
           }
           testID="test-tag-1-text"
         >
-          Acheté le: 08/25
+          Acheté le: 09/25
         </Text>
       </View>
       <View

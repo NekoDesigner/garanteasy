@@ -8,6 +8,7 @@ import Chips from '../components/ui/Chips';
 import FormCard from '../components/ui/FormCard';
 import PDFPreview from '../components/ui/PDFPreview';
 import ProductCard from '../components/ui/ProductCard';
+import RoundedIconButton from '../components/ui/RoundedIconButton';
 import { COLORS, SIZES } from '../constants';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
 import { Item } from '../models/Item/Item';
@@ -46,7 +47,7 @@ const ShowItem = () => {
   return (
     <ScreenView>
       <ScrollView>
-        <Container>
+        <Container style={{ paddingBottom: SIZES.padding.m }}>
           <ProductCard
             brand={item?.brand || 'Unknown Brand'}
             name={item?.label || 'Unknown Item'}
@@ -86,6 +87,10 @@ const ShowItem = () => {
             </FormCard>
           )}
           <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
+            <Text style={styles.h1}>Ajouter une intervention</Text>
+            <RoundedIconButton icon='arrow-right' onPress={() => { router.push({ pathname: '/add-intervention', params: { itemId: item.id } }); }} />
+          </FormCard>
+          <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
             <Text style={styles.h1}>Categorie</Text>
             <Chips label={item?.category?.name || ""} category={item?.category?.id || 'other'} showIcon={item?.category?.showIcon()} />
           </FormCard>
@@ -99,6 +104,18 @@ const ShowItem = () => {
             label="Modifier"
             variant='secondary'
             style={{ paddingVertical: SIZES.padding.s }}
+            textStyle={{ textAlign: 'center', flex: 1 }}
+            onPress={() => {
+              router.push({
+                pathname: '/update-item',
+                params: { itemId: item.id },
+              });
+            }}
+          />
+          <Button
+            label="Supprimer le produit"
+            variant='outline-secondary'
+            style={{ paddingVertical: SIZES.padding.s, marginTop: SIZES.padding.xs }}
             textStyle={{ textAlign: 'center', flex: 1 }}
             onPress={() => {
               router.push({
