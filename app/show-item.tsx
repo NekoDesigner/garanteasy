@@ -90,6 +90,33 @@ const ShowItem = () => {
             <Text style={styles.h1}>Ajouter une intervention</Text>
             <RoundedIconButton icon='arrow-right' onPress={() => { router.push({ pathname: '/add-intervention', params: { itemId: item.id } }); }} />
           </FormCard>
+
+          {/** Liste des interventions */}
+          {item?.interventions && item.interventions.length > 0 && item.interventions.map((intervention, index) => (
+            <FormCard key={intervention.getId()} style={styles.space}>
+              <Text style={styles.h1}>Intervention du {intervention.interventDate.toLocaleDateString()}</Text>
+              <Text>Type: {intervention.label}</Text>
+              {intervention.description && <Text>Description: {intervention.description}</Text>}
+              {intervention.documents && intervention.documents.length > 0 && (
+                <>
+                  <Text style={{ marginTop: 10, fontWeight: '600' }}>Documents associés:</Text>
+                  {intervention.documents.map((doc, docIndex) => (
+                    <PDFPreview
+                      key={doc.getId()}
+                      uri={doc.filePath}
+                      style={styles.pdfPreview}
+                      documentName={doc.name}
+                      documentType={doc.type}
+                      onError={(error: any) => {
+                        console.error('PDF Preview Error:', error);
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+            </FormCard>
+          ))}
+
           <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
             <Text style={styles.h1}>Categorie</Text>
             <Chips label={item?.category?.name || ""} category={item?.category?.id || 'other'} showIcon={item?.category?.showIcon()} />

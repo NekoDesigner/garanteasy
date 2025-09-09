@@ -3,6 +3,7 @@ import { Category } from "../Category/Category";
 import { Document } from "../Document/Document";
 import { IModel } from "../model";
 import { Notification } from "../Notification/Notification";
+import { History } from './../History/History';
 import { DatabaseItemDto, ItemDto } from "./Item.dto";
 
 export class Item extends IModel {
@@ -19,6 +20,7 @@ export class Item extends IModel {
   createdAt: Date;
   updatedAt: Date;
   documents?: Document[];
+  interventions: History[] = [];
   category: Category | null = null;
   notifications: Notification[] = [];
   constructor(data: ItemDto) {
