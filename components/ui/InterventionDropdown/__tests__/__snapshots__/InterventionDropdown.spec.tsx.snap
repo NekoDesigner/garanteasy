@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GDropdown2 Components renders correctly 1`] = `
+exports[`InterventionDropdown Components renders correctly 1`] = `
 <View
   style={
     {
@@ -64,7 +64,16 @@ exports[`GDropdown2 Components renders correctly 1`] = `
     >
       Réparation
     </Text>
-    <Text />
+    <Icon
+      color="#140E57"
+      name="down"
+      size={16}
+      style={
+        {
+          "marginLeft": 6,
+        }
+      }
+    />
   </View>
 </View>
 `;
