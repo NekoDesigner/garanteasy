@@ -95,8 +95,6 @@ const AddIntervention = () => {
     );
   }
 
-  React.useEffect(() => {}, [historyIntervention])
-
   return (
     <ScreenView>
       <ScrollView>
@@ -132,7 +130,7 @@ const AddIntervention = () => {
                   ...prev,
                   label: value,
                 }));
-              
+
               }}
             />
           </FormCard>

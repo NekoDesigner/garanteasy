@@ -43,10 +43,24 @@ Follow the instructions in the terminal to run the app on an emulator or physica
 
 ## Commit
 
+### Installation
+
+Install [commitizen](https://commitizen-tools.github.io/commitizen/#getting-started) and follow installation and configuration steps.
+
+### How to use it
+
+#### Create a commit
+
 For create pretty commit, use
 
 ```shell
-npm run cz
+cz commit
+```
+
+#### Version Management
+
+```shell
+cz bump
 ```
 
 ## Project Info

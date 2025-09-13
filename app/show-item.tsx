@@ -1,7 +1,7 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, ScrollView, ActivityIndicator, View } from 'react-native';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Container from '../components/Container';
 import ScreenView from '../components/ScreenView';
 import Button from '../components/ui/Button';
@@ -9,13 +9,12 @@ import Chips from '../components/ui/Chips';
 import FormCard from '../components/ui/FormCard';
 import PDFPreview from '../components/ui/PDFPreview';
 import ProductCard from '../components/ui/ProductCard';
-import RoundedIconButton from '../components/ui/RoundedIconButton';
 import { COLORS, SIZES } from '../constants';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
+import { History } from '../models/History/History';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
 import { DateService } from '../services/DateService';
-import { History } from '../models/History/History';
 
 const ShowItem = () => {
   const router = useRouter();
@@ -46,8 +45,6 @@ const ShowItem = () => {
       </ScreenView>
     );
   }
-
-  console.log("ITEM INTERVENTIONS:", item.interventions);
 
   return (
     <ScreenView>
