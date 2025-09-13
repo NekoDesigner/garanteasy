@@ -15,9 +15,10 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
 
   const [warrantyDurationTag, setWarrantyDurationTag] = React.useState<string>('');
   const [progress, setProgress] = React.useState<number>(1);
+  const [image, setImage] = React.useState<{ uri: string }>(require('../../../assets/images/default-product.png'));
 
   // Helper function to determine the correct image source
-  const getImageSource = () => {
+  const getImageSource = React.useCallback(() => {
     if (!props.image) {
       return require('../../../assets/images/default-product.png');
     }
@@ -33,7 +34,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
 
     // If it's already an object (like {uri: string}), use it directly
     return props.image;
-  };
+  }, [props.image]);
 
   function formatExpirationDate(purchaseDateProp: Date | string, warrantyDurationInDays: number): string {
     const _purchaseDate = new Date(purchaseDateProp);
@@ -59,6 +60,8 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
   }
 
   React.useEffect(() => {
+    const uri = getImageSource();
+    setImage(uri);
     if (props.warrantyDuration) {
       const warrantyDurationInDays = DateService.getWarrantyDurationInDays(props.warrantyDuration);
       const expirationDate = formatExpirationDate(purchaseDate, warrantyDurationInDays);
@@ -85,17 +88,16 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
     } else {
       setWarrantyDurationTag('Aucune garantie');
     }
-  }, [props.warrantyDuration, purchaseDate]);
+  }, [props.warrantyDuration, purchaseDate, getImageSource]);
 
   return (
       <View style={[ProductCardStyles.container, style]} testID={testID} {...props}>
         <Image
-          source={getImageSource()}
+          source={image}
           style={ProductCardStyles.image}
           resizeMode="cover"
-          onError={(error) => {
-            console.error('ProductCard Image load error:', error.nativeEvent.error);
-            console.log('Failed image source:', getImageSource());
+          onError={() => {
+            setImage(require('../../../assets/images/default-product.png'));
           }}
         />
         <View style={{ display: 'flex', flex: 1 }}>

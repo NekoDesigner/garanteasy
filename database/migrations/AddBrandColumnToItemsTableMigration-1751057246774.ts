@@ -9,6 +9,7 @@ export class AddBrandColumnToItemsTableMigration1751057246774 extends Migration 
     this.database = database;
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
     await this.addBrandColumn();
+    await this.saveMigration(database);
   }
 
   async addBrandColumn() {

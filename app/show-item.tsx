@@ -1,6 +1,7 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, ScrollView, ActivityIndicator, View } from 'react-native';
 import Container from '../components/Container';
 import ScreenView from '../components/ScreenView';
 import Button from '../components/ui/Button';
@@ -10,8 +11,10 @@ import PDFPreview from '../components/ui/PDFPreview';
 import ProductCard from '../components/ui/ProductCard';
 import { COLORS, SIZES } from '../constants';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
+import { History } from '../models/History/History';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
+import { DateService } from '../services/DateService';
 
 const ShowItem = () => {
   const router = useRouter();
@@ -46,7 +49,7 @@ const ShowItem = () => {
   return (
     <ScreenView>
       <ScrollView>
-        <Container>
+        <Container style={{ paddingBottom: SIZES.padding.m }}>
           <ProductCard
             brand={item?.brand || 'Unknown Brand'}
             name={item?.label || 'Unknown Item'}
@@ -85,6 +88,49 @@ const ShowItem = () => {
               ))}
             </FormCard>
           )}
+
+          {/** Liste des interventions */}
+          <FormCard style={styles.space}>
+            {item?.interventions && item.interventions.length > 0 && item.interventions.map((intervention, index) => (
+            <View key={intervention.getId()}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+                <MaterialIcons name="support-agent" size={24} color="black" />
+                <Text style={styles.h1}>Intervention du {DateService.formatDDMMYYYY(intervention.interventDate)}</Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 5 }}>
+                <Text style={{ fontWeight: '600' }}>Type:</Text>
+                <View style={{ backgroundColor: COLORS.primary, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
+                  <Text style={{ fontWeight: '600', color: COLORS.light }}>{History.setLabelToDisplayFormat(intervention.label)}</Text>
+                </View>
+              </View>
+              {intervention.description && (
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 5, marginBottom: 5 }}>
+                  <Text style={{ fontWeight: '600' }}>Description:</Text>
+                  <Text>{intervention.description}</Text>
+                </View>
+              )}
+              {intervention.documents && intervention.documents.length > 0 && (
+                <>
+                  <Text style={{ marginTop: 10, fontWeight: '600' }}>Documents associés:</Text>
+                  {intervention.documents.map((doc, docIndex) => (
+                    <PDFPreview
+                      key={doc.getId()}
+                      uri={doc.filePath}
+                      style={styles.pdfPreview}
+                      documentName={doc.name}
+                      documentType={doc.type}
+                      onError={(error: any) => {
+                        console.error('PDF Preview Error:', error);
+                      }}
+                    />
+                  ))}
+                </>
+                )}
+              {index < item.interventions.length - 1 && <View style={{ borderBottomWidth: 1, borderBottomColor: COLORS.greyDarker, marginVertical: 10 }} />}
+                </View>
+            ))}
+            </FormCard>
+
           <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
             <Text style={styles.h1}>Categorie</Text>
             <Chips label={item?.category?.name || ""} category={item?.category?.id || 'other'} showIcon={item?.category?.showIcon()} />
@@ -99,6 +145,18 @@ const ShowItem = () => {
             label="Modifier"
             variant='secondary'
             style={{ paddingVertical: SIZES.padding.s }}
+            textStyle={{ textAlign: 'center', flex: 1 }}
+            onPress={() => {
+              router.push({
+                pathname: '/update-item',
+                params: { itemId: item.id },
+              });
+            }}
+          />
+          <Button
+            label="Supprimer le produit"
+            variant='outline-secondary'
+            style={{ paddingVertical: SIZES.padding.s, marginTop: SIZES.padding.xs }}
             textStyle={{ textAlign: 'center', flex: 1 }}
             onPress={() => {
               router.push({

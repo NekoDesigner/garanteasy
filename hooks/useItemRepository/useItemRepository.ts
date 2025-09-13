@@ -9,6 +9,8 @@ import { Category } from "../../models/Category/Category";
 import { DatabaseCategoryDto } from "../../models/Category/Category.dto";
 import { Document } from "../../models/Document/Document";
 import { DatabaseDocumentDto } from "../../models/Document/Document.dto";
+import { History } from "../../models/History/History";
+import { DatabaseHistoryDto } from "../../models/History/History.dto";
 import { Item } from "../../models/Item/Item";
 import { DatabaseItemDto } from "../../models/Item/Item.dto";
 import { Notification } from "../../models/Notification/Notification";
@@ -137,8 +139,28 @@ export function useItemRepository(props: IItemRepositoryProps) {
           category = Category.toModel<DatabaseCategoryDto, Category>(categoryDatabaseDto);
         }
 
+        const interventionsDto = await db.getAllAsync<DatabaseHistoryDto>(`SELECT * FROM histories WHERE item_id = ?`, [id]);
+        let interventions: History[] = [];
+        if (interventionsDto.length > 0) {
+          interventions = interventionsDto.map(intervention => History.toModel<DatabaseHistoryDto, History>(intervention));
+          const documents = await db.getAllAsync<DatabaseDocumentDto>(`SELECT
+            documents.*,
+            document_attachments.model as "entity_model",
+            document_attachments.entity_id as "entity_id"
+          FROM documents
+            INNER JOIN document_attachments ON documents.id = document_attachments.document_id
+            WHERE document_attachments.entity_id IN (?) AND document_attachments.model = 'History'`, [
+            interventions.map(i => i.getId()).join(', ')
+          ]);
+          // Attach documents to their respective history interventions
+          for (const intervention of interventions) {
+            intervention.documents = documents.filter(doc => doc.entity_id === intervention.getId()).map(doc => Document.toModel<DatabaseDocumentDto, Document>(doc)) ?? [];
+          }
+        }
+
         const item = Item.toModel<DatabaseItemDto, Item>(result);
         item.documents = documents.map(doc => Document.toModel<DatabaseDocumentDto, Document>(doc));
+        item.interventions = interventions;
         item.category = category;
         return item;
       }
@@ -288,7 +310,7 @@ export function useItemRepository(props: IItemRepositoryProps) {
 
       return savedItem || item;
     },
-    [db, props.ownerId, getItemById, createNotification, removeNotificationByItem]
+    [createNotification, props.ownerId, db, getItemById, removeNotificationByItem, removeNotification]
   );
 
   const deleteItem = React.useCallback(async (item: Item) => {

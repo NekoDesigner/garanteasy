@@ -9,6 +9,7 @@ export class AddTypeColumnFromDocumentTableMigration1751223578383 extends Migrat
     this.database = database;
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
     await this.addTypeColumn();
+    await this.saveMigration(database);
   }
 
   async addTypeColumn() {
