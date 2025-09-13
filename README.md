@@ -93,7 +93,7 @@ This project is licensed under the [MIT License](LICENSE).
 ## Contributors 😎
 
 - <img src="https://github.com/NekoDesigner.png" width="24" height="24" alt="NekoDesigner avatar" style="vertical-align:middle; border-radius:50%;"> [Tahar Chibane](https://github.com/NekoDesigner)
-- <img src="https://media.licdn.com/dms/image/v2/D4E03AQE6RNVpdrXlFg/profile-displayphoto-shrink_800_800/B4EZacioCRGQAg-/0/1746383046511?e=1753920000&v=beta&t=MyIdRacSrNyDacx-gPAU9zHM02ENGjvbaaR_eyC1eNU" width="24" height="24" style="vertical-align:middle; border-radius:50%;"> [Mélissa Chibane](https://www.linkedin.com/in/m%C3%A9lissa-chibane-200bba240/)
+- <img src="https://media.licdn.com/dms/image/v2/D4E03AQEDQVepLn5Sww/profile-displayphoto-shrink_400_400/B4EZeNn0FyGcAg-/0/1750427714703?e=1760572800&v=beta&t=L08_0N4IZDMF2cso_rPbNo7gU5Rjcct7n_lkwtRVjlE" width="24" height="24" style="vertical-align:middle; border-radius:50%;"> [Mélissa Chibane](https://www.linkedin.com/in/m%C3%A9lissa-chibane-200bba240/)
 
 ---
 
