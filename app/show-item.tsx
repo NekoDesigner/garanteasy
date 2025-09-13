@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, ScrollView, ActivityIndicator, View } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Container from '../components/Container';
 import ScreenView from '../components/ScreenView';
 import Button from '../components/ui/Button';
@@ -13,6 +14,8 @@ import { COLORS, SIZES } from '../constants';
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
+import { DateService } from '../services/DateService';
+import { History } from '../models/History/History';
 
 const ShowItem = () => {
   const router = useRouter();
@@ -43,6 +46,8 @@ const ShowItem = () => {
       </ScreenView>
     );
   }
+
+  console.log("ITEM INTERVENTIONS:", item.interventions);
 
   return (
     <ScreenView>
@@ -86,17 +91,27 @@ const ShowItem = () => {
               ))}
             </FormCard>
           )}
-          <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
-            <Text style={styles.h1}>Ajouter une intervention</Text>
-            <RoundedIconButton icon='arrow-right' onPress={() => { router.push({ pathname: '/add-intervention', params: { itemId: item.id } }); }} />
-          </FormCard>
 
           {/** Liste des interventions */}
-          {item?.interventions && item.interventions.length > 0 && item.interventions.map((intervention, index) => (
-            <FormCard key={intervention.getId()} style={styles.space}>
-              <Text style={styles.h1}>Intervention du {intervention.interventDate.toLocaleDateString()}</Text>
-              <Text>Type: {intervention.label}</Text>
-              {intervention.description && <Text>Description: {intervention.description}</Text>}
+          <FormCard style={styles.space}>
+            {item?.interventions && item.interventions.length > 0 && item.interventions.map((intervention, index) => (
+            <View key={intervention.getId()}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+                <MaterialIcons name="support-agent" size={24} color="black" />
+                <Text style={styles.h1}>Intervention du {DateService.formatDDMMYYYY(intervention.interventDate)}</Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 5 }}>
+                <Text style={{ fontWeight: '600' }}>Type:</Text>
+                <View style={{ backgroundColor: COLORS.primary, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
+                  <Text style={{ fontWeight: '600', color: COLORS.light }}>{History.setLabelToDisplayFormat(intervention.label)}</Text>
+                </View>
+              </View>
+              {intervention.description && (
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 5, marginBottom: 5 }}>
+                  <Text style={{ fontWeight: '600' }}>Description:</Text>
+                  <Text>{intervention.description}</Text>
+                </View>
+              )}
               {intervention.documents && intervention.documents.length > 0 && (
                 <>
                   <Text style={{ marginTop: 10, fontWeight: '600' }}>Documents associés:</Text>
@@ -113,9 +128,11 @@ const ShowItem = () => {
                     />
                   ))}
                 </>
-              )}
+                )}
+              {index < item.interventions.length - 1 && <View style={{ borderBottomWidth: 1, borderBottomColor: COLORS.greyDarker, marginVertical: 10 }} />}
+                </View>
+            ))}
             </FormCard>
-          ))}
 
           <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
             <Text style={styles.h1}>Categorie</Text>

@@ -17,7 +17,7 @@ import { useHistoryRepository } from '../hooks/useHistoryRepository/useHistoryRe
 import { useItemRepository } from '../hooks/useItemRepository/useItemRepository';
 import { useUploaderService } from '../hooks/useUploaderService/useUploaderService';
 import { Document } from '../models/Document/Document';
-import { History } from '../models/History/History';
+import { History, HistoryLabel } from '../models/History/History';
 import { Item } from '../models/Item/Item';
 import { useUserContext } from '../providers/UserContext';
 import { DateService } from '../services/DateService';
@@ -95,6 +95,8 @@ const AddIntervention = () => {
     );
   }
 
+  React.useEffect(() => {}, [historyIntervention])
+
   return (
     <ScreenView>
       <ScrollView>
@@ -124,7 +126,15 @@ const AddIntervention = () => {
 
           <FormCard style={styles.space}>
             <Text style={styles.h1}>Type d&apos;intervention</Text>
-            <InterventionDropdown />
+            <InterventionDropdown
+              onValueChange={(value: HistoryLabel) => {
+                setHistoryIntervention(prev => new History({
+                  ...prev,
+                  label: value,
+                }));
+              
+              }}
+            />
           </FormCard>
 
           <FormCard style={styles.space}>

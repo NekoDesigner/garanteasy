@@ -480,7 +480,13 @@ const UpdateItem = () => {
                 />
               </View>
             </View>
-            </FormCard>
+          </FormCard>
+
+          <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
+            <Text style={styles.h1}>Ajouter une intervention</Text>
+            <RoundedIconButton icon='arrow-right' onPress={() => { router.push({ pathname: '/add-intervention', params: { itemId: item.id } }); }} />
+          </FormCard>
+
             <FormCard style={styles.space}>
               <Text style={styles.h1}>Type de document</Text>
             {document && <Text style={styles.label}>Document de garantie : {document.typeLabel}</Text>}

@@ -3,6 +3,7 @@ import { IModel } from "../model";
 import { DatabaseHistoryDto, HistoryDto } from "./History.dto";
 
 export type HistoryLabel = 'repair' | 'maintenance' | 'update' | 'replacement' | 'inspection';
+export type HistoryDisplayLabel = 'Réparation' | 'Maintenance' | 'Mise à jour' | 'Remplacement' | 'Inspection';
 
 export class History extends IModel {
   id?: string;

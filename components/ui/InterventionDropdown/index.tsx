@@ -1,10 +1,12 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { History, HistoryDisplayLabel } from "../../../models/History/History";
+import { InterventionDropdownProps } from "./@types";
 
 export const INTERVENTION_OPTIONS = ["Réparation", "Maintenance", "Mise à jour", "Remplacement", "Inspection"] as const;
 
-export default function InterventionDropdown() {
+const InterventionDropdown: React.FC<InterventionDropdownProps> = ({ onValueChange }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("Réparation");
 
@@ -12,9 +14,12 @@ export default function InterventionDropdown() {
 
   const toggleDropdown = () => setOpen(!open);
 
-  const handleSelect = (value: any) => {
+  const handleSelect = (value: HistoryDisplayLabel) => {
     setSelected(value);
     setOpen(false);
+    if (onValueChange) {
+      onValueChange(History.setLabelToDatabaseFormat(value));
+    }
   };
 
   return (
@@ -42,7 +47,7 @@ export default function InterventionDropdown() {
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -86,3 +91,5 @@ const styles = StyleSheet.create({
     color: "#140E57",
   },
 });
+
+export default InterventionDropdown;

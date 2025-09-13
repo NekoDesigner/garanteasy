@@ -88,32 +88,32 @@ export function useHistoryRepository({ ownerId }: IHistoryRepositoryProps) {
         WHERE id = $id
         `);
       result = await statement.executeAsync({
-        id: dbHistoryDto.id,
-        label: dbHistoryDto.label,
-        itemId: item.getId(),
-        interventDate: dbHistoryDto.intervention_date instanceof Date
+        $id: dbHistoryDto.id,
+        $label: dbHistoryDto.label,
+        $itemId: item.getId(),
+        $interventDate: dbHistoryDto.intervention_date instanceof Date
           ? dbHistoryDto.intervention_date.toISOString()
           : dbHistoryDto.intervention_date,
-        description: dbHistoryDto.description
+        $description: dbHistoryDto.description
       });
       if (result.changes === 0) {
         throw new DatabaseSaveException('Failed to update history intervention');
       }
     } else {
       // INSERT
-      history.id = History.generateId();
       const statement = await db.prepareAsync(`
         INSERT INTO histories (id, label, item_id, intervention_date, description)
         VALUES ($id, $label, $itemId, $interventionDate, $description)
       `);
+      dbHistoryDto.id = History.generateId();
       result = await statement.executeAsync({
-        id: history.id,
-        label: dbHistoryDto.label,
-        itemId: item.getId(),
-        interventDate: dbHistoryDto.intervention_date instanceof Date
+        $id: dbHistoryDto.id,
+        $label: dbHistoryDto.label,
+        $itemId: item.getId(),
+        $interventionDate: dbHistoryDto.intervention_date instanceof Date
           ? dbHistoryDto.intervention_date.toISOString()
           : dbHistoryDto.intervention_date,
-        description: dbHistoryDto.description
+        $description: dbHistoryDto.description
       });
       if (result.changes === 0) {
         throw new DatabaseSaveException('Failed to create history intervention');
