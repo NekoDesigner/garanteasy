@@ -3,13 +3,14 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { COLORS } from '../../../constants';
+import { COLORS, SIZES } from '../../../constants';
 
 const styles = StyleSheet.create({
   label: {
       marginBottom: 5,
       color: COLORS.placeholder,
       fontSize: 14,
+      fontFamily: SIZES.font.familly.default,
   },
   textInputContainer: {
     flexDirection: 'row',
@@ -35,6 +36,7 @@ const styles = StyleSheet.create({
     color: '#ff4444',
     fontSize: 12,
     marginTop: 5,
+    fontFamily: SIZES.font.familly.default,
   }
 });
 

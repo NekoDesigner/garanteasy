@@ -118,6 +118,7 @@ export function useHistoryRepository({ ownerId }: IHistoryRepositoryProps) {
       if (result.changes === 0) {
         throw new DatabaseSaveException('Failed to create history intervention');
       }
+      return History.toModel<DatabaseHistoryDto, History>({ ...dbHistoryDto, id: dbHistoryDto.id });
     }
     return history;
   }, [db]);

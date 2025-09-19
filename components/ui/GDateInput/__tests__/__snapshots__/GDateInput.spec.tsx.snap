@@ -7,11 +7,13 @@ exports[`GDateInput Components renders correctly 1`] = `
       {
         "errorText": {
           "color": "#ff4444",
+          "fontFamily": "Ubuntu",
           "fontSize": 12,
           "marginTop": 5,
         },
         "label": {
           "color": "#454545",
+          "fontFamily": "Ubuntu",
           "fontSize": 14,
           "marginBottom": 5,
         },
@@ -46,6 +48,7 @@ exports[`GDateInput Components renders correctly 1`] = `
       [
         {
           "color": "#454545",
+          "fontFamily": "Ubuntu",
           "fontSize": 14,
           "marginBottom": 5,
         },

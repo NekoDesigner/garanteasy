@@ -1,6 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { SIZES } from "../../../constants";
 import { History, HistoryDisplayLabel } from "../../../models/History/History";
 import { InterventionDropdownProps } from "./@types";
 
@@ -31,7 +32,7 @@ const InterventionDropdown: React.FC<InterventionDropdownProps> = ({ onValueChan
           name={open ? "up" : "down"}
           size={16}
           color="#140E57"
-          style={{ marginLeft: 6 }}
+          style={{ marginLeft: 6, fontWeight: SIZES.font.weight.bold }}
         />
       </TouchableOpacity>
 
@@ -61,15 +62,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#140E57",
     borderRadius: 6,
-    paddingVertical: 6,
+    paddingVertical: 12,
     paddingHorizontal: 14,
     backgroundColor: "#fff",
     width: "100%",
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: SIZES.font.s,
     color: "#140E57",
-    fontWeight: "600",
+    fontFamily: SIZES.font.familly.default,
+    fontWeight: SIZES.font.weight.bold,
   },
   dropdown: {
     position: "absolute",
@@ -87,8 +89,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   optionText: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#140E57",
+    fontFamily: SIZES.font.familly.default,
+    fontWeight: SIZES.font.weight.medium,
   },
 });
 

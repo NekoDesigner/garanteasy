@@ -29,7 +29,7 @@ const AddIntervention = () => {
   const { getItemById } = useItemRepository({ ownerId: user?.id ?? '' });
   const { handleAddDocument, isCreatingDocument, setUploaderDocumentType } = useUploaderService({ user });
   const { saveHistoryInterventionFromItem } = useHistoryRepository({ ownerId: user?.id || '' });
-  const { saveAndAttachDocumentToHistoryIntervention } = useDocumentRepository({ ownerId: user?.id || '' });
+  const { attachDocumentToHistoryIntervention } = useDocumentRepository({ ownerId: user?.id || '' });
   const [item, setItem] = React.useState<Item>(new Item({
       ownerId: user?.id ?? '',
       label: '',
@@ -67,10 +67,15 @@ const AddIntervention = () => {
 
   const handleSaveHistoryIntervention = React.useCallback(async () => {
     try {
+      console.log('Saving history intervention:');
       const createdHistoryIntervention = await saveHistoryInterventionFromItem(historyIntervention, item);
       if (document) {
-        await saveAndAttachDocumentToHistoryIntervention(document!, createdHistoryIntervention.getId());
+        console.log('Attaching document to history intervention:');
+        console.log('Document ID:', document.getId());
+        console.log('History Intervention ID:', createdHistoryIntervention.getId());
+        await attachDocumentToHistoryIntervention(document.getId(), createdHistoryIntervention.getId());
       }
+      console.log('History intervention saved successfully:');
       setUploaderDocumentType('other');
       router.replace({
         pathname: '/show-item',
@@ -83,7 +88,7 @@ const AddIntervention = () => {
         "Une erreur est survenue lors de l'enregistrement de l'intervention. Veuillez contacter le support si le problème persiste."
       );
     }
-  }, [document, historyIntervention, item, router, saveAndAttachDocumentToHistoryIntervention, saveHistoryInterventionFromItem, setUploaderDocumentType]);
+  }, [attachDocumentToHistoryIntervention, document, historyIntervention, item, router, saveHistoryInterventionFromItem, setUploaderDocumentType]);
 
   if (!item) {
     return (
