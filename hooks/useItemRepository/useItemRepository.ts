@@ -143,15 +143,19 @@ export function useItemRepository(props: IItemRepositoryProps) {
         let interventions: History[] = [];
         if (interventionsDto.length > 0) {
           interventions = interventionsDto.map(intervention => History.toModel<DatabaseHistoryDto, History>(intervention));
+          const interventionIds = interventions.map(i => i.getId());
+          console.log('🔍 Intervention IDs to search:', interventionIds);
+          console.log('🔍 Generated SQL placeholders:', interventionIds.map(() => '?').join(', '));
+
           const documents = await db.getAllAsync<DatabaseDocumentDto>(`SELECT
             documents.*,
             document_attachments.model as "entity_model",
             document_attachments.entity_id as "entity_id"
           FROM documents
             INNER JOIN document_attachments ON documents.id = document_attachments.document_id
-            WHERE document_attachments.entity_id IN (?) AND document_attachments.model = 'History'`, [
-            interventions.map(i => i.getId()).join(', ')
-          ]);
+            WHERE document_attachments.entity_id IN (${interventionIds.map(() => '?').join(', ')}) AND document_attachments.model = 'History'`,
+            interventionIds
+          );
           // Attach documents to their respective history interventions
           for (const intervention of interventions) {
             intervention.documents = documents.filter(doc => doc.entity_id === intervention.getId()).map(doc => Document.toModel<DatabaseDocumentDto, Document>(doc)) ?? [];

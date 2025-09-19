@@ -638,11 +638,13 @@ const styles = StyleSheet.create({
     color: COLORS.blueDarker,
     fontSize: 16,
     fontWeight: SIZES.font.weight.semiBold,
+    fontFamily: SIZES.font.familly.default,
   },
   label: {
     marginBottom: 5,
     color: COLORS.placeholder,
     fontSize: 14,
+    fontFamily: SIZES.font.familly.default,
   },
   mainInfoContainer: {
     flexDirection: 'row',
@@ -668,12 +670,14 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
+    fontFamily: SIZES.font.familly.default,
   },
   imagePlaceholderText: {
     color: COLORS.placeholder,
     fontSize: 12,
     textAlign: 'center',
     marginTop: 5,
+    fontFamily: SIZES.font.familly.default,
   },
   pdfPreviewContainer: {
     marginTop: 15,
@@ -682,6 +686,7 @@ const styles = StyleSheet.create({
     color: COLORS.blueDarker,
     fontSize: 14,
     fontWeight: SIZES.font.weight.medium,
+    fontFamily: SIZES.font.familly.default,
     marginBottom: 10,
   },
   pdfPreview: {
@@ -697,6 +702,7 @@ const styles = StyleSheet.create({
     color: COLORS.blueDarker,
     fontSize: 13,
     fontWeight: SIZES.font.weight.medium,
+    fontFamily: SIZES.font.familly.default,
     marginBottom: 2,
   },
   documentType: {
@@ -714,12 +720,14 @@ const styles = StyleSheet.create({
     color: COLORS.blueDarker,
     fontSize: 14,
     fontWeight: SIZES.font.weight.medium,
+    fontFamily: SIZES.font.familly.default,
     marginBottom: 4,
   },
   noDocumentSubtext: {
     color: COLORS.placeholder,
     fontSize: 12,
     textAlign: 'center',
+    fontFamily: SIZES.font.familly.default,
   },
   loadingContainer: {
     backgroundColor: COLORS.greyLighter,
@@ -732,6 +740,7 @@ const styles = StyleSheet.create({
     color: COLORS.blueDarker,
     fontSize: 14,
     fontWeight: SIZES.font.weight.medium,
+    fontFamily: SIZES.font.familly.default,
   },
   documentsListContainer: {
     marginTop: 15,
@@ -740,6 +749,7 @@ const styles = StyleSheet.create({
     color: COLORS.blueDarker,
     fontSize: 14,
     fontWeight: SIZES.font.weight.medium,
+    fontFamily: SIZES.font.familly.default,
     marginBottom: 10,
   },
   documentItem: {
@@ -787,5 +797,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     lineHeight: 15,
+    fontFamily: SIZES.font.familly.default,
   },
 });

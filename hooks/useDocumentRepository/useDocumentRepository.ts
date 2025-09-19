@@ -55,6 +55,7 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
     let result: SQLiteExecuteAsyncResult<DatabaseDocumentDto>;
     const dbDocumentDto: DatabaseDocumentDto = Document.fromModel(document);
     if (dbDocumentDto.id) {
+      console.log('Updating document with ID:', dbDocumentDto.id);
       // UPDATE
       const statement = await db.prepareAsync(
         `UPDATE documents SET 
@@ -82,13 +83,14 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
       }
     } else {
       // INSERT
-      document.id = Document.generateId(); // Ensure we have an ID for the new document
+      const ID = Document.generateId(); // Ensure we have an ID for the new document
       const statement = await db.prepareAsync(
         `INSERT INTO documents (id, name, filename, type, file_path, file_source, owner_id, mimetype) 
           VALUES ($id, $name, $filename, $type, $file_path, $file_source, $owner_id, $mimetype)`
       );
+      console.log('Inserting document with ID:', ID);
       result = await statement.executeAsync({
-        $id: document.id,
+        $id: ID,
         $name: dbDocumentDto.name,
         $filename: dbDocumentDto.filename,
         $type: dbDocumentDto.type,
@@ -97,9 +99,13 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
         $mimetype: dbDocumentDto.mimetype,
         $owner_id: ownerId
       });
+      console.log('Insert result:', result);
       if (result.changes === 0) {
         throw new DatabaseSaveException(`Failed to save document for user ${dbDocumentDto.owner_id}`);
       }
+      const document = Document.toModel<DatabaseDocumentDto, Document>({ ...dbDocumentDto, id: ID, owner_id: ownerId });
+      console.log('Saved document:', document);
+      return document;
     }
     return document;
   }, [db, ownerId]);
@@ -164,7 +170,9 @@ export function useDocumentRepository({ ownerId }: IDocumentRepositoryProps) {
    * @description This is a convenience method to save a document and immediately attach it to a history intervention
    */
   const saveAndAttachDocumentToHistoryIntervention = useCallback(async (document: Document, historyInterventionId: string): Promise<Document> => {
+    console.log('saveAndAttachDocumentToHistoryIntervention =>');
     const savedDocument = await saveDocument(document);
+    console.log('savedDocument =>', JSON.stringify(savedDocument, null, 2));
     await attachDocumentToHistoryIntervention(savedDocument.getId(), historyInterventionId);
     return savedDocument;
   }, [saveDocument, attachDocumentToHistoryIntervention]);

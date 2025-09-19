@@ -26,7 +26,7 @@ exports[`Tag Components renders correctly 1`] = `
         {
           "color": "#050426",
           "fontFamily": "Ubuntu",
-          "fontSize": 14,
+          "fontSize": 12,
           "fontWeight": "700",
         },
         {},

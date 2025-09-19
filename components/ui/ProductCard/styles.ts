@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     fontFamily: SIZES.font.familly.default,
     fontWeight: SIZES.font.weight.semiBold,
-    fontSize: SIZES.font.xl,
+    fontSize: SIZES.font.l,
   },
   brand: {
     color: COLORS.blueDarker,

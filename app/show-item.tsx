@@ -90,46 +90,46 @@ const ShowItem = () => {
           )}
 
           {/** Liste des interventions */}
-          <FormCard style={styles.space}>
-            {item?.interventions && item.interventions.length > 0 && item.interventions.map((intervention, index) => (
-            <View key={intervention.getId()}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                <MaterialIcons name="support-agent" size={24} color="black" />
-                <Text style={styles.h1}>Intervention du {DateService.formatDDMMYYYY(intervention.interventDate)}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 5 }}>
-                <Text style={{ fontWeight: '600' }}>Type:</Text>
-                <View style={{ backgroundColor: COLORS.primary, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
-                  <Text style={{ fontWeight: '600', color: COLORS.light }}>{History.setLabelToDisplayFormat(intervention.label)}</Text>
+          {item?.interventions && item.interventions.length > 0 && <FormCard style={styles.space}>
+            {item.interventions.map((intervention, index) => (
+              <View key={intervention.getId()}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+                  <MaterialIcons name="support-agent" size={24} color="black" />
+                  <Text style={styles.h1}>Intervention du {DateService.formatDDMMYYYY(intervention.interventDate)}</Text>
                 </View>
-              </View>
-              {intervention.description && (
-                <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 5, marginBottom: 5 }}>
-                  <Text style={{ fontWeight: '600' }}>Description:</Text>
-                  <Text>{intervention.description}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 5 }}>
+                  <Text style={{ fontWeight: '600' }}>Type:</Text>
+                  <View style={{ backgroundColor: COLORS.primary, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
+                    <Text style={{ fontWeight: '600', color: COLORS.light }}>{History.setLabelToDisplayFormat(intervention.label)}</Text>
+                  </View>
                 </View>
-              )}
-              {intervention.documents && intervention.documents.length > 0 && (
-                <>
-                  <Text style={{ marginTop: 10, fontWeight: '600' }}>Documents associés:</Text>
-                  {intervention.documents.map((doc, docIndex) => (
-                    <PDFPreview
-                      key={doc.getId()}
-                      uri={doc.filePath}
-                      style={styles.pdfPreview}
-                      documentName={doc.name}
-                      documentType={doc.type}
-                      onError={(error: any) => {
-                        console.error('PDF Preview Error:', error);
-                      }}
-                    />
-                  ))}
-                </>
+                {intervention.description && (
+                  <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 5, marginBottom: 5 }}>
+                    <Text style={{ fontWeight: '600' }}>Description:</Text>
+                    <Text>{intervention.description}</Text>
+                  </View>
                 )}
-              {index < item.interventions.length - 1 && <View style={{ borderBottomWidth: 1, borderBottomColor: COLORS.greyDarker, marginVertical: 10 }} />}
-                </View>
+                {intervention.documents && intervention.documents.length > 0 && (
+                  <>
+                    <Text style={{ marginVertical: 10, fontWeight: '600' }}>Document{intervention.documents.length > 1 ? 's' : ''} associé{intervention.documents.length > 1 ? 's' : ''}:</Text>
+                    {intervention.documents.map((doc, docIndex) => (
+                      <PDFPreview
+                        key={doc.getId()}
+                        uri={doc.filePath}
+                        style={styles.pdfPreview}
+                        documentName={doc.name}
+                        documentType={doc.type}
+                        onError={(error: any) => {
+                          console.error('PDF Preview Error:', error);
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+                {index < item.interventions.length - 1 && <View style={{ borderBottomWidth: 1, borderBottomColor: COLORS.greyDarker, marginVertical: 10 }} />}
+              </View>
             ))}
-            </FormCard>
+          </FormCard>}
 
           <FormCard style={[{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', alignItems: 'center' }, styles.space]}>
             <Text style={styles.h1}>Categorie</Text>
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
   h1: {
     fontSize: SIZES.font.m,
     fontWeight: SIZES.font.weight.semiBold,
+    fontFamily: SIZES.font.familly.default,
   },
   space: {
     marginBottom: SIZES.padding.m,

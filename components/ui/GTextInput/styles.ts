@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { COLORS } from '../../../constants';
+import { COLORS, SIZES } from '../../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: COLORS.placeholder,
     fontSize: 14,
+    fontFamily: SIZES.font.familly.default,
   },
   textInput: {
     borderWidth: 1,

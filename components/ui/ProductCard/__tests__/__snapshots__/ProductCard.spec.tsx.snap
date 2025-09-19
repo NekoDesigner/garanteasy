@@ -70,7 +70,7 @@ exports[`ProductCard Components renders correctly 1`] = `
           {
             "color": "#050426",
             "fontFamily": "Ubuntu",
-            "fontSize": 20,
+            "fontSize": 18,
             "fontWeight": "700",
             "overflow": "hidden",
             "textOverflow": "ellipsis",
@@ -86,7 +86,7 @@ exports[`ProductCard Components renders correctly 1`] = `
         {
           "color": "#050426",
           "fontFamily": "Ubuntu",
-          "fontSize": 14,
+          "fontSize": 12,
           "fontWeight": "700",
           "overflow": "hidden",
           "textOverflow": "ellipsis",
@@ -133,13 +133,13 @@ exports[`ProductCard Components renders correctly 1`] = `
               {
                 "color": "#050426",
                 "fontFamily": "Ubuntu",
-                "fontSize": 14,
+                "fontSize": 12,
                 "fontWeight": "700",
               },
               {
                 "color": "#050426",
                 "fontFamily": "Ubuntu",
-                "fontSize": 12,
+                "fontSize": 10,
               },
             ]
           }
@@ -173,13 +173,13 @@ exports[`ProductCard Components renders correctly 1`] = `
               {
                 "color": "#050426",
                 "fontFamily": "Ubuntu",
-                "fontSize": 14,
+                "fontSize": 12,
                 "fontWeight": "700",
               },
               {
                 "color": "#050426",
                 "fontFamily": "Ubuntu",
-                "fontSize": 12,
+                "fontSize": 10,
               },
             ]
           }
