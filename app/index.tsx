@@ -243,8 +243,6 @@ const HomeScreen = () => {
     }
   }
 
-  // console.log(JSON.stringify(items, null, 2));
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScreenView>

@@ -1,6 +1,8 @@
 import React from 'react';
 import AddIcon from './AddIcon';
 import ArrowIcon from './ArrowIcon';
+import BellIcon from './BellIcon';
+import BookIcon from './BookIcon';
 import CalendarIcon from './CalendarIcon';
 import CheckIcon from './CheckIcon';
 import CloseIcon from './CloseIcon';
@@ -30,6 +32,8 @@ interface IconProps {
 const iconRegistry: Record<string, React.ComponentType<any>> = {
   add: AddIcon,
   arrow: ArrowIcon,
+  bell: BellIcon,
+  book: BookIcon,
   calendar: CalendarIcon,
   check: CheckIcon,
   close: CloseIcon,
@@ -58,7 +62,7 @@ const DynamicIcon = ({ name, size = 24, color = 'black' }: IconProps) => {
     return null;
   }
 
-  return <IconComponent width={size} height={size} fill={color} />;
+  return <IconComponent width={size} height={size} color={color} />;
 };
 
 export default DynamicIcon;

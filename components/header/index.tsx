@@ -20,7 +20,9 @@ const Header: React.FC = () => {
   const { ghostbuster } = useDocumentRepository({ ownerId: user?.id || '' });
   const LeftIconComponent = React.useMemo(() => {
     if (!segments.length) {
-      return <RoundedIconButton icon="settings" onPress={() => {}} />;
+      return <RoundedIconButton icon="settings" onPress={() => {
+        router.push({ pathname: '/settings' });
+      }} />;
     }
     if (segments[segments.length - 1] === 'scanner' && params?.reviewMode) {
       return <RoundedIconButton icon="close" onPress={() => { router.dismissAll(); }} />;

@@ -144,8 +144,6 @@ export function useItemRepository(props: IItemRepositoryProps) {
         if (interventionsDto.length > 0) {
           interventions = interventionsDto.map(intervention => History.toModel<DatabaseHistoryDto, History>(intervention));
           const interventionIds = interventions.map(i => i.getId());
-          console.log('🔍 Intervention IDs to search:', interventionIds);
-          console.log('🔍 Generated SQL placeholders:', interventionIds.map(() => '?').join(', '));
 
           const documents = await db.getAllAsync<DatabaseDocumentDto>(`SELECT
             documents.*,

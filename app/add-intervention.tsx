@@ -67,15 +67,10 @@ const AddIntervention = () => {
 
   const handleSaveHistoryIntervention = React.useCallback(async () => {
     try {
-      console.log('Saving history intervention:');
       const createdHistoryIntervention = await saveHistoryInterventionFromItem(historyIntervention, item);
       if (document) {
-        console.log('Attaching document to history intervention:');
-        console.log('Document ID:', document.getId());
-        console.log('History Intervention ID:', createdHistoryIntervention.getId());
         await attachDocumentToHistoryIntervention(document.getId(), createdHistoryIntervention.getId());
       }
-      console.log('History intervention saved successfully:');
       setUploaderDocumentType('other');
       router.replace({
         pathname: '/show-item',
