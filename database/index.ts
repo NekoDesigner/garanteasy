@@ -1,15 +1,19 @@
 import { AddBrandColumnToItemsTableMigration1751057246774 } from './migrations/AddBrandColumnToItemsTableMigration-1751057246774';
 import { AddDescriptionColumnToHistoriesTableMigration1756657804230 } from './migrations/AddDescriptionColumnToHistoriesTableMigration-1756657804230';
+import { AddSettingsTableMigration1758810678380 } from './migrations/AddSettingsTableMigration-1758810678380';
 import { AddTypeColumnFromDocumentTableMigration1751223578383 } from './migrations/AddTypeColumnFromDocumentTableMigration-1751223578383';
 import { CreateNotificationsTableMigration1751560378406 } from './migrations/CreateNotificationsTableMigration-1751560378406';
 import { CreateOnboardingsTableMigration1751389874021 } from './migrations/CreateOnboardingsTableMigration-1751389874021';
 import { InitialMigration1750507867331 } from './migrations/InitialMigration-1750507867331';
+import { SettingsTableSeederMigration1758811376809 } from './migrations/SettingsTableSeederMigration-1758811376809';
 
 export const DATABASE_MIGRATIONS = [
     new AddBrandColumnToItemsTableMigration1751057246774(),
     new AddDescriptionColumnToHistoriesTableMigration1756657804230(),
+    new AddSettingsTableMigration1758810678380(),
     new AddTypeColumnFromDocumentTableMigration1751223578383(),
     new CreateNotificationsTableMigration1751560378406(),
     new CreateOnboardingsTableMigration1751389874021(),
-    new InitialMigration1750507867331()
+    new InitialMigration1750507867331(),
+    new SettingsTableSeederMigration1758811376809()
 ];

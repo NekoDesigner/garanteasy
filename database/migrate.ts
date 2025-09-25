@@ -175,7 +175,7 @@ export class Migrate {
           // console.log(`Migrations list : ${migrations.map(m => m.constructor.name).join(', \n')}`);
           continue; // Skip migration if it has already been run
         }
-        // console.log(`🚀 Running migration: ${migration.constructor.name} (version: ${migration.currentVersion})`);
+        console.log(`🚀 Running migration: ${migration.constructor.name} (version: ${migration.currentVersion})`);
         await migration.run(database);
       } catch (error: unknown) {
         if (error instanceof DatabaseMigrationException) {
