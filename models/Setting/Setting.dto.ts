@@ -3,6 +3,7 @@ export interface IKeySettingValue {
 }
 
 export const enum EKeySetting {
+  // eslint-disable-next-line no-unused-vars
   ENABLE_NOTIFICATIONS = 'notifications_enabled'
 }
 
