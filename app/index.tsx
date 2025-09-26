@@ -1,7 +1,7 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
 import { MediaType } from 'expo-image-picker';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { Text, View, ScrollView, FlatList, RefreshControl, Alert, ActivityIndicator, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -147,6 +147,7 @@ export function BottomBar() {
 
 const HomeScreen = () => {
   const router = useRouter();
+  const params = useLocalSearchParams<{ refresh?: string }>();
   const { user } = useUserContext();
   const { getAllItems } = useItemRepository({ ownerId: user?.id ?? '' });
   // ‡const [items, setItems] = React.useState<Item[]>([]);
@@ -185,7 +186,6 @@ const HomeScreen = () => {
   const fetchItems = React.useCallback(async () => {
     try {
       const fetchedItems = await getAllItems({ withArchived: false, withDocuments: true });
-      // setItems(fetchedItems);
       setSearchedItems(fetchedItems);
       handleShowCategories(fetchedItems);
     } catch (error) {
@@ -220,7 +220,16 @@ const HomeScreen = () => {
       // Use push instead of replace and cast to any to bypass TypeScript route checking
       (router as any).push('/onboarding');
     }
-  }, [currentOnboarding, isLoading, router]);
+
+    if (params.refresh && params.refresh === 'true') {
+      fetchItems();
+      // Clear the refresh param from the URL after fetching
+      router.replace({
+        pathname: '/',
+        params: {},
+      });
+    }
+  }, [currentOnboarding, fetchItems, isLoading, params.refresh, router]);
 
   function handleSearchBarFocus(): void {
     setIsCategoriesFilterVisible(true);

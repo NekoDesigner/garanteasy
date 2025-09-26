@@ -451,7 +451,7 @@ const CreateItem = () => {
             disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
           />
           </Container>
-        </ScrollView>
+      </ScrollView>
     </ScreenView>
   );
 };

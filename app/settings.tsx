@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React from "react";
 import { ScrollView, Text, StyleSheet, View, TouchableOpacity, TextInput } from "react-native";
 import Container from "../components/Container";
@@ -125,7 +126,11 @@ const Settings = () => {
             <BookIcon size={18} color={COLORS.primary} />
             <Text style={styles.text}>Archive</Text>
           </Row>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              router.push('/archived-item');
+            }}
+          >
             <ArrowIcon size={24} color={COLORS.primary} />
           </TouchableOpacity>
         </View>
