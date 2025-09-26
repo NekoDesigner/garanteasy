@@ -8,7 +8,7 @@ import { HeaderStyles, LogoStyles } from './styles';
 
 const Logo: React.FC = () => {
   return (
-    <Text style={LogoStyles.text}>GareantEasy</Text>
+    <Text style={LogoStyles.text}>GarantEasy</Text>
   );
 };
 
