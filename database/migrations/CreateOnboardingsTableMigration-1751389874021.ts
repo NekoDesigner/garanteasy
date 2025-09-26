@@ -10,6 +10,7 @@ export class CreateOnboardingsTableMigration1751389874021 extends Migration {
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
     await this.createOnboardingsTable();
     await this.addFirstOnboarding();
+    await this.saveMigration(database);
   }
 
   private createOnboardingsTable(): Promise<void> {

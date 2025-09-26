@@ -24,4 +24,4 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Run ESLint
-        run: npx eslint . --ignore-pattern ".storybook/*"
+        run: npx eslint . --ignore-pattern ".storybook/*" --ignore-pattern "jest.setup.js"

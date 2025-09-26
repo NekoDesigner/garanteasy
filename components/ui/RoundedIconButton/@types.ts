@@ -6,6 +6,7 @@ export interface IRoundedIconButtonProps {
   style?: object;
   size?: IRoundedIconButtonSize;
   testID?: string;
+  disabled?: boolean;
   icon: IRoundedIconButtonType;
   onPress: () => void;
 }

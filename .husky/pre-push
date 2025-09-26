@@ -1,6 +1,4 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 branch="$(git symbolic-ref --short HEAD)"
 if [ "$branch" = "main" ]; then
   echo "🚫 Direct push to main is not allowed."

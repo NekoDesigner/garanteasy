@@ -1,12 +1,14 @@
 import { IModel } from "../model";
 import { DocumentDto, DatabaseDocumentDto } from "./Document.dto";
 
+export type DocumentType = 'invoice' | 'ticket' | 'intervention' | 'other';
+
 export class Document extends IModel {
   id?: string | undefined;
   name: string;
   filename: string;
   mimeType: string;
-  type: 'invoice' | 'ticket' | 'other';
+  type: DocumentType;
   filePath: string;
   fileSource: 'local' | 'remote';
   ownerId: string;

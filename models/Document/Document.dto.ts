@@ -3,7 +3,7 @@ export interface DocumentDto {
   name: string;
   filename: string;
   mimetype: string;
-  type: 'invoice' | 'ticket' | 'other';
+  type: 'invoice' | 'ticket' | 'intervention' | 'other';
   filePath: string;
   fileSource: 'local' | 'remote';
   ownerId: string;
@@ -14,7 +14,7 @@ export interface DatabaseDocumentDto {
   name: string;
   filename: string;
   mimetype: string;
-  type: 'invoice' | 'ticket' | 'other';
+  type: 'invoice' | 'ticket' | 'intervention' | 'other';
   file_path: string;
   file_source: 'local' | 'remote';
   owner_id: string;

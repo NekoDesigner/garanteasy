@@ -17,6 +17,7 @@ exports[`GTextInput Components renders correctly 1`] = `
       [
         {
           "color": "#454545",
+          "fontFamily": "Ubuntu",
           "fontSize": 14,
           "marginBottom": 5,
         },

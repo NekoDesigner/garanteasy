@@ -1,3 +1,4 @@
+import { useFonts, Ubuntu_400Regular, Ubuntu_700Bold } from '@expo-google-fonts/ubuntu';
 import * as Notifications from 'expo-notifications';
 import { Slot } from "expo-router";
 import { SQLiteProvider, SQLiteDatabase } from 'expo-sqlite';
@@ -10,6 +11,7 @@ import { Migrate } from "../database/migrate";
 import { OnboardingProvider } from "../providers/OnboardingContext";
 import { UserProvider } from "../providers/UserContext";
 import { ImageService } from "../services/ImageService";
+
 
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === "true";
 const resetDBOnInit = process.env.EXPO_PUBLIC_RESET_DB_ON_INIT === "true";
@@ -75,6 +77,11 @@ function Fallback() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Ubuntu_400Regular,
+    Ubuntu_700Bold,
+  });
+
   useEffect(() => {
     // Initialize image directories on app start
     ImageService.initializeDirectories().catch(error => {
@@ -104,6 +111,10 @@ export default function RootLayout() {
         <StorybookUI />
       </View>
     );
+  }
+
+  if (!fontsLoaded) {
+    return <Fallback />; // ou un splash screen
   }
 
   return (

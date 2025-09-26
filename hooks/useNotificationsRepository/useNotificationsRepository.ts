@@ -6,8 +6,10 @@ import * as Notifications from 'expo-notifications';
 import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Item } from '../../models/Item/Item';
+import { DatabaseItemDto } from '../../models/Item/Item.dto';
 import { Notification } from '../../models/Notification/Notification';
 import { DatabaseNotificationDto } from '../../models/Notification/Notification.dto';
+import { DateService } from '../../services/DateService';
 
 export function useNotificationsRepository() {
   const db = useSQLiteContext();
@@ -103,9 +105,11 @@ export function useNotificationsRepository() {
     }
     try {
       const identifier = typeof notification === 'string' ? notification : notification.deviceNotificationId;
-      const query = `DELETE FROM notifications WHERE device_notification_id = ?;`;
-      await db.runAsync(query, [identifier]);
-      await Notifications.cancelScheduledNotificationAsync(identifier);
+      if (identifier) {
+        const query = `DELETE FROM notifications WHERE device_notification_id = ?;`;
+        await db.runAsync(query, [identifier]);
+        await Notifications.cancelScheduledNotificationAsync(identifier);
+      }
     } catch {
       console.warn(`Failed to remove notification with identifier: ${typeof notification === 'string' ? notification : notification.deviceNotificationId}`);
     }
@@ -127,6 +131,31 @@ export function useNotificationsRepository() {
     await Notifications.cancelAllScheduledNotificationsAsync();
   }, [db]);
 
+  const createNotificationFromItem = React.useCallback(async (item: Item) => {
+    removeNotificationByItem(item);
+    await createNotification({
+      scheduleTime: DateService.scheduleTimeNotificationDateByItem(item),
+      title: `Une garanties arrive à expiration bientôt !`,
+      body: `La garrantie de votre ${item.label} va bientôt expirer 🔔.`,
+      data: {
+        itemId: item.id,
+        itemLabel: item.label,
+        itemOwnerId: item.ownerId
+      }
+    });
+  }, [createNotification, removeNotificationByItem]);
+
+  const enableAllNotifications = React.useCallback(async () => {
+    if (!db) {
+      throw new Error("Database connection is not established.");
+    }
+    const unarchivedItemsQuery = `SELECT * FROM items WHERE is_archived = 0;`;
+    const unarchivedItemsDto = await db.getAllAsync<DatabaseItemDto>(unarchivedItemsQuery, []);
+    const unarchivedItems = unarchivedItemsDto.map(itemDto => Item.toModel<DatabaseItemDto, Item>(itemDto));
+    const promises = unarchivedItems.map(item => createNotificationFromItem(item));
+    await Promise.all(promises);
+  }, [createNotificationFromItem, db]);
+
   return {
     createNotification,
     removeNotification,
@@ -134,6 +163,7 @@ export function useNotificationsRepository() {
     removeAllNotifications,
     recreateNotifications,
     getNotificationByItem,
-    removeNotificationByItem
+    removeNotificationByItem,
+    enableAllNotifications
   };
 }

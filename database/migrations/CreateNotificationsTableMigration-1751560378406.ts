@@ -9,6 +9,7 @@ export class CreateNotificationsTableMigration1751560378406 extends Migration {
     this.database = database;
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
     await this.createNotificationsTable();
+    await this.saveMigration(database);
   }
 
   private async createNotificationsTable(): Promise<void> {

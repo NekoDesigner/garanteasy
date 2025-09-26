@@ -33,7 +33,10 @@ const RoundedIconButton: React.FC<IRoundedIconButtonProps> = ({ style, testID = 
     }
   }, [icon]);
   return (
-    <TouchableOpacity style={[RoundedIconButtonStyles(size).container, style]} testID={testID} {...props}>
+    <TouchableOpacity
+      style={[RoundedIconButtonStyles(size).container, style]}
+      testID={testID}
+      {...props}>
       {iconComponent}
     </TouchableOpacity>
   );
