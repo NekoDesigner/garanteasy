@@ -151,10 +151,6 @@ const CreateItem = () => {
   const handleSaveItem = async () => {
     try {
       setLoading(true);
-      if (!itemImage) {
-        Alert.alert('Erreur', 'Veuillez ajouter une image pour l\'article.');
-        return;
-      }
 
       // Check if warranty duration is alreay expired
       if (DateService.isItemExpired(
@@ -448,7 +444,7 @@ const CreateItem = () => {
             label='Enregistrer'
             variant='secondary'
             onPress={handleSaveItem}
-            disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
+            disabled={loading || !item.label || !item.purchaseDate || !category || !item.brand}
           />
           </Container>
       </ScrollView>

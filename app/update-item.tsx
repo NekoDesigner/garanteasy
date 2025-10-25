@@ -184,10 +184,6 @@ const UpdateItem = () => {
   const handleSaveItem = async () => {
     try {
       setLoading(true);
-      if (!itemImage) {
-        Alert.alert('Erreur', 'Veuillez ajouter une image pour l\'article.');
-        return;
-      }
 
       // Compare current additionalDocuments with original to determine what to attach/detach
       const documentToAttach: Document[] = additionalDocuments.filter(dc =>
@@ -620,7 +616,7 @@ const UpdateItem = () => {
             label='Supprimer le produit'
             variant='outline-secondary'
             onPress={handleDeleteItem}
-            disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
+            disabled={loading || !item.label || !item.purchaseDate || !category || !item.brand}
           />
           </Container>
         </ScrollView>
