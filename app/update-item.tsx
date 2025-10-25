@@ -420,7 +420,7 @@ const UpdateItem = () => {
                 }}
               />
               <GTextInput
-                label="Objet"
+                label="Désignation"
                 placeholder='Tondeuse'
                 value={item?.label}
                 onChangeText={(value: string) => {
@@ -457,7 +457,7 @@ const UpdateItem = () => {
                 }}
               />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 10 }}>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex: 1 }}>
                 <GTextInput
                   label="Durée de la garantie"
                   keyboardType='numeric'

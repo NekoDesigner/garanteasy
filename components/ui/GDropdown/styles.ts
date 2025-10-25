@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    minHeight: 44,
+    paddingHorizontal: 10,
+    minHeight: 42,
   },
   dropdownButtonText: {
     fontSize: 16,

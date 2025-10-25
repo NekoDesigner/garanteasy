@@ -264,17 +264,9 @@ const CreateItem = () => {
                   </View>
                 )}
               </TouchableOpacity>
-              <View style={{ flex: 1 }}>
-              <GTextInput label="Marque" placeholder='Bosh' onChangeText={(value: string) => {
-                setItem(prev => new Item({
-                  ...prev,
-                  label: prev.label || '',
-                  memo: prev.memo || '',
-                  brand: value,
-                }));
-              }} />
+            <View style={{ flex: 1 }}>
               <GTextInput
-                label="Objet"
+                label="Désignation"
                 placeholder='Tondeuse'
                 onChangeText={(value: string) => {
                   setItem(prev => new Item({
@@ -284,6 +276,14 @@ const CreateItem = () => {
                   }));
                 }}
               />
+              <GTextInput label="Marque" placeholder='Bosh' onChangeText={(value: string) => {
+                setItem(prev => new Item({
+                  ...prev,
+                  label: prev.label || '',
+                  memo: prev.memo || '',
+                  brand: value,
+                }));
+              }} />
               </View>
             </FormCard>
             <FormCard style={styles.space}>
@@ -300,7 +300,7 @@ const CreateItem = () => {
                 }}
               />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 10 }}>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex: 1 }}>
                 <GTextInput
                   label="Durée de la garantie"
                   keyboardType='numeric'
