@@ -578,7 +578,7 @@ const UpdateItem = () => {
             label='Enregistrer'
             variant='secondary'
             onPress={handleSaveItem}
-            disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
+            disabled={loading || !item.label || !item.purchaseDate || !category || !item.brand}
           />
           </Container>
         </ScrollView>

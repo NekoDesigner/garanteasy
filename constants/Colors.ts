@@ -10,5 +10,6 @@ export const COLORS = {
   success: "#7ABA8E",
   warning: "#F4B286",
   dangerLight: "#F86068",
-  placeholder: "#454545"
+  placeholder: "#454545",
+  black: "#000000",
 };

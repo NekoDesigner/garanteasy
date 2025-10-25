@@ -153,7 +153,7 @@ const ShowItem = () => {
             name={item?.label || 'Unknown Item'}
             purchaseDate={item?.purchaseDate || new Date()}
             warrantyDuration={item?.warrantyDuration || 'Aucune garantie'}
-            image={item?.picture ? { uri: item.picture } : require('../assets/images/default-product.png')}
+            image={item?.pictureUri}
             style={styles.space}
           />
 

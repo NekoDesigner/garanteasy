@@ -14,6 +14,7 @@ import ImageIcon from './ImageIcon';
 import MultimediaIcon from './MultimediaIcon';
 import PenIcon from './PenIcon';
 import PictureIcon from './PictureIcon';
+import QuestionMarkIcon from './QuestionMarkIcon';
 import ScanIcon from './ScanIcon';
 import SearchIcon from './SearchIcon';
 import SettingsIcon from './SettingsIcon';
@@ -52,6 +53,7 @@ const iconRegistry: Record<string, React.ComponentType<any>> = {
   trash: TrashIcon,
   upload: UploadIcon,
   washingMachin: WashingMachinIcon,
+  other: QuestionMarkIcon,
 };
 
 const DynamicIcon = ({ name, size = 24, color = 'black' }: IconProps) => {

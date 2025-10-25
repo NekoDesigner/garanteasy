@@ -16,5 +16,6 @@ export const DYNAMIC_CATEGORIES_FILE_NAME = [
   { id: 'default-category-3', label: 'Bricolage', fileId: 'diy' },
   { id: 'default-category-4', label: 'Jardin', fileId: 'garden' },
   { id: 'default-category-5', label: 'Mode', fileId: 'fashion' },
-  { id: 'default-category-6', label: 'Multimédia', fileId: 'multimedia' }
+  { id: 'default-category-6', label: 'Multimédia', fileId: 'multimedia' },
+  { id: 'default-category-7', label: 'Autre', fileId: 'other' },
 ];

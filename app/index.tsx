@@ -329,7 +329,7 @@ const HomeScreen = () => {
                     name={item.label!}
                     purchaseDate={item.purchaseDate}
                     warrantyDuration={item.warrantyDuration}
-                    image={item.picture ? item.picture : require('../assets/images/default-product.png')}
+                    image={item.pictureUri}
                     style={{ marginTop: 16 }}
                     onPress={() => {
                       router.push({
