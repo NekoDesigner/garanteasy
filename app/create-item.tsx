@@ -420,7 +420,7 @@ const CreateItem = () => {
                     style={{
                       marginRight: 10,
                       marginBottom: 10,
-                      opacity: !category ? 1 : category && category.getId() !== chip.getId() ? 1 : 0.6
+                      opacity: !category ? 1 : category && category.getId() !== chip.getId() ? 0.6 : 1
                     }}
                   />
                 );

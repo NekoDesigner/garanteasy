@@ -581,7 +581,7 @@ const UpdateItem = () => {
                     style={{
                       marginRight: 10,
                       marginBottom: 10,
-                      opacity: !category ? 1 : category && category.name !== chip.label ? 1 : 0.6
+                      opacity: !category ? 1 : category && category.name !== chip.label ? 0.6 : 1
                     }}
                   />
                 ))}
