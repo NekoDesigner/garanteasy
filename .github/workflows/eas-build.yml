@@ -27,10 +27,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
 
       - name: Log in to Expo
         uses: expo/expo-github-action@v8
@@ -38,18 +40,30 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: Setup EAS
+        run: |
+          npx eas --version
+          npx eas whoami
+
       - name: Run EAS Android Test Build
         id: eas-build
         run: |
-            echo "🔧 Starting EAS build..."
-            npx eas build --platform android --profile test --non-interactive > build-log.txt 2>&1 || {
-              echo "❌ EAS build failed. Showing build-log.txt:"
-              cat build-log.txt
-              exit 1
-            }
-            BUILD_URL=$(grep -o 'https://expo.dev/accounts[^ ]*' build-log.txt | tail -1)
-            echo "✅ EAS build triggered: $BUILD_URL"
-            echo "build_url=$BUILD_URL" >> $GITHUB_OUTPUT
+          echo "🔧 Starting EAS build..."
+          echo "Current directory: $(pwd)"
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo "EAS version: $(npx eas --version)"
+
+          npx eas build --platform android --profile test --non-interactive > build-log.txt 2>&1 || {
+            echo "❌ EAS build failed. Showing build-log.txt:"
+            cat build-log.txt
+            echo "❌ npm debug log:"
+            find /home/runner/.npm/_logs -name "*debug*.log" -exec cat {} \; || echo "No npm debug logs found"
+            exit 1
+          }
+          BUILD_URL=$(grep -o 'https://expo.dev/accounts[^ ]*' build-log.txt | tail -1)
+          echo "✅ EAS build triggered: $BUILD_URL"
+          echo "build_url=$BUILD_URL" >> $GITHUB_OUTPUT
 
       - name: Send notification to Discord
         if: ${{ env.DISCORD_WEBHOOK_STAGING_URL != '' }}
@@ -61,18 +75,17 @@ jobs:
           -d "{\"content\": \"🚀 Nouveau build Android (staging) disponible : ${{ steps.eas-build.outputs.build_url }}\"}" \
           $DISCORD_WEBHOOK_STAGING_URL
 
-      - name: Comment PR with build link and QR Code
+      - name: Comment PR with build link
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const buildUrl = "${{ steps.eas-build.outputs.build_url }}";
-            const qrCodeUrl = "${{ steps.generate-qr-code.outputs.QR_CODE_URL }}";
             const pr = context.payload.pull_request;
             await github.rest.issues.createComment({
               issue_number: pr.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 Un nouveau build Android (profil \`test\`) est disponible pour cette PR :\n🔗 ${buildUrl}\n\n📲 QR Code pour les testeurs :\n![QR Code](${qrCodeUrl})`
+              body: `🚀 Un nouveau build Android (profil \`test\`) est disponible pour cette PR :\n🔗 ${buildUrl}`
             });
