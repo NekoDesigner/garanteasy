@@ -3,8 +3,9 @@
  */
 
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, ImageSourcePropType } from "react-native";
 import { DateService } from "../../../services/DateService";
+import DynamicIcon from "../Icons/DynamicIcon";
 import ProgressIndicator from "../ProgressIndicator";
 import RoundedIconButton from "../RoundedIconButton";
 import Tag from "../Tag";
@@ -15,7 +16,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
 
   const [warrantyDurationTag, setWarrantyDurationTag] = React.useState<string>('');
   const [progress, setProgress] = React.useState<number>(1);
-  const [image, setImage] = React.useState<{ uri: string }>(require('../../../assets/images/default-product.png'));
+  const [image, setImage] = React.useState<ImageSourcePropType | string>(require('../../../assets/images/default-product.png'));
 
   // Helper function to determine the correct image source
   const getImageSource = React.useCallback(() => {
@@ -50,13 +51,13 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
 
     if (daysLeft > 365) {
       const yearsLeft = Math.floor(daysLeft / 365);
-      return `Expire dans ${yearsLeft}an${yearsLeft > 1 ? 's' : ''}`;
+      return `Expire dans ${yearsLeft} an${yearsLeft > 1 ? 's' : ''}`;
     }
     if (daysLeft > 99) {
       const monthsLeft = Math.floor(daysLeft / 30);
-      return `Expire dans ${monthsLeft}m`;
+      return `Expire dans ${monthsLeft} mois`;
     }
-    return `Expire dans ${daysLeft}j`;
+    return `Expire dans ${daysLeft} jour${daysLeft > 1 ? 's' : ''}`;
   }
 
   React.useEffect(() => {
@@ -90,16 +91,25 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
     }
   }, [props.warrantyDuration, purchaseDate, getImageSource]);
 
+  const getPictureComponent = () => {
+    if (typeof image === 'string' && image.startsWith('category:')) {
+      return <DynamicIcon name={image.replace('category:', '')} size={64} />;
+    }
+    return (
+      <Image
+        source={image as ImageSourcePropType}
+        style={ProductCardStyles.image}
+        resizeMode="cover"
+        onError={() => {
+          setImage(require('../../../assets/images/default-product.png'));
+        }}
+      />
+    );
+  };
+
   return (
-      <View style={[ProductCardStyles.container, style]} testID={testID} {...props}>
-        <Image
-          source={image}
-          style={ProductCardStyles.image}
-          resizeMode="cover"
-          onError={() => {
-            setImage(require('../../../assets/images/default-product.png'));
-          }}
-        />
+    <View style={[ProductCardStyles.container, style]} testID={testID} {...props}>
+      {getPictureComponent()}
         <View style={{ display: 'flex', flex: 1 }}>
           <View style={ProductCardStyles.brandContainer}>
             <Text style={ProductCardStyles.name} numberOfLines={1}>

@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "@expo-google-fonts/ubuntu": "^0.4.1",
-    "@expo/config-plugins": "~54.0.1",
     "@expo/metro-runtime": "~6.1.2",
-    "@expo/prebuild-config": "~54.0.0",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-documents/viewer": "^1.0.1",
-    "@react-navigation/bottom-tabs": "^7.2.0",
-    "@react-navigation/native": "^7.0.14",
+    "@react-native-masked-view/masked-view": "0.3.2",
+    "@react-navigation/bottom-tabs": "^7.4.0",
+    "@react-navigation/native": "^7.1.8",
+    "@react-navigation/stack": "^7.5.0",
     "buffer": "^6.0.3",
     "commander": "^13.1.0",
     "expo": "~54.0.10",
@@ -40,7 +40,7 @@
     "expo-image-picker": "~17.0.8",
     "expo-linking": "~8.0.8",
     "expo-notifications": "~0.32.11",
-    "expo-router": "~6.0.8",
+    "expo-router": "^6.0.13",
     "expo-sharing": "~14.0.7",
     "expo-splash-screen": "~31.0.10",
     "expo-sqlite": "~16.0.8",
@@ -52,7 +52,7 @@
     "pdf-lib": "^1.17.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-native": "0.81.4",
+    "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-get-random-values": "^1.11.0",
     "react-native-image-crop-picker": "^0.50.1",
@@ -60,6 +60,7 @@
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1",
+    "react-native-svg-transformer": "^1.5.1",
     "react-native-uuid": "^2.0.3",
     "react-native-web": "^0.21.0",
     "react-native-webview": "13.15.0",
@@ -85,7 +86,6 @@
     "@typescript-eslint/parser": "^8.33.0",
     "babel-loader": "^8.4.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eas-cli": "^16.13.3",
     "eslint": "^9.27.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-plugin-import": "^2.31.0",
@@ -98,17 +98,6 @@
     "prettier": "^3.5.3",
     "react-test-renderer": "^19.1.0",
     "typescript": "~5.9.2"
-  },
-  "expo": {
-    "doctor": {
-      "reactNativeDirectoryCheck": {
-        "listUnknownPackages": false
-      }
-    }
-  },
-  "overrides": {
-    "@expo/config-plugins": "~10.1.1",
-    "@expo/prebuild-config": "~9.0.0"
   },
   "expo": {
     "doctor": {

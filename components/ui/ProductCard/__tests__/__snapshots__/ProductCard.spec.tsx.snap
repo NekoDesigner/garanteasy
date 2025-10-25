@@ -185,7 +185,7 @@ exports[`ProductCard Components renders correctly 1`] = `
           }
           testID="test-tag-2-text"
         >
-          Expire dans 12j
+          Expire dans 12 jours
         </Text>
       </View>
     </View>

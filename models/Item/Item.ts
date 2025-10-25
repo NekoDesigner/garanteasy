@@ -1,3 +1,4 @@
+import { DYNAMIC_CATEGORIES_FILE_NAME } from "../../constants/Categories";
 import { DateService } from "../../services/DateService";
 import { Category } from "../Category/Category";
 import { Document } from "../Document/Document";
@@ -121,5 +122,26 @@ export class Item extends IModel {
   get warrantyEndDate(): Date {
     const warrantyDurationInDays = DateService.getWarrantyDurationInDays(this.warrantyDuration);
     return DateService.addDays(this.purchaseDate, warrantyDurationInDays);
+  }
+
+  get pictureUri(): string | { uri: string } | null {
+    if (!this.picture) {
+      return this.getPictureIconByCategoryOrDefault();
+    }
+    return { uri: this.picture };
+  }
+
+  private getPictureIconByCategoryOrDefault(): string | null {
+    if (this.category) {
+      const dynamicCategory = DYNAMIC_CATEGORIES_FILE_NAME.find((cat) => {
+        if (cat.id === this.category?.id) {
+          return cat;
+        }
+      });
+      if (dynamicCategory) {
+        return `category:${dynamicCategory.fileId}`;
+      }
+    }
+    return null;
   }
 }

@@ -151,10 +151,6 @@ const CreateItem = () => {
   const handleSaveItem = async () => {
     try {
       setLoading(true);
-      if (!itemImage) {
-        Alert.alert('Erreur', 'Veuillez ajouter une image pour l\'article.');
-        return;
-      }
 
       // Check if warranty duration is alreay expired
       if (DateService.isItemExpired(
@@ -194,14 +190,7 @@ const CreateItem = () => {
         await attachDocumentToItem(document.getId(), savedItem.getId());
       }
 
-      Alert.alert('Succès', 'Article enregistré avec succès!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            router.dismissAll();
-          }
-        }
-      ]);
+      router.dismissAll();
     } catch (error) {
       console.error('Error saving item:', error);
       Alert.alert('Erreur', `Échec de l'enregistrement de l'article: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
@@ -264,17 +253,9 @@ const CreateItem = () => {
                   </View>
                 )}
               </TouchableOpacity>
-              <View style={{ flex: 1 }}>
-              <GTextInput label="Marque" placeholder='Bosh' onChangeText={(value: string) => {
-                setItem(prev => new Item({
-                  ...prev,
-                  label: prev.label || '',
-                  memo: prev.memo || '',
-                  brand: value,
-                }));
-              }} />
+            <View style={{ flex: 1 }}>
               <GTextInput
-                label="Objet"
+                label="Désignation"
                 placeholder='Tondeuse'
                 onChangeText={(value: string) => {
                   setItem(prev => new Item({
@@ -284,6 +265,14 @@ const CreateItem = () => {
                   }));
                 }}
               />
+              <GTextInput label="Marque" placeholder='Bosh' onChangeText={(value: string) => {
+                setItem(prev => new Item({
+                  ...prev,
+                  label: prev.label || '',
+                  memo: prev.memo || '',
+                  brand: value,
+                }));
+              }} />
               </View>
             </FormCard>
             <FormCard style={styles.space}>
@@ -300,7 +289,7 @@ const CreateItem = () => {
                 }}
               />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 10 }}>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex: 1 }}>
                 <GTextInput
                   label="Durée de la garantie"
                   keyboardType='numeric'
@@ -420,7 +409,7 @@ const CreateItem = () => {
                     style={{
                       marginRight: 10,
                       marginBottom: 10,
-                      opacity: !category ? 1 : category && category.getId() !== chip.getId() ? 1 : 0.6
+                      opacity: !category ? 1 : category && category.getId() !== chip.getId() ? 0.6 : 1
                     }}
                   />
                 );
@@ -448,7 +437,7 @@ const CreateItem = () => {
             label='Enregistrer'
             variant='secondary'
             onPress={handleSaveItem}
-            disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
+            disabled={loading || !item.label || !item.purchaseDate || !category || !item.brand}
           />
           </Container>
       </ScrollView>

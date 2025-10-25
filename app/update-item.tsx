@@ -32,7 +32,7 @@ const UpdateItem = () => {
   // Use useMemo to stabilize the ownerId to prevent unnecessary re-renders
   const ownerId = React.useMemo(() => user?.id || '', [user?.id]);
 
-  const { saveItem, getItemById, deleteItem } = useItemRepository({ ownerId });
+  const { saveItem, getItemById } = useItemRepository({ ownerId });
   const { deleteDocumentById, attachDocumentToItem, detachDocumnentFromItem } = useDocumentRepository({ ownerId });
   const { getAllCategories } = useCategoryRepository({ ownerId });
   const { handleAddDocument, handleSelectImage, isCreatingDocument } = useUploaderService({ user });
@@ -184,10 +184,6 @@ const UpdateItem = () => {
   const handleSaveItem = async () => {
     try {
       setLoading(true);
-      if (!itemImage) {
-        Alert.alert('Erreur', 'Veuillez ajouter une image pour l\'article.');
-        return;
-      }
 
       // Compare current additionalDocuments with original to determine what to attach/detach
       const documentToAttach: Document[] = additionalDocuments.filter(dc =>
@@ -259,16 +255,8 @@ const UpdateItem = () => {
         }
       }
 
-      Alert.alert('Succès', 'Article enregistré avec succès!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            // Update the original documents list to reflect the current state
-            setOriginalAdditionalDocuments([...additionalDocuments]);
-            router.dismissAll();
-          }
-        }
-      ]);
+      setOriginalAdditionalDocuments([...additionalDocuments]);
+      router.dismissAll();
     } catch (error) {
       console.error('Error saving item:', error);
       Alert.alert('Erreur', `Échec de l'enregistrement de l'article: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
@@ -340,36 +328,6 @@ const UpdateItem = () => {
     );
   };
 
-  function handleDeleteItem(): void {
-    if (!item) {
-      return;
-    }
-    Alert.alert(
-      'Supprimer l\'article',
-      `Êtes-vous sûr de vouloir supprimer définitivement l'article "${item?.label}" ?`,
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Supprimer',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setLoading(true);
-              await deleteItem(item);
-              // Redirect to home screen
-              router.replace('/');
-            } catch (error) {
-              console.error('Error deleting item:', error);
-              Alert.alert('Erreur', `Échec de la suppression de l'article: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
-            } finally {
-              setLoading(false);
-            }
-          }
-        }
-      ]
-    );
-  }
-
   return (
     <ScreenView>
         <ScrollView contentContainerStyle={{ paddingBottom: SIZES.padding.m }}>
@@ -401,7 +359,23 @@ const UpdateItem = () => {
                   </View>
                 )}
               </TouchableOpacity>
-              <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
+              <GTextInput
+                label="Désignation"
+                placeholder='Tondeuse'
+                value={item?.label}
+                onChangeText={(value: string) => {
+                  setItem(prev => {
+                    if (!prev || !prev.purchaseDate) return prev;
+                    return new Item({
+                      ...prev,
+                      label: value,
+                      memo: prev.memo || '',
+                      purchaseDate: prev.purchaseDate, // Ensure purchaseDate is always present
+                    });
+                  });
+                }}
+              />
               <GTextInput
                 label="Marque"
                 placeholder='Bosh'
@@ -414,22 +388,6 @@ const UpdateItem = () => {
                       label: prev.label || '',
                       memo: prev.memo || '',
                       brand: value,
-                      purchaseDate: prev.purchaseDate, // Ensure purchaseDate is always present
-                    });
-                  });
-                }}
-              />
-              <GTextInput
-                label="Objet"
-                placeholder='Tondeuse'
-                value={item?.label}
-                onChangeText={(value: string) => {
-                  setItem(prev => {
-                    if (!prev || !prev.purchaseDate) return prev;
-                    return new Item({
-                      ...prev,
-                      label: value,
-                      memo: prev.memo || '',
                       purchaseDate: prev.purchaseDate, // Ensure purchaseDate is always present
                     });
                   });
@@ -457,7 +415,7 @@ const UpdateItem = () => {
                 }}
               />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 10 }}>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex: 1 }}>
                 <GTextInput
                   label="Durée de la garantie"
                   keyboardType='numeric'
@@ -581,7 +539,7 @@ const UpdateItem = () => {
                     style={{
                       marginRight: 10,
                       marginBottom: 10,
-                      opacity: !category ? 1 : category && category.name !== chip.label ? 1 : 0.6
+                      opacity: !category ? 1 : category && category.name !== chip.label ? 0.6 : 1
                     }}
                   />
                 ))}
@@ -612,15 +570,7 @@ const UpdateItem = () => {
             label='Enregistrer'
             variant='secondary'
             onPress={handleSaveItem}
-            disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
-          />
-          <Button
-            style={[styles.space, { paddingVertical: SIZES.padding.s }]}
-            textStyle={{ textAlign: 'center', width: '100%' }}
-            label='Supprimer le produit'
-            variant='outline-secondary'
-            onPress={handleDeleteItem}
-            disabled={loading || !itemImage || !item.label || !item.purchaseDate || !category || !item.brand}
+            disabled={loading || !item.label || !item.purchaseDate || !category || !item.brand}
           />
           </Container>
         </ScrollView>
