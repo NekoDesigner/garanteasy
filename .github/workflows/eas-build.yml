@@ -34,19 +34,17 @@ jobs:
           npm cache clean --force
           npm ci --legacy-peer-deps
 
-      - name: Log in to Expo
+      - name: Setup EAS
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: |
-          npx eas login --non-interactive
-
-      - name: Setup EAS
         run: |
           npx eas --version
           npx eas whoami
 
       - name: Run EAS Android Test Build
         id: eas-build
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           echo "🔧 Starting EAS build..."
           echo "Current directory: $(pwd)"
