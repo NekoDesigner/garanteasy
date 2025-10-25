@@ -51,13 +51,13 @@ const ProductCard: React.FC<IProductCardProps> = ({ style, testID = 'productcard
 
     if (daysLeft > 365) {
       const yearsLeft = Math.floor(daysLeft / 365);
-      return `Expire dans ${yearsLeft}an${yearsLeft > 1 ? 's' : ''}`;
+      return `Expire dans ${yearsLeft} an${yearsLeft > 1 ? 's' : ''}`;
     }
     if (daysLeft > 99) {
       const monthsLeft = Math.floor(daysLeft / 30);
-      return `Expire dans ${monthsLeft}m`;
+      return `Expire dans ${monthsLeft} mois`;
     }
-    return `Expire dans ${daysLeft}j`;
+    return `Expire dans ${daysLeft} jour${daysLeft > 1 ? 's' : ''}`;
   }
 
   React.useEffect(() => {

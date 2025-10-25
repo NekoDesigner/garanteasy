@@ -190,14 +190,7 @@ const CreateItem = () => {
         await attachDocumentToItem(document.getId(), savedItem.getId());
       }
 
-      Alert.alert('Succès', 'Article enregistré avec succès!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            router.dismissAll();
-          }
-        }
-      ]);
+      router.dismissAll();
     } catch (error) {
       console.error('Error saving item:', error);
       Alert.alert('Erreur', `Échec de l'enregistrement de l'article: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);

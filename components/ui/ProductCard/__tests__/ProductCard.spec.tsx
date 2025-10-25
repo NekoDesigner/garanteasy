@@ -114,7 +114,7 @@ describe("ProductCard Components", () => {
       await waitFor(() => {
         const tag = getByTestId('test-tag-2-text');
         expect(tag).toBeTruthy();
-        expect(tag.children).toContain('Expire dans 12j');
+        expect(tag.children).toContain('Expire dans 12 jours');
       });
     });
 

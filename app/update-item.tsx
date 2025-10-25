@@ -255,16 +255,8 @@ const UpdateItem = () => {
         }
       }
 
-      Alert.alert('Succès', 'Article enregistré avec succès!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            // Update the original documents list to reflect the current state
-            setOriginalAdditionalDocuments([...additionalDocuments]);
-            router.dismissAll();
-          }
-        }
-      ]);
+      setOriginalAdditionalDocuments([...additionalDocuments]);
+      router.dismissAll();
     } catch (error) {
       console.error('Error saving item:', error);
       Alert.alert('Erreur', `Échec de l'enregistrement de l'article: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
@@ -367,7 +359,23 @@ const UpdateItem = () => {
                   </View>
                 )}
               </TouchableOpacity>
-              <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
+              <GTextInput
+                label="Désignation"
+                placeholder='Tondeuse'
+                value={item?.label}
+                onChangeText={(value: string) => {
+                  setItem(prev => {
+                    if (!prev || !prev.purchaseDate) return prev;
+                    return new Item({
+                      ...prev,
+                      label: value,
+                      memo: prev.memo || '',
+                      purchaseDate: prev.purchaseDate, // Ensure purchaseDate is always present
+                    });
+                  });
+                }}
+              />
               <GTextInput
                 label="Marque"
                 placeholder='Bosh'
@@ -380,22 +388,6 @@ const UpdateItem = () => {
                       label: prev.label || '',
                       memo: prev.memo || '',
                       brand: value,
-                      purchaseDate: prev.purchaseDate, // Ensure purchaseDate is always present
-                    });
-                  });
-                }}
-              />
-              <GTextInput
-                label="Désignation"
-                placeholder='Tondeuse'
-                value={item?.label}
-                onChangeText={(value: string) => {
-                  setItem(prev => {
-                    if (!prev || !prev.purchaseDate) return prev;
-                    return new Item({
-                      ...prev,
-                      label: value,
-                      memo: prev.memo || '',
                       purchaseDate: prev.purchaseDate, // Ensure purchaseDate is always present
                     });
                   });
