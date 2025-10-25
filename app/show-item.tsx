@@ -264,7 +264,7 @@ const ShowItem = () => {
           />}
           <Button
             label="Supprimer le produit"
-            variant={item.isArchived ? 'danger' : 'outline-secondary'}
+            variant={item.isArchived ? 'danger' : 'outline-danger'}
             style={{ paddingVertical: SIZES.padding.s, marginTop: SIZES.padding.xs }}
             textStyle={{ textAlign: 'center', flex: 1 }}
             onPress={() => {
