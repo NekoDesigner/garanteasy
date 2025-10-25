@@ -16,7 +16,11 @@
     "lint:fix": "expo lint --fix",
     "storybook-generate": "sb-rn-get-stories",
     "cli": "node scripts/cli.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:android": "eas build --platform android",
+    "build:android:test": "eas build --platform android --profile test",
+    "build:ios": "eas build --platform ios",
+    "build:ios:test": "eas build --platform ios --profile test"
   },
   "dependencies": {
     "@expo-google-fonts/ubuntu": "^0.4.1",
@@ -86,6 +90,7 @@
     "@typescript-eslint/parser": "^8.33.0",
     "babel-loader": "^8.4.1",
     "cz-conventional-changelog": "^3.3.0",
+    "eas-cli": "^16.24.1",
     "eslint": "^9.27.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-plugin-import": "^2.31.0",

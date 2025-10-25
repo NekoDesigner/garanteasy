@@ -35,10 +35,10 @@ jobs:
           npm ci --legacy-peer-deps
 
       - name: Log in to Expo
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          npx eas login --non-interactive
 
       - name: Setup EAS
         run: |
@@ -54,7 +54,7 @@ jobs:
           echo "NPM version: $(npm --version)"
           echo "EAS version: $(npx eas --version)"
 
-          npx eas build --platform android --profile test --non-interactive > build-log.txt 2>&1 || {
+          npm run build:android:test -- --non-interactive > build-log.txt 2>&1 || {
             echo "❌ EAS build failed. Showing build-log.txt:"
             cat build-log.txt
             echo "❌ npm debug log:"
