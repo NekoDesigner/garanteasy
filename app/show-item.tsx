@@ -153,7 +153,7 @@ const ShowItem = () => {
             name={item?.label || 'Unknown Item'}
             purchaseDate={item?.purchaseDate || new Date()}
             warrantyDuration={item?.warrantyDuration || 'Aucune garantie'}
-            image={item?.picture ? { uri: item.picture } : require('../assets/images/default-product.png')}
+            image={item?.pictureUri}
             style={styles.space}
           />
 
@@ -264,7 +264,7 @@ const ShowItem = () => {
           />}
           <Button
             label="Supprimer le produit"
-            variant={item.isArchived ? 'danger' : 'outline-secondary'}
+            variant={item.isArchived ? 'danger' : 'outline-danger'}
             style={{ paddingVertical: SIZES.padding.s, marginTop: SIZES.padding.xs }}
             textStyle={{ textAlign: 'center', flex: 1 }}
             onPress={() => {

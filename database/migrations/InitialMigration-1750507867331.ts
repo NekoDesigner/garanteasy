@@ -13,10 +13,43 @@ export class InitialMigration1750507867331 extends Migration {
     this.ownerId = uuid.v4();
   }
 
+  // Override isAvailableToMigrate for initial migration since migrations table doesn't exist yet
+  protected async isAvailableToMigrate(): Promise<boolean> {
+    if (!this.database) {
+      throw new Error('Database is not available for migration.');
+    }
+
+    // Check if migrations table exists first
+    const tableExists = await this.database.getFirstAsync<{ count: number }>(
+      `SELECT COUNT(*) as count FROM sqlite_master WHERE type='table' AND name='migrations'`
+    );
+
+    if (!tableExists || tableExists.count === 0) {
+      // Migrations table doesn't exist yet, so this initial migration should run
+      return true;
+    }
+
+    // If migrations table exists, check if this specific migration has been run
+    const migration = await this.getDatabaseMigration();
+    if (migration) {
+      // Migration has already been run
+      return false;
+    }
+    return true;
+  }
+
   protected async up(database: SQLite.SQLiteDatabase): Promise<void> {
     this.database = database;
+
+    // Enable foreign keys and set WAL mode
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
+    await this.database.execAsync(`PRAGMA journal_mode = 'wal';`);
+
     await this.createMigrationTable();
+
+    // Save the migration record after creating the migrations table
+    await this.saveMigration(this.database);
+
     await this.createOwnersTable();
     await this.createCategoriesTable();
     await this.createDocumentsTable();
@@ -29,57 +62,53 @@ export class InitialMigration1750507867331 extends Migration {
     if (!this.database) {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
+
+    // Create migrations table
     await this.database.execAsync(`
-        PRAGMA journal_mode = 'wal';
-        CREATE TABLE IF NOT EXISTS migrations (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT NOT NULL,
-          version INTEGER NOT NULL,
-          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-    const migrationName = this.constructor.name;
-    // Insert the current migration version
-    await this.database.execAsync(`
-        INSERT INTO migrations (name, version, created_at)
-        VALUES ('${migrationName}', ${this.currentVersion}, CURRENT_TIMESTAMP);
-      `);
+      CREATE TABLE IF NOT EXISTS migrations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        version INTEGER NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
   }
 
   private async createOwnersTable(): Promise<void> {
     if (!this.database) {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
+
     await this.database.execAsync(`
-        PRAGMA journal_mode = 'wal';
-        CREATE TABLE IF NOT EXISTS owners (
-          id VARCHAR(125) PRIMARY KEY NOT NULL,
-          unikode VARCHAR(10) NOT NULL,
-          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
+      CREATE TABLE IF NOT EXISTS owners (
+        id VARCHAR(125) PRIMARY KEY NOT NULL,
+        unikode VARCHAR(10) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     // create current owner
     await this.database.execAsync(`
-        INSERT INTO owners (id, unikode, created_at, updated_at)
-        VALUES ('${this.ownerId}', '${this.generateUnikode()}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-      `);
+      INSERT INTO owners (id, unikode, created_at, updated_at)
+      VALUES ('${this.ownerId}', '${this.generateUnikode()}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    `);
   }
   private async createCategoriesTable(): Promise<void> {
     if (!this.database) {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
+
     await this.database.execAsync(`
-        PRAGMA journal_mode = 'wal';
-        CREATE TABLE IF NOT EXISTS categories (
-          id VARCHAR(125) PRIMARY KEY NOT NULL,
-          name TEXT NOT NULL,
-          owner_id VARCHAR(125) NOT NULL,
-          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE
-          );
-      `);
+      CREATE TABLE IF NOT EXISTS categories (
+        id VARCHAR(125) PRIMARY KEY NOT NULL,
+        name TEXT NOT NULL,
+        owner_id VARCHAR(125) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE
+      );
+    `);
 
     // Insert default categories only if they don't already exist
     const defaultCategories = [
@@ -113,82 +142,86 @@ export class InitialMigration1750507867331 extends Migration {
     if (!this.database) {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
+
     await this.database.execAsync(`
-        PRAGMA journal_mode = 'wal';
-        CREATE TABLE IF NOT EXISTS documents (
-          id VARCHAR(125) PRIMARY KEY NOT NULL,
-          name VARCHAR(255) NOT NULL,
-          filename VARCHAR(255) NOT NULL,
-          mimetype VARCHAR(50) NOT NULL,
-          file_path TEXT NOT NULL,
-          file_source VARCHAR(50) NOT NULL,
-          owner_id VARCHAR(125) NOT NULL,
-          FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE
-        );
-      `);
+      CREATE TABLE IF NOT EXISTS documents (
+        id VARCHAR(125) PRIMARY KEY NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        filename VARCHAR(255) NOT NULL,
+        mimetype VARCHAR(50) NOT NULL,
+        file_path TEXT NOT NULL,
+        file_source VARCHAR(50) NOT NULL,
+        owner_id VARCHAR(125) NOT NULL,
+        FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE
+      );
+    `);
   }
   private async createDocumentAttachmentsTable(): Promise<void> {
     if (!this.database) {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
+
     await this.database.execAsync(`
-        PRAGMA journal_mode = 'wal';
-        CREATE TABLE IF NOT EXISTS document_attachments (
-          id VARCHAR(125) PRIMARY KEY NOT NULL,
-          document_id VARCHAR(125) NOT NULL,
-          entity_id VARCHAR(125) NOT NULL,
-          model VARCHAR(50) DEFAULT 'Item',
-          FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
-        );
-      `);
+      CREATE TABLE IF NOT EXISTS document_attachments (
+        id VARCHAR(125) PRIMARY KEY NOT NULL,
+        document_id VARCHAR(125) NOT NULL,
+        entity_id VARCHAR(125) NOT NULL,
+        model VARCHAR(50) DEFAULT 'Item',
+        FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+      );
+    `);
   }
   private async createHistoriesTable(): Promise<void> {
     if (!this.database) {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
+
     await this.database.execAsync(`
-        PRAGMA journal_mode = 'wal';
-        CREATE TABLE IF NOT EXISTS histories (
-          id VARCHAR(125) PRIMARY KEY NOT NULL,
-          item_id VARCHAR(125) NOT NULL,
-          label VARCHAR(255) NOT NULL,
-          intervention_date TIMESTAMP NOT NULL,
-          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
-        );
-      `);
+      CREATE TABLE IF NOT EXISTS histories (
+        id VARCHAR(125) PRIMARY KEY NOT NULL,
+        item_id VARCHAR(125) NOT NULL,
+        label VARCHAR(255) NOT NULL,
+        intervention_date TIMESTAMP NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+      );
+    `);
   }
   private async createItemsTable(): Promise<void> {
     if (!this.database) {
       throw new DatabaseMigrationException('Database is not available for migration.');
     }
-      await this.database.execAsync(`
-        PRAGMA journal_mode = 'wal';
-        CREATE TABLE IF NOT EXISTS items (
-          id VARCHAR(125) PRIMARY KEY NOT NULL, 
-          owner_id VARCHAR(125) NOT NULL,
-          label TEXT NOT NULL, 
-          category_id VARCHAR(125) NOT NULL,
-          picture TEXT,
-          purchase_date TIMESTAMP,
-          warranty_duration VARCHAR(50),
-          memo TEXT,
-          is_archived BOOLEAN NOT NULL DEFAULT 0,
-          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE,
-          FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+
+    // Create the items table
+    await this.database.execAsync(`
+      CREATE TABLE IF NOT EXISTS items (
+        id VARCHAR(125) PRIMARY KEY NOT NULL, 
+        owner_id VARCHAR(125) NOT NULL,
+        label TEXT NOT NULL, 
+        category_id VARCHAR(125) NOT NULL,
+        picture TEXT,
+        purchase_date TIMESTAMP,
+        warranty_duration VARCHAR(50),
+        memo TEXT,
+        is_archived BOOLEAN NOT NULL DEFAULT 0,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE,
+        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
       );
-      CREATE TRIGGER update_category_on_delete
+    `);
+
+    // Then, create the trigger separately
+    await this.database.execAsync(`
+      CREATE TRIGGER IF NOT EXISTS update_category_on_delete
       AFTER DELETE ON categories
       BEGIN
         UPDATE items
         SET category_id = 'default-category-7'
         WHERE category_id = OLD.id;
       END;
-      `
-      );
+    `);
   }
 
   private generateUnikode(): string {

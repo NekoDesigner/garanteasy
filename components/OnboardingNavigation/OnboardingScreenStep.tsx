@@ -3,6 +3,10 @@ import { View, Text, StyleSheet, Animated } from 'react-native';
 import { COLORS } from '../../constants';
 import Button from '../ui/Button';
 import ArrowIcon from '../ui/Icons/ArrowIcon';
+import BellIllustrationComponent from './OnBordingIllustrationComponent/bell';
+import MascotIllustrationComponent from './OnBordingIllustrationComponent/mascot';
+import ScanIllustrationComponent from './OnBordingIllustrationComponent/scan';
+import ShieldIllustrationComponent from './OnBordingIllustrationComponent/shield';
 
 interface OnboardingScreenProps {
   isLast?: boolean;
@@ -80,11 +84,25 @@ const OnboardingScreenStep: React.FC<OnboardingScreenProps> = ({
     return null;
   }
 
+  function getSvgIllustration(name: string): React.JSX.Element {
+    switch (name) {
+      case 'mascot':
+        return <MascotIllustrationComponent style={{ maxWidth: '100%', maxHeight: '100%' }}/>;
+      case 'scan':
+        return <ScanIllustrationComponent style={{ maxWidth: '100%', maxHeight: '100%' }} />;
+      case 'bell':
+        return <BellIllustrationComponent style={{ maxWidth: '100%', maxHeight: '100%' }} />;
+      case 'shield':
+        return <ShieldIllustrationComponent style={{ maxWidth: '100%', maxHeight: '100%' }} />;
+    }
+    throw new Error(`Illustration name "${name}" is not recognized.`);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.illustrationContainer}>
-        <Animated.Image
-          source={illustration}
+        <Animated.View
+          // source={illustration}
           style={[
             styles.illustration,
             {
@@ -92,10 +110,12 @@ const OnboardingScreenStep: React.FC<OnboardingScreenProps> = ({
               opacity: illustrationOpacity
             }
           ]}
-          resizeMode="contain"
-          loadingIndicatorSource={undefined}
-          fadeDuration={0}
-        />
+          // resizeMode="contain"
+          // loadingIndicatorSource={undefined}
+          // fadeDuration={0}
+        >
+          {getSvgIllustration(illustration)}
+        </Animated.View>
       </View>
 
       <View style={styles.contentContainer}>
@@ -187,10 +207,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   illustration: {
-    width: '100%',
-    height: '100%',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '50%',
+    height: '50%'
   },
   contentContainer: {
     flex: 0.45,

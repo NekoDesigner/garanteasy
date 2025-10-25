@@ -19,43 +19,121 @@ interface DocumentScannerBottomProps {
   onModeChange?: (mode: 'invoice' | 'ticket') => void;
 }
 
+const BASE_LEFT_MARGIN = 30;
+
 const DocumentScannerBottom: React.FC<DocumentScannerBottomProps> = ({ onTakePicture, onClose, onImportPicture, onModeChange }) => {
   const [activeMode, setActiveMode] = useState<'invoice' | 'ticket'>('ticket');
+  const [factureTextWidth, setFactureTextWidth] = useState(60); // Valeur par défaut
+  const [ticketTextWidth, setTicketTextWidth] = useState(45);   // Valeur par défaut
+  const [textMeasured, setTextMeasured] = useState(false);
+
   const screenWidth = Dimensions.get('window').width;
-  const paddingLeftAnim = useRef(new Animated.Value(screenWidth * 0.13)).current; // Start with 15% padding for ticket mode
+
+  // Callbacks pour mesurer les tailles des textes
+  const onFactureTextLayout = (event: any) => {
+    const { width } = event.nativeEvent.layout;
+    setFactureTextWidth(width);
+    checkIfAllTextsMeasured();
+  };
+
+  const onTicketTextLayout = (event: any) => {
+    const { width } = event.nativeEvent.layout;
+    setTicketTextWidth(width);
+    checkIfAllTextsMeasured();
+  };
+
+  const checkIfAllTextsMeasured = () => {
+    // Une fois que les deux textes sont mesurés, on peut initialiser les animations
+    if (!textMeasured) {
+      setTextMeasured(true);
+    }
+  };
+
+  // Calculs pour les positions par défaut (Ticket mode)
+  const defaultFactureMargin = BASE_LEFT_MARGIN;
+  const defaultTicketMargin = (screenWidth - ticketTextWidth - BASE_LEFT_MARGIN + 7) / 2; // Centrer "Ticket"
+
+  // Animations pour les marges de chaque texte
+  const factureMarginAnim = useRef(new Animated.Value(defaultFactureMargin)).current;
+  const ticketMarginAnim = useRef(new Animated.Value(defaultTicketMargin)).current;
 
   const handleModeChange = (mode: 'invoice' | 'ticket') => {
     setActiveMode(mode);
     onModeChange?.(mode);
 
-    // Animate padding based on mode
-    const targetPadding = mode === 'invoice' ? screenWidth * 0.38 : screenWidth * 0.13; // Center when invoice, left-aligned when ticket
+    // Calculer les positions avec les vraies tailles de texte
+    // Pour centrer "Facture": on prend le centre de l'écran moins la moitié de la largeur du texte
+    const centeredFactureMargin = (screenWidth - factureTextWidth - BASE_LEFT_MARGIN) / 2;
+    const rightTicketMargin = screenWidth - ticketTextWidth - BASE_LEFT_MARGIN;
+    const newDefaultTicketMargin = (screenWidth - ticketTextWidth - BASE_LEFT_MARGIN + 7) / 2;
 
-    Animated.timing(paddingLeftAnim, {
-      toValue: targetPadding,
-      duration: 500,
-      easing: Easing.out(Easing.quad),
-      useNativeDriver: false,
-    }).start();
+    if (mode === 'invoice') {
+      // Centrer "Facture" et déplacer "Ticket" à droite
+      Animated.parallel([
+        Animated.timing(factureMarginAnim, {
+          toValue: centeredFactureMargin,
+          duration: 500,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: false,
+        }),
+        Animated.timing(ticketMarginAnim, {
+          toValue: rightTicketMargin,
+          duration: 500,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: false,
+        })
+      ]).start();
+    } else {
+      console.log('Reverting to ticket mode positions');
+      // Position par défaut: "Facture" à gauche, "Ticket" au centre
+      Animated.parallel([
+        Animated.timing(factureMarginAnim, {
+          toValue: defaultFactureMargin,
+          duration: 500,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: false,
+        }),
+        Animated.timing(ticketMarginAnim, {
+          toValue: newDefaultTicketMargin,
+          duration: 500,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: false,
+        })
+      ]).start();
+    }
   };
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.modeArea, {
-        paddingLeft: paddingLeftAnim
-      }]}>
-        <TouchableOpacity onPress={() => handleModeChange('invoice')}>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={activeMode === 'invoice' ? styles.modeAreaTextActive : styles.modeAreaText}>Facture</Text>
-            {activeMode === 'invoice' && <View style={{position: 'absolute', borderRadius: 999, height: 7, width: 7, backgroundColor: COLORS.primary, bottom: -10}} />}
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleModeChange('ticket')}>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={activeMode === 'ticket' ? styles.modeAreaTextActive : styles.modeAreaText}>Ticket</Text>
-            {activeMode === 'ticket' && <View style={{position: 'absolute', borderRadius: 999, height: 7, width: 7, backgroundColor: COLORS.primary, bottom: -10}} />}
-          </View>
-        </TouchableOpacity>
-      </Animated.View>
+      <View style={styles.modeArea}>
+        <Animated.View style={[styles.modeItem, { marginLeft: factureMarginAnim }]}>
+          <TouchableOpacity onPress={() => handleModeChange('invoice')}>
+            <View style={{ alignItems: 'center' }}>
+              <Text
+                style={activeMode === 'invoice' ? styles.modeAreaTextActive : styles.modeAreaText}
+                onLayout={onFactureTextLayout}
+              >
+                Facture
+              </Text>
+              {activeMode === 'invoice' && <View style={styles.activeIndicator} />}
+            </View>
+          </TouchableOpacity>
+        </Animated.View>
+
+        <Animated.View style={[styles.modeItem, { marginLeft: ticketMarginAnim }]}>
+          <TouchableOpacity onPress={() => handleModeChange('ticket')}>
+            <View style={{ alignItems: 'center' }}>
+              <Text
+                style={activeMode === 'ticket' ? styles.modeAreaTextActive : styles.modeAreaText}
+                onLayout={onTicketTextLayout}
+              >
+                Ticket
+              </Text>
+              {activeMode === 'ticket' && <View style={styles.activeIndicator} />}
+            </View>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
+
       <View style={styles.actionArea}>
         <TouchableOpacity onPress={onClose}>
           <CloseIcon size={36} />
@@ -77,11 +155,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.light
   },
   modeArea: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    position: 'relative',
+    height: 60,
     paddingVertical: 15,
-    gap: 50, // Fixed gap instead of percentage for better control
+  },
+  modeItem: {
+    position: 'absolute',
+    top: 15,
   },
   modeAreaText: {
     fontSize: 16,
@@ -91,6 +171,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: COLORS.primary,
     fontWeight: 'bold',
+  },
+  activeIndicator: {
+    position: 'absolute',
+    borderRadius: 999,
+    height: 7,
+    width: 7,
+    backgroundColor: COLORS.primary,
+    bottom: -10
   },
   actionArea: {
     flexDirection: 'row',

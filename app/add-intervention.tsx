@@ -100,11 +100,11 @@ const AddIntervention = () => {
       <ScrollView>
         <Container>
           <ProductCard
-              brand={item?.brand || 'Unknown Brand'}
-              name={item?.label || 'Unknown Item'}
-              purchaseDate={item?.purchaseDate || new Date()}
-              warrantyDuration={item?.warrantyDuration || 'Aucune garantie'}
-              image={item?.picture ? { uri: item.picture } : require('../assets/images/default-product.png')}
+            brand={item?.brand || 'Unknown Brand'}
+            name={item?.label || 'Unknown Item'}
+            purchaseDate={item?.purchaseDate || new Date()}
+            warrantyDuration={item?.warrantyDuration || 'Aucune garantie'}
+            image={item?.pictureUri}
               style={styles.space}
           />
 

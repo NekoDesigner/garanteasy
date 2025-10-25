@@ -2,9 +2,10 @@ import { useFonts, Ubuntu_400Regular, Ubuntu_700Bold } from '@expo-google-fonts/
 import * as Notifications from 'expo-notifications';
 import { Slot } from "expo-router";
 import { SQLiteProvider, SQLiteDatabase } from 'expo-sqlite';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from "react-native";
 import "react-native-reanimated";
+import { SplashScreen } from "../components/SplashScreen";
 import { DATABASE_MIGRATIONS } from "../database";
 import { DATABASE_NAME } from "../database/db";
 import { Migrate } from "../database/migrate";
@@ -82,6 +83,9 @@ export default function RootLayout() {
     Ubuntu_700Bold,
   });
 
+  const [isAppReady, setIsAppReady] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+
   useEffect(() => {
     // Initialize image directories on app start
     ImageService.initializeDirectories().catch(error => {
@@ -103,6 +107,31 @@ export default function RootLayout() {
     };
   }, []);
 
+  useEffect(() => {
+    // Gérer l'affichage du splash screen avec une durée minimale de 2 secondes
+    const preparApp = async () => {
+      const startTime = Date.now();
+
+      // Attendre que les polices soient chargées
+      while (!fontsLoaded) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
+      // S'assurer que le splash screen soit affiché pendant au moins 2 secondes
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, 2000 - elapsedTime);
+
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+
+      setIsAppReady(true);
+      setShowSplash(false);
+    };
+
+    preparApp();
+  }, [fontsLoaded]);
+
   if (storybookEnabled) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const StorybookUI = require("../.storybook").default;
@@ -113,8 +142,9 @@ export default function RootLayout() {
     );
   }
 
-  if (!fontsLoaded) {
-    return <Fallback />; // ou un splash screen
+  // Afficher le splash screen pendant le chargement
+  if (showSplash || !isAppReady) {
+    return <SplashScreen />;
   }
 
   return (
