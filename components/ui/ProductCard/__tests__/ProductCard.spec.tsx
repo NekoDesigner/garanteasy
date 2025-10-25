@@ -7,6 +7,8 @@ import React from "react";
 import { DateService } from "../../../../services/DateService";
 import ProductCard from "../index";
 
+const TEST_DATE = new Date('2025-09-25T12:00:00.000Z');
+
 describe("ProductCard Components", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -24,7 +26,7 @@ describe("ProductCard Components", () => {
     });
 
   beforeEach(() => {
-    jest.useFakeTimers().setSystemTime(new Date()); // Mock the current date
+    jest.useFakeTimers().setSystemTime(TEST_DATE); // Mock a specific date and time
   });
 
   afterEach(() => {
@@ -72,12 +74,15 @@ describe("ProductCard Components", () => {
         });
     });
 
-    it('should have full progress indicator bar', async () => {
+    it('should have approximately 50% progress indicator bar', async () => {
+        // Fixed purchase date for predictable testing - 10 days before the mocked current date
+        const purchaseDate = new Date('2025-09-15T12:00:00.000Z');
+
         const { getByTestId } = render(
           <ProductCard
             brand="Bosh"
             name="Tondeuse à gazon"
-            purchaseDate={DateService.subtractDays(new Date(), 10)}
+            purchaseDate={purchaseDate}
             warrantyDuration="20d"
             image={require('../../../../assets/images/default-product.png')}
           />
@@ -88,7 +93,8 @@ describe("ProductCard Components", () => {
 
         await waitFor(() => {
           const progressBarStyle = progressBar.props.style[0]; // Access the first style object
-          expect(progressBarStyle.width).toBe("50%"); // Adjust the expected width based on your implementation
+          const width = parseFloat(progressBarStyle.width.replace('%', ''));
+          expect(width).toBe(50); // Exact 50% with fixed dates
         });
     });
   });
@@ -108,7 +114,7 @@ describe("ProductCard Components", () => {
       await waitFor(() => {
         const tag = getByTestId('test-tag-2-text');
         expect(tag).toBeTruthy();
-        expect(tag.children).toContain('Expire dans 12j'); // 15 days - 3 days passed
+        expect(tag.children).toContain('Expire dans 12j');
       });
     });
 

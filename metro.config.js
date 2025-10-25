@@ -1,14 +1,16 @@
+// metro.config.js
 const { getDefaultConfig } = require("expo/metro-config");
 
-module.exports = (async () => {
-  let defaultConfig = await getDefaultConfig(__dirname);
-  defaultConfig.resolver.resolverMainFields.unshift("sbmodern");
+const defaultConfig = getDefaultConfig(__dirname);
 
-  // Add node polyfills for React Native
-  defaultConfig.resolver.alias = {
-    ...defaultConfig.resolver.alias,
-    buffer: require.resolve('buffer'),
-  };
+defaultConfig.transformer.babelTransformerPath = require.resolve("react-native-svg-transformer");
 
-  return defaultConfig;
-})();
+defaultConfig.resolver.assetExts = defaultConfig.resolver.assetExts.filter((ext) => ext !== "svg");
+defaultConfig.resolver.sourceExts = [...defaultConfig.resolver.sourceExts, "svg"];
+
+defaultConfig.resolver.alias = {
+  ...defaultConfig.resolver.alias,
+  buffer: require.resolve("buffer"),
+};
+
+module.exports = defaultConfig;
