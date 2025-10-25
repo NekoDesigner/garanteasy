@@ -6,6 +6,7 @@ import { CreateNotificationsTableMigration1751560378406 } from './migrations/Cre
 import { CreateOnboardingsTableMigration1751389874021 } from './migrations/CreateOnboardingsTableMigration-1751389874021';
 import { InitialMigration1750507867331 } from './migrations/InitialMigration-1750507867331';
 import { SettingsTableSeederMigration1758811376809 } from './migrations/SettingsTableSeederMigration-1758811376809';
+import { UpdateCategoriesTableMigration1761404688363 } from './migrations/UpdateCategoriesTableMigration-1761404688363';
 
 export const DATABASE_MIGRATIONS = [
     new AddBrandColumnToItemsTableMigration1751057246774(),
@@ -15,5 +16,6 @@ export const DATABASE_MIGRATIONS = [
     new CreateNotificationsTableMigration1751560378406(),
     new CreateOnboardingsTableMigration1751389874021(),
     new InitialMigration1750507867331(),
-    new SettingsTableSeederMigration1758811376809()
+    new SettingsTableSeederMigration1758811376809(),
+    new UpdateCategoriesTableMigration1761404688363()
 ];
