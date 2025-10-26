@@ -1,6 +1,7 @@
 {
-  "name": "cli",
+  "name": "garanteasy-cli",
   "version": "1.0.0",
+  "description": "CLI for Garanteasy project",
   "main": "cli.mjs",
   "module": "true",
   "scripts": {
@@ -12,6 +13,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "description": ""
+  "license": "ISC"
 }
