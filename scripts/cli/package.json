@@ -1,0 +1,17 @@
+{
+  "name": "garanteasy-cli",
+  "version": "1.0.0",
+  "description": "CLI for Garanteasy project",
+  "main": "cli.mjs",
+  "module": "true",
+  "scripts": {
+    "start": "node cli.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "garanteasy": "./cli.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

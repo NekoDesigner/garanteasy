@@ -8,5 +8,7 @@ export class {{MigrationTemplate}} extends Migration {
   protected async up(database: SQLite.SQLiteDatabase): Promise<void> {
     this.database = database;
     await this.database.execAsync(`PRAGMA foreign_keys = ON;`);
+    // Insert your migration code here
+    await this.saveMigration(database);
   }
 }

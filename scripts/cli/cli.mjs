@@ -1,8 +1,43 @@
+#!/usr/bin/env node
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url'; // Explicitly import fileURLToPath
 import { program } from 'commander';
 import ora from 'ora';
+
+/**
+ * Finds the root directory of the Garanteasy project by searching recursively for package.json
+ * @param {string} startPath - The path to start searching from (defaults to current working directory)
+ * @returns {string} The absolute path to the Garanteasy project root
+ * @throws Will throw an error if no Garanteasy project is found
+ */
+function findProjectRoot(startPath = process.cwd()) {
+  let currentPath = path.resolve(startPath);
+
+  while (currentPath !== path.dirname(currentPath)) {
+    const packageJsonPath = path.join(currentPath, 'package.json');
+
+    if (fs.existsSync(packageJsonPath)) {
+      try {
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+        // Check if this is a Garanteasy project (you can adjust this condition)
+        if (packageJson.name === 'garanteasy' ||
+            (packageJson.keywords && packageJson.keywords.includes('garanteasy')) ||
+            fs.existsSync(path.join(currentPath, 'app.json')) &&
+            fs.existsSync(path.join(currentPath, 'components'))) {
+          return currentPath;
+        }
+      } catch (_error) {
+        // Continue searching if package.json is malformed
+      }
+    }
+
+    currentPath = path.dirname(currentPath);
+  }
+
+  throw new Error('❌ Projet Garanteasy non trouvé. Assurez-vous d\'être dans un projet Garanteasy ou un de ses sous-répertoires.');
+}
 
 program
   .name('Garanteasier')
@@ -10,8 +45,9 @@ program
   .version('0.8.0');
 
 program
-  .command('generate <type> <name>', 'Generate a new Garanteasy Element')
+  .command('generate <type> <name>')
   .alias('g')
+  .description('Generate a new Garanteasy Element')
   .action((type, name) => {
     const spinner = ora(`Generate ${type} ${name}`).start();
     switch(type) {
@@ -133,7 +169,8 @@ program.parse(process.argv);
 function createComponent(name) {
   const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Resolve __dirname correctly
   const stubDirectory = path.join(__dirname, 'stubs', 'component', 'ui');
-  const componentPath = path.join(process.cwd(), 'components', 'ui', name);
+  const projectRoot = findProjectRoot();
+  const componentPath = path.join(projectRoot, 'components', 'ui', name);
 
   // Create base component
   fs.mkdirSync(componentPath, { recursive: true });
@@ -185,7 +222,8 @@ function createHook(name) {
   const hookName = `use${firstLetterToUpperCase(name)}`;
   const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Resolve __dirname correctly
   const stubDirectory = path.join(__dirname, 'stubs', 'hooks');
-  const hookPath = path.join(process.cwd(), 'hooks', hookName);
+  const projectRoot = findProjectRoot();
+  const hookPath = path.join(projectRoot, 'hooks', hookName);
   const testsDir = path.join(hookPath, '__tests__');
 
   // Create base component
@@ -209,7 +247,8 @@ function createHook(name) {
 function createIconComponent(name) {
   const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Resolve __dirname correctly
   const stubDirectory = path.join(__dirname, 'stubs', 'component', 'ui');
-  const iconPath = path.join(process.cwd(), 'components', 'ui', 'Icons');
+  const projectRoot = findProjectRoot();
+  const iconPath = path.join(projectRoot, 'components', 'ui', 'Icons');
 
   // Create base component
   const indexStubPath = path.join(stubDirectory, 'icon.component.stub');
@@ -233,7 +272,8 @@ function createIconComponent(name) {
 function createMigration(name) {
   const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Resolve __dirname correctly
   const stubDirectory = path.join(__dirname, 'stubs', 'database');
-  const migrationPath = path.join(process.cwd(), 'database', 'migrations');
+  const projectRoot = findProjectRoot();
+  const migrationPath = path.join(projectRoot, 'database', 'migrations');
   const migrationName = `${firstLetterToUpperCase(name)}Migration-${Date.now()}`;
   const migrationFileName = `${migrationName}.ts`;
   const migrationFilePath = path.join(migrationPath, migrationFileName);
@@ -250,7 +290,8 @@ function createMigration(name) {
 }
 
 function updateDatabaseMigrationConstantsList() {
-  const basePath = path.join(process.cwd(), 'database');
+  const projectRoot = findProjectRoot();
+  const basePath = path.join(projectRoot, 'database');
   const migrationPath = path.join(basePath, 'migrations');
   const migrationsFilePath = path.join(basePath, 'index.ts');
   fs.readdir(migrationPath, (err, files) => {

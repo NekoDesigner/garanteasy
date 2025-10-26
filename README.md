@@ -65,8 +65,8 @@ cz bump
 
 ## Project Info
 
-- **React Native**: v0.79.x (React 19)
-- **Expo**: v53.x or higher
+- **React Native**: v0.81.x (React 19)
+- **Expo**: v54.x or higher
 - **Node.js**: v20.x or higher
 
 ## License
