@@ -17,6 +17,9 @@ module.exports = defineConfig([
       ],
       "semi": ["error", "always"], // Enforce semicolons
       "no-trailing-spaces": ["error"], // Disallow trailing spaces
+      // Règles React Compiler (eslint-plugin-react-hooks v6+) : à corriger progressivement
+      "react-hooks/refs": "warn",
+      "react-hooks/set-state-in-effect": "warn",
     },
   }
 ]);
