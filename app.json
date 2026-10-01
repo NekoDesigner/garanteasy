@@ -7,9 +7,13 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.inuko.garanteasy",
+      "buildNumber": "2",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.inuko.garanteasy",
@@ -35,7 +39,22 @@
         }
       ],
       "expo-sqlite",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Garanteasy a besoin de la caméra pour scanner des documents et des codes."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Garanteasy a besoin d'accéder à tes photos pour joindre des justificatifs et factures."
+        }
+      ],
+      "expo-notifications",
+      "expo-sharing",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

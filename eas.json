@@ -6,6 +6,9 @@
       "distribution": "store",
       "android": {
         "buildType": "apk"
+      },
+      "ios": {
+        "autoIncrement": true
       }
     },
     "test": {
@@ -18,11 +21,19 @@
       "env": {
         "EXPO_PUBLIC_RESET_DB_ON_INIT": "false",
         "EXPO_PUBLIC_STORYBOOK_ENABLED": "false"
+      },
+      "ios": {
+        "simulator": false
       }
     }
   },
   "cli": {
     "version": ">=16.2.2",
     "appVersionSource": "local"
+  },
+  "submit": {
+    "production": {
+      "ios": {}
+    }
   }
 }
